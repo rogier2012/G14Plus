@@ -17,7 +17,7 @@ This module also supports edge weighted graphs: edges should/will have an (integ
 # updated 2-2-2015: writeDOT can also write directed graphs.
 # updated 5-2-2015: no black fill color used, when more than numcolors**2 vertices.
 
-import basicgraphs
+import assets.basicgraphs
 
 defaultcolorscheme = "paired12"
 numcolors = 12
@@ -83,7 +83,7 @@ def readgraphlist(graphclass, readline):
     return L, options
 
 
-def loadgraph(filename, graphclass=basicgraphs.graph, readlist=False):
+def loadgraph(filename, graphclass=assets.basicgraphs.graph, readlist=False):
     """
     Reads the file <filename>, and returns the corresponding graph object.
     Optional second argument: you may use your own <graph> class, instead of
@@ -111,7 +111,7 @@ def loadgraph(filename, graphclass=basicgraphs.graph, readlist=False):
         return G  # ,options
 
 
-def inputgraph(graphclass=basicgraphs.graph, readlist=False):
+def inputgraph(graphclass=assets.basicgraphs.graph, readlist=False):
     """
     Reads a graph from stdin, and returns the corresponding graph object.
     Optional first argument: you may use your own <graph> class, instead of
