@@ -2,8 +2,8 @@ from assets.fastgraphs import graph
 from assets.graphIO import loadgraph, writeDOT
 
 
-def refine(g):
-    V = g.V()
+def refine(G):
+    V = G.V()
 
     alphalist = []
     initiallist = []
@@ -11,7 +11,6 @@ def refine(g):
     for i in V:
         initiallist.append(i)
         i.colornum = 0
-
     resultlist.append(initiallist)
     while alphalist != resultlist:
         alphalist = resultlist
@@ -32,6 +31,11 @@ def refine(g):
                         resultlist.append(newcolor)
                         v.colornum = resultlist.index(newcolor)
 
+    for colorlist in alphalist:
+        for vertex in colorlist:
+            vertex.colornum = alphalist.index(colorlist)
+
+
     return G
 
 
@@ -47,9 +51,14 @@ def same_color_neighbour(u,v):
         S.add(vertex.colornum)
     for vertex in v.nbs():
         T.add(vertex.colornum)
+
+    if S == T:
+        print(str(u) + " with set: " + str(S))
+        print(str(v) + " with set: " + str(T))
+
     return S == T
 
 L = loadgraph("colorref_smallexample_4_7.grl",graphclass=graph,readlist=True)
-G = L[0][0]
+G = L[0][1]
 G = refine(G)
 writeDOT(G, "examplegraph.dot")
