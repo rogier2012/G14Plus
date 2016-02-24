@@ -5,17 +5,18 @@ from assets.graphIO import loadgraph, writeDOT
 from assets.graphfunctions import disjointunion
 
 
-def refine(G):
+def refine(G, D=[], I=[]):
     V = G.V()
 
     alpha_list = []
     initial_list = []
     result_list = []
+    if len(D) > 0:
 
-    for i in V:
-        initial_list.append(i)
-        i.colornum = 0
-    result_list.append(initial_list)
+        for i in V:
+            initial_list.append(i)
+            i.colornum = 0
+        result_list.append(initial_list)
 
     while alpha_list != result_list:
         alpha_list = result_list
@@ -28,7 +29,6 @@ def refine(G):
                 if not same_color(color_list[k], color_list[k + 1]):
                     no_list_found = True
                     v = color_list[k + 1]
-                    # print("Vertex " + str(v))
 
                     for i in result_list:
                         if same_color(i[0], v):
@@ -53,7 +53,7 @@ def refine(G):
 
 
 def individual_refinement(G, D, I):
-    pass
+    return refine(G, D, I)
 
 
 def countIsomorphism(D, I):
