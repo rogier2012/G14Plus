@@ -46,13 +46,10 @@ def refine(G):
 
     return alphalist
 
-
-def same_color(u,v):
-    return len(u.nbs()) == len(v.nbs()) and same_color_neighbour(u,v)
 #put k in new color in result list with same properties or create a new list inside result list
 
 
-def same_color_neighbour(u,v):
+def same_color(u, v):
     S = []
     T = []
     for vertex in u.nbs():
