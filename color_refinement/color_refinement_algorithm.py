@@ -53,13 +53,14 @@ def same_color(u,v):
 
 
 def same_color_neighbour(u,v):
-    S = set()
-    T = set()
+    S = []
+    T = []
     for vertex in u.nbs():
-        S.add(vertex.colornum)
+        S.append(vertex.colornum)
     for vertex in v.nbs():
-        T.add(vertex.colornum)
-
+        T.append(vertex.colornum)
+    S.sort()
+    T.sort()
     # print("Two sets with vertices: " + str(u) +" and " + str(v))
     # print(str(u) + " with set: " + str(S))
     # print(str(v) + " with set: " + str(T))
@@ -68,7 +69,7 @@ def same_color_neighbour(u,v):
 
 
 L = loadgraph("../graphs/colorref_smallexample_4_16.grl", graphclass=graph, readlist=True)
-G = L[0][2]
+G = L[0][3]
 colorschemes = []
 # for graph in L[0]:
 #     colorschemes.append(refine(graph))
