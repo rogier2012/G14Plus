@@ -5,46 +5,51 @@ from assets.graphIO import loadgraph, writeDOT
 def refine(G):
     V = G.V()
 
-    alphalist = []
-    initiallist = []
-    resultlist = []
-    for i in V:
-        initiallist.append(i)
-        i.colornum = 0
-    resultlist.append(initiallist)
+    alpha_list = []
+    initial_list = []
+    result_list = []
 
-    while alphalist != resultlist:
-        alphalist = resultlist
-        print(str(alphalist) + " with length: " + str(len(alphalist)))
-        resultlist = []
-        for colorlist in alphalist:
-            initiallist = []
-            initiallist.append(colorlist[0])
-            resultlist.append(initiallist)
-            for k in range(len(colorlist) - 1):
-                if not same_color(colorlist[k], colorlist[k+1]):
-                    nolistfound = True
-                    v = colorlist[k + 1]
+    for i in V:
+        initial_list.append(i)
+        i.colornum = 0
+    result_list.append(initial_list)
+
+    while alpha_list != result_list:
+        alpha_list = result_list
+        print(str(alpha_list) + " with length: " + str(len(alpha_list)))
+        result_list = []
+        for color_list in alpha_list:
+            initial_list = [color_list[0]]
+            result_list.append(initial_list)
+
+            for k in range(len(color_list) - 1):
+                if not same_color(color_list[k], color_list[k + 1]):
+                    no_list_found = True
+                    v = color_list[k + 1]
                     # print("Vertex " + str(v))
-                    for i in resultlist:
-                        if i != colorlist:
-                            if same_color(i[0],v):
-                                i.append(v)
-                                nolistfound = False
-                    if nolistfound:
-                        newcolor = [v]
-                        resultlist.append(newcolor)
-                else:
-                    v = colorlist[k + 1]
-                    for i in resultlist:
-                        if i != colorlist:
+
+                    for i in result_list:
+                        if i != color_list:
                             if same_color(i[0], v):
                                 i.append(v)
-        for colorlist in resultlist:
-            for vertex in colorlist:
-                vertex.colornum = resultlist.index(colorlist)
+                                no_list_found = False
 
-    return alphalist
+                    if no_list_found:
+                        new_color = [v]
+                        result_list.append(new_color)
+
+                else:
+                    v = color_list[k + 1]
+                    for i in result_list:
+                        if i != color_list:
+                            if same_color(i[0], v):
+                                i.append(v)
+
+        for color_list in result_list:
+            for vertex in color_list:
+                vertex.colornum = result_list.index(color_list)
+
+    return alpha_list
 
 #put k in new color in result list with same properties or create a new list inside result list
 
