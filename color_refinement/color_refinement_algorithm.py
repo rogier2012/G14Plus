@@ -44,7 +44,7 @@ def refine(G):
             for vertex in colorlist:
                 vertex.colornum = resultlist.index(colorlist)
 
-    return G
+    return alphalist
 
 
 def same_color(u,v):
@@ -67,7 +67,11 @@ def same_color_neighbour(u,v):
     return S == T
 
 
-L = loadgraph("../graphs/colorref_largeexample_4_1026.grl", graphclass=graph, readlist=True)
+L = loadgraph("../graphs/colorref_smallexample_4_16.grl", graphclass=graph, readlist=True)
 G = L[0][2]
-G = refine(G)
+colorschemes = []
+# for graph in L[0]:
+#     colorschemes.append(refine(graph))
+
+refine(G)
 writeDOT(G, "examplegraph.dot")
