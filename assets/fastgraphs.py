@@ -14,11 +14,26 @@ class vertex(vertex):
     def addedge(self, edge):
         self._inclist.append(edge)
 
+    def deleteedge(self, edge):
+        self._inclist.remove(edge)
+
     def inclist(self):
         return self._inclist
 
 
 class graph(graph):
+    def deletevertext(self, vertex):
+        edgelist = vertex.inclist
+        for edge in edgelist:
+            self.deleteedge(edge)
+        self._V.remove(vertex)
+
+    def deleteedge(self, edge):
+        edge.head().deleteedge(edge)
+        edge.tail().deleteedge(edge)
+        self._E.remove(edge)
+
+
     def addvertex(self, label=-1):
         """
         Add a vertex to the graph.

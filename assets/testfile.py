@@ -3,4 +3,7 @@
 
 list1 = [1,2,3]
 
-for i in range(len(list1)) and i is not 2:
+list2 = [2]
+
+list3 = [3]
+print(set(list1) - set(list2) - set(list3))

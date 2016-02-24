@@ -17,7 +17,19 @@ def refine(G, D=[], I=[]):
             i.colornum = 0
         result_list.append(initial_list)
     else:
-        pass
+        VSet = set(V)
+        DSet = set(D)
+        ISet = set(I)
+        VSet = VSet - DSet - ISet
+        for i in VSet:
+            initial_list.append(i)
+            i.colornum = 0
+
+        result_list.append(initial_list)
+        for i in range(D):
+            next_list = [D[i], I[i]]
+            result_list.append(next_list)
+
     while alpha_list != result_list:
         alpha_list = result_list
         print(str(alpha_list) + " with length: " + str(len(alpha_list)))
