@@ -11,13 +11,13 @@ def refine(G, D=[], I=[]):
     alpha_list = []
     initial_list = []
     result_list = []
-    if len(D) > 0:
-
+    if len(D) == 0:
         for i in V:
             initial_list.append(i)
             i.colornum = 0
         result_list.append(initial_list)
-
+    else:
+        pass
     while alpha_list != result_list:
         alpha_list = result_list
         print(str(alpha_list) + " with length: " + str(len(alpha_list)))
