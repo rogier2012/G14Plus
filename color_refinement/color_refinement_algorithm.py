@@ -12,29 +12,37 @@ def refine(G):
         initiallist.append(i)
         i.colornum = 0
     resultlist.append(initiallist)
+
     while alphalist != resultlist:
         alphalist = resultlist
+        print(str(alphalist) + " with length: " + str(len(alphalist)))
         resultlist = []
         for colorlist in alphalist:
+            initiallist = []
+            initiallist.append(colorlist[0])
+            resultlist.append(initiallist)
             for k in range(len(colorlist) - 1):
                 if not same_color(colorlist[k], colorlist[k+1]):
                     nolistfound = True
-                    v = colorlist[k]
+                    v = colorlist[k + 1]
+                    # print("Vertex " + str(v))
                     for i in resultlist:
                         if i != colorlist:
                             if same_color(i[0],v):
                                 i.append(v)
-                                v.colornum = resultlist.index(i)
                                 nolistfound = False
                     if nolistfound:
                         newcolor = [v]
                         resultlist.append(newcolor)
-                        v.colornum = resultlist.index(newcolor)
-
-    for colorlist in alphalist:
-        for vertex in colorlist:
-            vertex.colornum = alphalist.index(colorlist)
-
+                else:
+                    v = colorlist[k + 1]
+                    for i in resultlist:
+                        if i != colorlist:
+                            if same_color(i[0], v):
+                                i.append(v)
+        for colorlist in resultlist:
+            for vertex in colorlist:
+                vertex.colornum = resultlist.index(colorlist)
 
     return G
 
@@ -52,13 +60,14 @@ def same_color_neighbour(u,v):
     for vertex in v.nbs():
         T.add(vertex.colornum)
 
-    if S == T:
-        print(str(u) + " with set: " + str(S))
-        print(str(v) + " with set: " + str(T))
+    # print("Two sets with vertices: " + str(u) +" and " + str(v))
+    # print(str(u) + " with set: " + str(S))
+    # print(str(v) + " with set: " + str(T))
 
     return S == T
 
-L = loadgraph("colorref_smallexample_4_7.grl",graphclass=graph,readlist=True)
-G = L[0][1]
+
+L = loadgraph("../graphs/colorref_largeexample_4_1026.grl", graphclass=graph, readlist=True)
+G = L[0][2]
 G = refine(G)
 writeDOT(G, "examplegraph.dot")
