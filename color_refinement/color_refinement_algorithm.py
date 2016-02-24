@@ -29,8 +29,7 @@ def refine(G):
                     # print("Vertex " + str(v))
 
                     for i in result_list:
-                        if i != color_list:
-                            if same_color(i[0], v):
+                        if same_color(i[0], v):
                                 i.append(v)
                                 no_list_found = False
 
@@ -41,8 +40,7 @@ def refine(G):
                 else:
                     v = color_list[k + 1]
                     for i in result_list:
-                        if i != color_list:
-                            if same_color(i[0], v):
+                        if same_color(i[0], v):
                                 i.append(v)
 
         for color_list in result_list:
@@ -70,8 +68,8 @@ def same_color(u, v):
     return S == T
 
 
-L = loadgraph("../graphs/colorref_smallexample_4_16.grl", graphclass=graph, readlist=True)
-G = L[0][3]
+L = loadgraph("../graphs/colorref_smallexample_4_7.grl", graphclass=graph, readlist=True)
+G = L[0][2]
 colorschemes = []
 # for graph in L[0]:
 #     colorschemes.append(refine(graph))
