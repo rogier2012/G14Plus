@@ -3,11 +3,10 @@ import time
 from assets.fastgraphs import graph
 from assets.graphIO import loadgraph, writeDOT
 from assets.graphfunctions import disjointunion
-
+from random import randint
 
 def refine(G, D=[], I=[]):
     V = G.V()
-
     alpha_list = []
     initial_list = []
     result_list = []
@@ -68,8 +67,21 @@ def individual_refinement(G, D, I):
     return refine(G, D, I)
 
 
-def countIsomorphism(D, I):
+def countIsomorphism(G, D, I):
     alpha1 = individual_refinement(G, D, I)
+    if(not balanced(alpha1)):
+        return 0
+    if(bijection(alpha1)):
+        return 1
+
+    found = False
+    noOfColorClasses=0
+    for
+    while(not found):
+
+        c = alpha1[x]
+        if
+
 
     pass
 
