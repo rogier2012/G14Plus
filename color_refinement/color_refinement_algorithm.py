@@ -31,7 +31,7 @@ def refine(G, D, I):
             next_list = [D[i], I[i]]
             result_list.append(next_list)
     time2 = timeMs() - time1
-    print("Initialisation time: " + str(time2 // 1000) + "s")
+    # print("Initialisation time: " + str(time2 // 1000) + "s")
     partTime = 0
     coloringTime = 0
     while alpha_list != result_list:
@@ -40,32 +40,52 @@ def refine(G, D, I):
         result_list = []
         part1 = timeMs()
         for color_list in alpha_list:
-            initial_list = [color_list[0]]
-            result_list.append(initial_list)
-            index = result_list.index(initial_list)
-            # result_list[index][0].colornum = index
-            neighbourU = neighbourhood(color_list[0])
-            for k in range(1, len(color_list)):
-                v = color_list[k]
-                neighbourV = neighbourhood(v)
-                if not same_color(neighbourU, neighbourV):
-                    no_list_found = True
-
-                    for i in result_list:
-                        neighbourI = neighbourhood(i[0])
-                        if same_color(neighbourI, neighbourV):
-                            # v.colornum = result_list.index(i)
-                            i.append(v)
-                            no_list_found = False
-
-                    if no_list_found:
-                        # v.colornum = len(result_list)
-                        new_color = [v]
-                        result_list.append(new_color)
-
+            initial_list = []
+            new_list = []
+            nbslist = listOfNodeNeighbourhoods(color_list)
+            # print(nbslist)
+            for k in range(len(nbslist)):
+                if k == 0 or same_color(nbslist[0], nbslist[k]):
+                    initial_list.append(color_list[k])
                 else:
-                    # v.colornum = index
-                    result_list[index].append(v)
+
+                    found = False
+                    for l in new_list:
+                        # if k == 3:
+                        #     print("L[0]: " + str(l[0]))
+                        if same_color(neighbourhood(l[0]), nbslist[k]):
+                            l.append(color_list[k])
+                            found = True
+                    if not found:
+                        new_list.append([color_list[k]])
+
+            result_list.append(initial_list)
+            result_list.extend(new_list)
+            # index = result_list.index(initial_list)
+            # # result_list[index][0].colornum = index
+            # neighbourU = neighbourhood(color_list[0])
+            #
+            # for k in range(1, len(color_list)):
+            #     v = color_list[k]
+            #     neighbourV = neighbourhood(v)
+            #     if not same_color(neighbourU, neighbourV):
+            #         no_list_found = True
+            #
+            #         for i in result_list:
+            #             neighbourI = neighbourhood(i[0])
+            #             if same_color(neighbourI, neighbourV):
+            #                 # v.colornum = result_list.index(i)
+            #                 i.append(v)
+            #                 no_list_found = False
+            #
+            #         if no_list_found:
+            #             # v.colornum = len(result_list)
+            #             new_color = [v]
+            #             result_list.append(new_color)
+            #
+            #     else:
+            #         # v.colornum = index
+            #         result_list[index].append(v)
         partTime = partTime + (timeMs() - part1)
         coloring1 = timeMs()
         for color_list in result_list:
@@ -74,9 +94,9 @@ def refine(G, D, I):
         coloringTime = coloringTime + (timeMs() - coloring1)
 
     time3 = timeMs() - time1
-    print("Loop time: " + str(time3 // 1000) + "s")
-    print("Partitioning time: " + str(partTime // 1000) + "s")
-    print("Coloring time: " + str(coloringTime // 1000) + "s")
+    # print("Loop time: " + str(time3 // 1000) + "s")
+    # print("Partitioning time: " + str(partTime // 1000) + "s")
+    # print("Coloring time: " + str(coloringTime // 1000) + "s")
     return alpha_list
 
 
@@ -87,6 +107,12 @@ def individual_refinement(G, D, I):
 def timeMs():
     return int(round(time.time() * 1000))
 
+
+def listOfNodeNeighbourhoods(color_list):
+    result = []
+    for u in color_list:
+        result.append(neighbourhood(u))
+    return result
 
 def countIsomorphism(GH, G, H, D, I, findSingleIso=False):
     # print("Begin individual Refinement with " + str(D) + " and " + str(I))
@@ -119,14 +145,6 @@ def countIsomorphism(GH, G, H, D, I, findSingleIso=False):
 
 
 def same_color(S, T):
-    # S = []
-    # T = []
-    # for vertex in u.nbs():
-    #     S.append(vertex.colornum)
-    # for vertex in v.nbs():
-    #     T.append(vertex.colornum)
-    # S.sort()
-    # T.sort()
     #     print("Two sets with vertices: " + str(u) +" and " + str(v))
     #     print(str(u) + " with set: " + str(S))
     #     print(str(v) + " with set: " + str(T))
@@ -159,17 +177,17 @@ def bijection(alpha):
 
 
 # L = loadgraph("../graphs/colorref_smallexample_4_7.grl", graphclass=graph, readlist=True)
-# L = loadgraph("../graphs/products72.grl", graphclass=graph, readlist=True)
-L = loadgraph("../graphs/threepaths640.gr", graphclass=graph)
-# G = L[0][4]
-# H = L[0][7]
+# L = loadgraph("../graphs/trees90.grl", graphclass=graph, readlist=True)
+L = loadgraph("../graphs/threepaths1280.gr", graphclass=graph)
+# G = L[0][0]
+# H = L[0][3]
 # GH = disjointunion(G, H)
 
 t1 = timeMs()
 alpha1 = refine(L, [], [])
 # numberofIso = countIsomorphism(GH, G, H, [], [], False)
 # print("Number of Isomorphisms: " + str(numberofIso))
-print("Time runned: " + str((timeMs() // 1000)) + "s")
+print("Time runned: " + str((timeMs() - t1) // 1000) + "s")
 # print("Graph is balanced: " + str(balanced(alpha1)))
 # print("Graph is bijection: " + str(bijection(alpha1)))
 # writeDOT(GH, "examplegraph.dot")
