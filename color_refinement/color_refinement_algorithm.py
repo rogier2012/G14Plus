@@ -1,5 +1,7 @@
+import time
+
 from assets.fastgraphs import graph
-from assets.graphIO import loadgraph, writeDOT
+from assets.graphIO import loadgraph
 from assets.graphfunctions import disjointunion
 
 
@@ -28,39 +30,35 @@ def refine(G, D, I):
             next_list = [D[i], I[i]]
             result_list.append(next_list)
 
-    # print(result_list)
     while alpha_list != result_list:
         alpha_list = result_list
-        # print(str(alpha_list) + " with length: " + str(len(alpha_list)))
+        print(str(alpha_list) + " with length: " + str(len(alpha_list)))
         result_list = []
         for color_list in alpha_list:
             initial_list = [color_list[0]]
             result_list.append(initial_list)
-
-            for k in range(len(color_list) - 1):
-                if not same_color(color_list[k], color_list[k + 1]):
+            index = result_list.index(initial_list)
+            # result_list[index][0].colornum = index
+            for k in range(1, len(color_list)):
+                v = color_list[k]
+                if not same_color(color_list[0], v):
                     no_list_found = True
-                    v = color_list[k + 1]
 
                     for i in result_list:
                         if same_color(i[0], v):
+                            # v.colornum = result_list.index(i)
                             i.append(v)
+
                             no_list_found = False
 
                     if no_list_found:
+                        # v.colornum = len(result_list)
                         new_color = [v]
                         result_list.append(new_color)
 
                 else:
-                    if len(color_list) == 2:
-                        result_list[result_list.index(initial_list)].append(color_list[k + 1])
-                    else:
-
-                        v = color_list[k + 1]
-                        for i in result_list:
-                            if same_color(i[0], v):
-                                i.append(v)
-                                #
+                    # v.colornum = index
+                    result_list[index].append(v)
 
 
         for color_list in result_list:
@@ -82,11 +80,11 @@ def countIsomorphism(GH, G, H, D, I, findSingleIso=False):
         return 1
 
     color = None
-    found = False
+    # found = False
     for color_list in alpha1:
         if len(color_list) >= 4:
             color = color_list
-            found = True
+            # found = True
     x = color[0]
     # print("List found: " + str(found))
     num = 0
@@ -135,17 +133,18 @@ def bijection(alpha):
     return more
 
 
-# L = loadgraph("../graphs/colorref_smallexample_4_7.grl", graphclass=graph, readlist=True)
-L = loadgraph("../graphs/bigtrees1.grl", graphclass=graph, readlist=True)
-G = L[0][0]
-H = L[0][2]
+L = loadgraph("../graphs/colorref_smallexample_4_7.grl", graphclass=graph, readlist=True)
+# L = loadgraph("../graphs/torus24.grl", graphclass=graph, readlist=True)
+# L = loadgraph("../graphs/threepaths160.gr", graphclass=graph)
+G = L[0][1]
+H = L[0][3]
 GH = disjointunion(G, H)
 
-# t1 = int(round(time.time() * 1000))
-# alpha1 = refine(GH, [], [])
-numberofIso = countIsomorphism(GH, G, H, [], [], True)
+t1 = int(round(time.time() * 1000))
+# alpha1 = refine(L, [], [])
+numberofIso = countIsomorphism(GH, G, H, [], [])
 print("Number of Isomorphisms: " + str(numberofIso))
-# print("Time runned: " + str(int(round(time.time() * 1000)) - t1) + "ms")
+print("Time runned: " + str((int(round(time.time() * 1000)) - t1) // 1000) + "s")
 # print("Graph is balanced: " + str(balanced(alpha1)))
 # print("Graph is bijection: " + str(bijection(alpha1)))
-writeDOT(GH, "examplegraph.dot")
+# writeDOT(GH, "examplegraph.dot")
