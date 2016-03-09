@@ -6,10 +6,10 @@ class vertex(vertex):
         self._graph = graph
         self._label = label
         self._inclist = []
-        incl = []
-        for e in self._graph._E:
-            if e.incident(self):
-                incl.append(e)
+        # incl = []
+        # for e in self._graph._E:
+        #     if e.incident(self):
+        #         incl.append(e)
 
     def addedge(self, edge):
         self._inclist.append(edge)
