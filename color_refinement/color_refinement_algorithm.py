@@ -2,6 +2,7 @@ import time
 
 from assets.fastgraphs import graph
 from assets.graphIO import loadgraph
+from assets.graphfunctions import disjointunion
 
 
 def refine(G, D, I):
@@ -43,16 +44,12 @@ def refine(G, D, I):
             initial_list = []
             new_list = []
             nbslist = listOfNodeNeighbourhoods(color_list)
-            # print(nbslist)
             for k in range(len(nbslist)):
                 if k == 0 or same_color(nbslist[0], nbslist[k]):
                     initial_list.append(color_list[k])
                 else:
-
                     found = False
                     for l in new_list:
-                        # if k == 3:
-                        #     print("L[0]: " + str(l[0]))
                         if same_color(neighbourhood(l[0]), nbslist[k]):
                             l.append(color_list[k])
                             found = True
@@ -61,36 +58,11 @@ def refine(G, D, I):
 
             result_list.append(initial_list)
             result_list.extend(new_list)
-            # index = result_list.index(initial_list)
-            # # result_list[index][0].colornum = index
-            # neighbourU = neighbourhood(color_list[0])
-            #
-            # for k in range(1, len(color_list)):
-            #     v = color_list[k]
-            #     neighbourV = neighbourhood(v)
-            #     if not same_color(neighbourU, neighbourV):
-            #         no_list_found = True
-            #
-            #         for i in result_list:
-            #             neighbourI = neighbourhood(i[0])
-            #             if same_color(neighbourI, neighbourV):
-            #                 # v.colornum = result_list.index(i)
-            #                 i.append(v)
-            #                 no_list_found = False
-            #
-            #         if no_list_found:
-            #             # v.colornum = len(result_list)
-            #             new_color = [v]
-            #             result_list.append(new_color)
-            #
-            #     else:
-            #         # v.colornum = index
-            #         result_list[index].append(v)
         partTime = partTime + (timeMs() - part1)
         coloring1 = timeMs()
-        for color_list in result_list:
-            for vertex in color_list:
-                vertex.colornum = result_list.index(color_list)
+        for colornumber in range(len(result_list)):
+            for vertexnum in range(len(result_list[colornumber])):
+                result_list[colornumber][vertexnum].colornum = colornumber
         coloringTime = coloringTime + (timeMs() - coloring1)
 
     time3 = timeMs() - time1
@@ -123,13 +95,10 @@ def countIsomorphism(GH, G, H, D, I, findSingleIso=False):
         return 1
 
     color = None
-    # found = False
     for color_list in alpha1:
         if len(color_list) >= 4:
             color = color_list
-            # found = True
     x = color[0]
-    # print("List found: " + str(found))
     num = 0
     for index in range(len(color) // 2, len(color)):
         nD = []
@@ -145,9 +114,6 @@ def countIsomorphism(GH, G, H, D, I, findSingleIso=False):
 
 
 def same_color(S, T):
-    #     print("Two sets with vertices: " + str(u) +" and " + str(v))
-    #     print(str(u) + " with set: " + str(S))
-    #     print(str(v) + " with set: " + str(T))
     return S == T
 
 
@@ -177,16 +143,16 @@ def bijection(alpha):
 
 
 # L = loadgraph("../graphs/colorref_smallexample_4_7.grl", graphclass=graph, readlist=True)
-# L = loadgraph("../graphs/trees90.grl", graphclass=graph, readlist=True)
-L = loadgraph("../graphs/threepaths1280.gr", graphclass=graph)
-# G = L[0][0]
-# H = L[0][3]
-# GH = disjointunion(G, H)
+L = loadgraph("../graphs/torus144.grl", graphclass=graph, readlist=True)
+# L = loadgraph("../graphs/threepaths640.gr", graphclass=graph)
+G = L[0][1]
+H = L[0][3]
+GH = disjointunion(G, H)
 
 t1 = timeMs()
-alpha1 = refine(L, [], [])
-# numberofIso = countIsomorphism(GH, G, H, [], [], False)
-# print("Number of Isomorphisms: " + str(numberofIso))
+# alpha1 = refine(L, [], [])
+numberofIso = countIsomorphism(GH, G, H, [], [], True)
+print("Number of Isomorphisms: " + str(numberofIso))
 print("Time runned: " + str((timeMs() - t1) // 1000) + "s")
 # print("Graph is balanced: " + str(balanced(alpha1)))
 # print("Graph is bijection: " + str(bijection(alpha1)))
