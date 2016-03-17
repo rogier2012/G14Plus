@@ -38,7 +38,7 @@ def refine(G, D, I):
     coloringTime = 0
     while alpha_list != result_list:
         alpha_list = result_list
-        # print(str(alpha_list) + " with length: " + str(len(alpha_list)))
+        print(str(alpha_list) + " with length: " + str(len(alpha_list)))
         result_list = []
         part1 = timeMs()
         for color_list in alpha_list:
@@ -102,8 +102,6 @@ def countIsomorphism(GH, G, H, D, I, branching_rule, findSingleIso=False):
         color = branchingrule2(alpha1)
     elif branching_rule == 3:
         color = branchingrule3(alpha1)
-    elif branching_rule == 0:
-        color = branchingrule0(alpha1)
 
 
 
@@ -158,10 +156,11 @@ def bijection(alpha):
 
 
 def pathsBench():
-    L = loadgraph("../graphs/threepaths640.gr", graphclass=graph)
+    L = loadgraph("../graphs/colorref_smallexample_4_7.grl", graphclass=graph, readlist=True)[0][0]
     t1 = timeMs()
     refine(L, [], [])
     print("Time runned: " + str((timeMs() - t1) // 1000) + "s")
+    writeDOT(L, "example.dot")
 
 
 def countAutomorphisms(findSingleIso=False, writeDot=False):
@@ -201,6 +200,6 @@ def branching_rules(findSingleIso=False, writeDot=False):
             writeDOT(GH, "examplegraph.dot")
 
 
-# pathsBench()
+pathsBench()
 # countAutomorphisms(True)
-branching_rules()
+# branching_rules()
