@@ -1,10 +1,9 @@
-import sys
 import time
 
 from assets.fastgraphs import graph
-from assets.graphIO import loadgraph
-from assets.graphIO import writeDOT
+from assets.graphIO import loadgraph, writeDOT
 from assets.graphfunctions import disjointunion
+from color_refinement.branch_algorithms import *
 
 
 def refine(G, D, I):
@@ -90,7 +89,6 @@ def listOfNodeNeighbourhoods(color_list):
 
 
 def countIsomorphism(GH, G, H, D, I, branching_rule, findSingleIso=False):
-    # print("Begin individual Refinement with " + str(D) + " and " + str(I))
     alpha1 = individual_refinement(GH, D, I)
     if not balanced(alpha1):
         return 0
@@ -104,8 +102,8 @@ def countIsomorphism(GH, G, H, D, I, branching_rule, findSingleIso=False):
         color = branchingrule2(alpha1)
     elif branching_rule == 3:
         color = branchingrule3(alpha1)
-    elif branching_rule == 4:
-        color = branchingrule3(alpha1)
+    elif branching_rule == 0:
+        color = branchingrule0(alpha1)
 
 
 
@@ -146,44 +144,10 @@ def balanced(alpha):
     return even
 
 
-def branchingrule1(alpha_list):
-    color = None
-    length = 2
-    for color_list in alpha_list:
-        if len(color_list) > length:
-            color = color_list
-            length = len(color_list)
-    return color
 
 
-def branchingrule2(alpha_list):
-    color = None
-    length = sys.maxsize
-    for color_list in alpha_list:
-        if len(color_list) <= length and len(color_list) >= 4:
-            color = color_list
-            length = len(color_list)
-    return color
 
 
-def branchingrule3(alpha_list):
-    color = None
-    maxdegree = 0
-    for color_list in alpha_list:
-        if len(color_list) >= 4 and color_list[0].deg() > maxdegree:
-            color = color_list
-            maxdegree = color_list[0].deg()
-    return color
-
-
-def branchingrule4(alpha_list):
-    color = None
-    mindegree = 0
-    for color_list in alpha_list:
-        if len(color_list) >= 4 and color_list[0].deg() < mindegree:
-            color = color_list
-            mindegree = color_list[0].deg()
-    return color
 
 def bijection(alpha):
     more = True
@@ -220,12 +184,12 @@ def countAutomorphisms(findSingleIso=False, writeDot=False):
 
 def branching_rules(findSingleIso=False, writeDot=False):
     # L = loadgraph("../graphs/colorref_smallexample_4_7.grl", graphclass=graph, readlist=True)
-    branching_rules = {1, 2, 3}
+    branching_rules = {0, 1, 2, 3}
     for rule in branching_rules:
 
-        L = loadgraph("../graphs/torus144.grl", graphclass=graph, readlist=True)
-        G = L[0][1]
-        H = L[0][5]
+        L = loadgraph("../graphs/products72.grl", graphclass=graph, readlist=True)
+        G = L[0][4]
+        H = L[0][7]
         GH = disjointunion(G, H)
 
         t1 = timeMs()
@@ -239,4 +203,4 @@ def branching_rules(findSingleIso=False, writeDot=False):
 
 # pathsBench()
 # countAutomorphisms(True)
-branching_rules(True)
+branching_rules()
