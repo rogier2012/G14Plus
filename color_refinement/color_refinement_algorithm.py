@@ -2,7 +2,7 @@ import time
 
 from assets.fastgraphs import graph
 from assets.graphIO import loadgraph, writeDOT
-from assets.graphfunctions import disjointunion
+from assets.GraphFunctions import disjointunion
 from color_refinement.branch_algorithms import *
 
 
@@ -38,7 +38,7 @@ def refine(G, D, I):
     coloringTime = 0
     while alpha_list != result_list:
         alpha_list = result_list
-        print(str(alpha_list) + " with length: " + str(len(alpha_list)))
+        # print(str(alpha_list) + " with length: " + str(len(alpha_list)))
         result_list = []
         part1 = timeMs()
         for color_list in alpha_list:
@@ -156,8 +156,9 @@ def bijection(alpha):
 
 
 def pathsBench():
-    L = loadgraph("../graphs/colorref_smallexample_4_7.grl", graphclass=graph, readlist=True)[0][0]
     t1 = timeMs()
+    L = loadgraph("../graphs/threepaths640.gr", graphclass=graph)
+
     refine(L, [], [])
     print("Time runned: " + str((timeMs() - t1) // 1000) + "s")
     writeDOT(L, "example.dot")
