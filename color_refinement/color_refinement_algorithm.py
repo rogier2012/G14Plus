@@ -5,6 +5,9 @@ from assets.fastgraphs import graph
 from assets.graphIO import loadgraph
 from assets.graphIO import writeDOT
 from assets.graphfunctions import disjointunion
+from assets.basicgraphs import coloring
+
+
 # hoi
 
 def refine(G, D, I):
@@ -237,6 +240,27 @@ def branching_rules(findSingleIso=False, writeDot=False):
             writeDOT(GH, "examplegraph.dot")
 
 
+def initial_coloring(G):
+    V = G.V()
+    degree_list = dict()
+    sorted_degree_list = []
+
+    for vertex in V:
+        degree_list[vertex] = vertex.deg()
+
+    for w in sorted(degree_list, key=degree_list.get):
+        sorted_degree_list.append((w, degree_list[w]))
+
+    colors = coloring(sorted_degree_list)
+    print(colors[3])
+    print(len(colors))
+    print(colors.getcolors())
+
+
 # pathsBench()
 # countAutomorphisms(True)
-branching_rules(True)
+# branching_rules(True)
+L = loadgraph("../graphs/colorref_smallexample_4_7.grl", graphclass=graph, readlist=True)
+G = L[0][1]
+
+initial_coloring(G)
