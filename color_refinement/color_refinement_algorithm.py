@@ -1,7 +1,7 @@
 import sys
 import time
 
-from assets.fastgraphs import graph, coloring
+from assets.fastgraphs import graph, colorclass
 from assets.graphIO import loadgraph, writeDOT
 from assets.graphfunctions import disjointunion
 from color_refinement.branch_algorithms import *
@@ -195,28 +195,49 @@ def branching_rules(findSingleIso=False, writeDot=False):
         if writeDot:
             writeDOT(GH, "examplegraph.dot")
 
-def initial_coloring(G):
-    V = G.V()
-    degree_list = dict()
-    sorted_degree_list = []
 
-    for vertex in V:
-        degree_list[vertex] = vertex.deg()
+def fast_partitioning(G):
+    color_list = dict()
+    queue = list()
 
-    for w in sorted(degree_list, key=degree_list.get):
-        sorted_degree_list.append((w, degree_list[w]))
+    # *** INITIALISATIE ***
+    for vertex in G.V():
+        if not vertex.deg() in color_list.keys():
+            color_list[vertex.deg()] = colorclass(vertex.deg())
 
-    colors = coloring(sorted_degree_list)
-    print(colors[3])
-    print(len(colors))
-    print(colors.getcolors())
+        color_list[vertex.deg()].addvertex(vertex)
+
+    for w in sorted(color_list, key=color_list.get):
+        queue.append(color_list[w])
+
+    queue.pop(len(queue) - 1)
+    print(queue)
 
 
-pathsBench()
+    # ***
+    for color_entry in queue:
+        relative_color_list = list(color_list.values())
+        relative_color_list.remove(color_entry)
+
+        relative_vertices = list()
+
+        for color in relative_color_list:
+            relative_vertices += color.getvertices()
+
+        for vertex in relative_vertices:
+
+
+
+    # test initialisatie
+    # for color in color_list.keys():
+    #     print(color_list[color], color_list[color]._vertices)
+
+
+# pathsBench()
 # countAutomorphisms(True)
 # branching_rules()
 
-# L = loadgraph("../graphs/colorref_smallexample_4_7.grl", graphclass=graph, readlist=True)
-# G = L[0][1]
+L = loadgraph("../graphs/colorref_smallexample_4_7.grl", graphclass=graph, readlist=True)
+G = L[0][1]
 
-# initial_coloring(G)
+fast_partitioning(G)

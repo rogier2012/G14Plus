@@ -76,32 +76,27 @@ class graph(graph):
         return v in u.inclist.head() or v in u.inclist.tail()
 
 
-class coloring():
-    def __init__(self, ordered_list):
-        self._i = 1
-        self._colorlist = dict()
+class colorclass():
+    def __init__(self, id):
+        self._vertices = list()
+        self._id = id
+
+    def getvertices(self):
+        return self._vertices
+
+    def addvertex(self, vertex):
+        self._vertices.append(vertex)
+
+    def __lt__(self, other):
+        return len(self._vertices) < len(other._vertices)
+
+    def __repr__(self):
+        return str(self._id)
+
+
+class queue():
+    def __init__(self):
         self._queue = dict()
-
-        for tup in ordered_list:
-            label = tup[0]
-            degree = tup[1]
-
-            if degree in self._colorlist:
-                self._colorlist[degree].append(label)
-            else:
-                self._colorlist[degree] = [label]
-
-    def __getitem__(self, item):
-        if item in self._colorlist:
-            return self._colorlist[item]
-        else:
-            return None
-
-    def __len__(self):
-        return len(self._colorlist)
-
-    def getcolors(self):
-        return list(self._colorlist.keys())
 
     def addtoqueue(self, color):
         if not color in self._queue:
