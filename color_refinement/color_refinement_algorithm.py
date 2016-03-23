@@ -3,7 +3,7 @@ import time
 
 from assets.fastgraphs import graph, colorclass
 from assets.graphIO import loadgraph, writeDOT
-from assets.GraphFunctions import disjointunion
+from assets.graphfunctions import disjointunion
 from color_refinement.branch_algorithms import *
 
 
@@ -196,36 +196,85 @@ def branching_rules(findSingleIso=False, writeDot=False):
             writeDOT(GH, "examplegraph.dot")
 
 
+
 def fast_partitioning(G):
     color_list = dict()
     queue = list()
 
-    # *** INITIALISATIE ***
-    for vertex in G.V():
-        if not vertex.deg() in color_list.keys():
-            color_list[vertex.deg()] = colorclass(vertex.deg())
+    # # *** INITIALISATIE ***
+    # for vertex in G.V():
+    #     if not vertex.deg() in color_list.keys():
+    #         color_list[vertex.deg()] = colorclass(vertex.deg())
+    #
+    #     color_list[vertex.deg()].addvertex(vertex)
 
-        color_list[vertex.deg()].addvertex(vertex)
+    degID = dict()
+    for v in G.V():
+        if v.deg() in degID.keys():
+            color_list[degID[v.deg()]].addvertex(v)
+        else:
+            len1 = len(color_list) + 1
+            color_list[len1] = colorclass(len1, [v])
+            degID[v.deg()] = len1
 
     for w in sorted(color_list, key=color_list.get):
         queue.append(color_list[w])
 
-    queue.pop(len(queue) - 1)
-    print(queue)
+    # queue.pop(len(queue) - 1)
+    # print(queue)
 
+    for color in color_list.values():
+        print(color)
 
+    print("------")
     # ***
     for color_entry in queue:
+        # Voor alle colors behalve color_entry
+        neighbourhoodOfColor = get_neighbourhood_color(color_entry)
         relative_color_list = list(color_list.values())
         relative_color_list.remove(color_entry)
-
-        relative_vertices = list()
+        # print(str(color_entry) + " + lijst " + str(relative_color_list))
 
         for color in relative_color_list:
-            relative_vertices += color.getvertices()
+            Dcount = dict()
 
-        for vertex in relative_vertices:
-            pass
+            for vertex in color.getvertices():
+                nbscount = neighbourhoodOfColor.count(vertex)
+                if nbscount in Dcount.keys():
+                    Dcount[nbscount].append(vertex)
+                else:
+                    Dcount[nbscount] = [vertex]
+                #                 get amount of times in neighbourhood of color
+            if len(Dcount) > 1:
+                # split
+                colorPair = Dcount.popitem()
+                color.setvertices(colorPair[1])
+                newColorList = list()
+
+                for new_color_class in Dcount.keys():
+                    newcolor = colorclass(len(color_list) + 1, Dcount[new_color_class])
+                    color_list[newcolor._id] = newcolor
+                    newColorList.append(newcolor)
+
+                if color in queue:
+                    queue.extend(newColorList)
+                else:
+                    max = color
+                    for color1 in newColorList:
+                        if len(color1.getvertices()) > len(color.getvertices()):
+                            max = color1
+                    if max == color:
+                        queue.extend(newColorList)
+                    else:
+                        queue.append(color)
+                        newColorList.remove(max)
+                        queue.extend(newColorList)
+
+    print(len(color_list.values()))
+
+
+#       We now have the DCount array, so we can split.
+
 
 
 
@@ -239,5 +288,6 @@ def get_neighbourhood_color(colorentry):
 
 L = loadgraph("../graphs/colorref_smallexample_4_7.grl", graphclass=graph, readlist=True)
 G = L[0][1]
-
+# refine(G, [], [])
+writeDOT(G, "grpah.dot")
 fast_partitioning(G)

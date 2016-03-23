@@ -77,8 +77,8 @@ class graph(graph):
 
 
 class colorclass():
-    def __init__(self, id):
-        self._vertices = list()
+    def __init__(self, id, vertices=[]):
+        self._vertices = vertices
         self._id = id
 
     def getvertices(self):
@@ -91,9 +91,10 @@ class colorclass():
         return len(self._vertices) < len(other._vertices)
 
     def __repr__(self):
-        return "( ID = " + str(self._id) +" List of Vertices = "+  str(self._vertices) + " "
+        return "( ID = " + str(self._id) + " List of Vertices = " + str(self._vertices) + ")"
 
-
+    def setvertices(self, vertices):
+        self._vertices = vertices
 class queue():
     def __init__(self):
         self._queue = dict()
