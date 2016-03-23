@@ -42,7 +42,7 @@
 \usepackage{booktabs} % Horizontal rules in tables
 \usepackage{float} % Required for tables and figures in the multi-column environment - they need to be placed in specific locations with the [H] (e.g. \begin{table}[H])
 \usepackage{hyperref} % For hyperlinks in the PDF
-
+\usepackage[dutch]{babel}
 \usepackage{lettrine} % The lettrine is the first enlarged letter at the beginning of the text
 \usepackage{paralist} % Used for the compactitem environment which makes bullet points with less space between them
 
@@ -110,7 +110,7 @@
 
 
 %------------------------------------------------
-\section{Introduction}
+\section{Introductie}
 
 %\lettrine[nindent=0em,lines=3]{L} orem ipsum dolor sit amet, consectetur adipiscing elit.
 \lipsum[2-3] % Dummy text
@@ -122,7 +122,7 @@
 Describe \lipsum[1] % Dummy text
 
 %------------------------------------------------
-\section{Methods}
+\section{Methoden}
 This results in the following, exhaustive list of possibilities. 
 \begin{compactitem}
 \item Donec dolor arcu, rutrum id molestie in, viverra sed diam
@@ -136,7 +136,7 @@ This results in the following, exhaustive list of possibilities.
 \lipsum[4] % Dummy text
 
 %------------------------------------------------
-\section{Results}
+\section{Resultaten}
 
 The results with this algorithm are given in Table~\ref{table:example}.
 \begin{table}[H]
@@ -158,7 +158,7 @@ Richard & Miles & $2$ \\
 \lipsum[5] % Dummy text
 
 %------------------------------------------------
-\subsection{Implementation}
+\subsection{Implementatie}
 \lipsum[1]
 The following therefore holds for all
 planar graphs $G$ with $n$ vertices, $m$ edges, and $r$ regions.
@@ -169,7 +169,10 @@ n-m+r=2
 \end{equation}
 
 %------------------------------------------------
-\subsection{Computational Results}
+\subsection{Bewijs}
+
+%------------------------------------------------
+\subsection{Berekende resultaten}
 
 The following conclusion follows directly from \eqref{eq:emc}.
 \lipsum[6] % Dummy text
@@ -199,7 +202,7 @@ def gcd(a,b):
 For more information on programming in {\tt python}, we refer to\cite{jaco} \cite{MR0403320}.
 
 %------------------------------------------------
-\section{Conclusions}
+\section{Conclusie \& Discussie}
 
 
 \lipsum[8] % Dummy text. 
