@@ -225,17 +225,10 @@ def fast_partitioning(G):
             relative_vertices += color.getvertices()
 
         for vertex in relative_vertices:
+            pass
 
 
 
-    # test initialisatie
-    # for color in color_list.keys():
-    #     print(color_list[color], color_list[color]._vertices)
-
-
-# pathsBench()
-# countAutomorphisms(True)
-# branching_rules()
 
 L = loadgraph("../graphs/colorref_smallexample_4_7.grl", graphclass=graph, readlist=True)
 G = L[0][1]

@@ -91,7 +91,7 @@ class colorclass():
         return len(self._vertices) < len(other._vertices)
 
     def __repr__(self):
-        return str(self._id)
+        return "( ID = " + str(self._id) +" List of Vertices = "+  str(self._vertices) + " "
 
 
 class queue():
