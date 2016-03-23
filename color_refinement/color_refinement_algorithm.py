@@ -1,7 +1,7 @@
 import sys
 import time
 
-from assets.fastgraphs import graph
+from assets.fastgraphs import graph, coloring
 from assets.graphIO import loadgraph, writeDOT
 from assets.graphfunctions import disjointunion
 from color_refinement.branch_algorithms import *
