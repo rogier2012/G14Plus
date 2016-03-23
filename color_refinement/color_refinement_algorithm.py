@@ -152,10 +152,10 @@ def bijection(alpha):
 
 def pathsBench():
     t1 = timeMs()
-    L = loadgraph("../graphs/threepaths640.gr", graphclass=graph)
-
-    refine(L, [], [])
-    print("Time runned: " + str((timeMs() - t1) // 1000) + "s")
+    L = loadgraph("../graphs/threepaths1280.gr", graphclass=graph)
+    fast_partitioning(L)
+    # refine(L, [], [])
+    print("Time runned: " + str((timeMs() - t1)) + "ms")
     writeDOT(L, "example.dot")
 
 
@@ -164,8 +164,8 @@ def countAutomorphisms(findSingleIso=False, writeDot=False):
 
 
     L = loadgraph("../graphs/colorref_largeexample_4_1026.grl", graphclass=graph, readlist=True)
-    G = L[0][0]
-    H = L[0][1]
+    G = L[0][1]
+    H = L[0][0]
     GH = disjointunion(G, H)
 
     t1 = timeMs()
@@ -207,7 +207,6 @@ def fast_partitioning(G):
     #         color_list[vertex.deg()] = colorclass(vertex.deg())
     #
     #     color_list[vertex.deg()].addvertex(vertex)
-
     degID = dict()
     for v in G.V():
         if v.deg() in degID.keys():
@@ -217,18 +216,20 @@ def fast_partitioning(G):
             color_list[len1] = colorclass(len1, [v])
             degID[v.deg()] = len1
 
-    for w in sorted(color_list, key=color_list.get):
+    # for w in sorted(color_list, key=color_list.get):
+    #     queue.append(color_list[w])
+    for w in color_list:
         queue.append(color_list[w])
-
     # queue.pop(len(queue) - 1)
     # print(queue)
 
-    for color in color_list.values():
-        print(color)
-
-    print("------")
+    # for color in color_list.values():
+    #     print(color)
+    #
+    # print("------")
     # ***
-    for color_entry in queue:
+    while len(queue) > 0:
+        color_entry = queue.pop()
         # Voor alle colors behalve color_entry
         neighbourhoodOfColor = get_neighbourhood_color(color_entry)
         relative_color_list = list(color_list.values())
@@ -270,8 +271,10 @@ def fast_partitioning(G):
                         newColorList.remove(max)
                         queue.extend(newColorList)
 
-    print(len(color_list.values()))
-
+    totallist = list()
+    for color in color_list.values():
+        totallist.append(color.getvertices())
+    return totallist
 
 #       We now have the DCount array, so we can split.
 
@@ -290,4 +293,13 @@ L = loadgraph("../graphs/colorref_smallexample_4_7.grl", graphclass=graph, readl
 G = L[0][1]
 # refine(G, [], [])
 writeDOT(G, "grpah.dot")
-fast_partitioning(G)
+# fast_partitioning(G)
+
+L = loadgraph("../graphs/colorref_smallexample_4_7.grl", graphclass=graph, readlist=True)
+G = L[0][1]
+H = L[0][3]
+GH = disjointunion(G, H)
+print(fast_partitioning(GH))
+# countAutomorphisms()
+
+pathsBench()
