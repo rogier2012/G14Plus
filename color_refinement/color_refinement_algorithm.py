@@ -3,7 +3,7 @@ import time
 
 from assets.fastgraphs import graph, colorclass
 from assets.graphIO import loadgraph, writeDOT
-from assets.graphfunctions import disjointunion
+from assets.GraphFunctions import disjointunion
 from color_refinement.branch_algorithms import *
 
 
@@ -228,6 +228,13 @@ def fast_partitioning(G):
             pass
 
 
+
+def get_neighbourhood_color(colorentry):
+    result = []
+    for vertex in colorentry.getvertices():
+        result.extend(vertex.nbs())
+
+    return result
 
 
 L = loadgraph("../graphs/colorref_smallexample_4_7.grl", graphclass=graph, readlist=True)
