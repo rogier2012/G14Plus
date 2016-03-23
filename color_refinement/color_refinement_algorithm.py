@@ -211,8 +211,6 @@ def fast_partitioning(G):
         queue.append(color_list[w])
 
     queue.pop(len(queue) - 1)
-    print(queue)
-
 
     # ***
     for color_entry in queue:
@@ -224,8 +222,23 @@ def fast_partitioning(G):
         for color in relative_color_list:
             relative_vertices += color.getvertices()
 
-        for vertex in relative_vertices:
+        refine_partitioning(color_entry, relative_vertices)
 
+
+def refine_partitioning(color_entry, relative_vertices):
+    color_vertices = color_entry.getvertices()
+    neighbour_list = dict()
+
+    for vertex in relative_vertices:
+        vertex_neighbours = vertex.nbs()
+        key = len(set.intersection(set(vertex_neighbours), set(color_vertices)))
+
+        if key in neighbour_list:
+            neighbour_list[key].append(vertex)
+        else:
+            neighbour_list[key] = [vertex]
+
+    print(neighbour_list)
 
 
     # test initialisatie
