@@ -158,7 +158,7 @@ Richard & Miles & $2$ \\
 \lipsum[5] % Dummy text
 
 %------------------------------------------------
-\subsection{Subsection One}
+\subsection{Implementation}
 \lipsum[1]
 The following therefore holds for all
 planar graphs $G$ with $n$ vertices, $m$ edges, and $r$ regions.
@@ -169,7 +169,7 @@ n-m+r=2
 \end{equation}
 
 %------------------------------------------------
-\subsection{Subsection Two}
+\subsection{Computational Results}
 
 The following conclusion follows directly from \eqref{eq:emc}.
 \lipsum[6] % Dummy text
@@ -183,7 +183,7 @@ We immediately conclude the following.
 \begin{corollary}
 Whenever two planar graphs $G$ and $G'$ are isomorphic, their maximum degree vertices have the same degree. 
 \end{corollary}
-This observation first appeared in \cite{Fig2009}, and was later generalized to arbitrary graphs in \cite{Lang2011}.
+This observation first appeared in , and was later generalized to arbitrary graphs in .
 In our implementation, we have therefore used the following algorithmic idea.
 \begin{verbatim}
 def gcd(a,b):
@@ -196,7 +196,7 @@ def gcd(a,b):
         r = a%b
     return b
 \end{verbatim}
-For more information on programming in {\tt python}, we refer to \cite{Lang2011}.
+For more information on programming in {\tt python}, we refer to\cite{jaco} .
 
 %------------------------------------------------
 \section{Conclusions}
@@ -210,19 +210,8 @@ For more information on programming in {\tt python}, we refer to \cite{Lang2011}
 %----------------------------------------------------------------------------------------
  
 % Bibliography - this is intentionally simple in this template
-\begin{thebibliography}{99}
-
-\bibitem{Fig2009}
-Figueredo, A.~J.\ and Wolf, P.\ S.~A.\ (2009).
-Assortative pairing and life history strategy - a cross-cultural study.
-\emph{Human Nature \& Arts}, 20:317-330.
-
-\bibitem{Lang2011}
-R.\ Langerak  (2011).
-How to write a {\tt python} computer program.
-\emph{Annals of Improbable Research}, 2:16-27.
-
-\end{thebibliography}
+\bibliographystyle{plain}
+\bibliography{referenties}
 
 %----------------------------------------------------------------------------------------
 
