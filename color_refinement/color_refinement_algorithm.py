@@ -7,6 +7,41 @@ from assets.graphIO import writeDOT
 from assets.graphfunctions import disjointunion
 
 
+
+# Fastrefinement branch
+def PartitionRefine(G):
+#     Remove unreachable states
+    for v in G.V():
+        if len(v.inclist()) == 0:
+            G.V().remove(v)
+
+    # List of color dicts
+    ColorList = dict()
+    for v in G.V():
+
+        if v.deg() not in ColorList:
+            ColorDict = dict()
+            listOfVertices = list()
+            D = dict()
+            listOfVertices.append(v)
+            ColorDict['vertices'] = listOfVertices
+
+            D[v.deg()] = 1
+            ColorDict['D'] = D
+            ColorList[v.deg()] = ColorDict
+        else:
+            ColorList.get(v.deg())['vertices'].append(v)
+            ColorList.get(v.deg()).get('D')[v.deg()] = ColorList.get(v.deg()).get('D')[v.deg()] + 1
+
+
+
+
+    print(ColorList)
+
+
+
+
+
 def refine(G, D, I):
     time1 = timeMs()
 
@@ -239,4 +274,8 @@ def branching_rules(findSingleIso=False, writeDot=False):
 
 # pathsBench()
 # countAutomorphisms(True)
-branching_rules(True)
+# branching_rules(True)
+
+L = loadgraph('colorref_smallexample_4_7.grl', graphclass=graph, readlist=True)
+G = L[0][0]
+PartitionRefine(G)
