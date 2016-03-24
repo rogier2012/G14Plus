@@ -2,6 +2,7 @@ from assets.basicgraphs import graph, edge, GraphError, vertex
 
 
 class vertex(vertex):
+    colorclss = None
     def __init__(self, graph, label=0):
         self._graph = graph
         self._label = label
@@ -19,6 +20,8 @@ class vertex(vertex):
 
     def inclist(self):
         return self._inclist
+    def setColorClass(self, colorclls):
+        self.colorclss = colorclls
 
 
 class graph(graph):
@@ -77,6 +80,9 @@ class graph(graph):
 
 
 class colorclass():
+    head = None
+    tail = None
+    in_queue = False
     def __init__(self, id, vertices=[]):
         self._vertices = vertices
         self._id = id
@@ -95,6 +101,12 @@ class colorclass():
 
     def setvertices(self, vertices):
         self._vertices = vertices
+
+    def inQueue(self):
+        self.in_queue = True
+
+    def notInQueue(self):
+        self.in_queue = False
 class queue():
     def __init__(self):
         self._queue = dict()

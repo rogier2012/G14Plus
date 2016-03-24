@@ -1,6 +1,7 @@
 class double_linked_list:
     first = None
     last = None
+    current = None
 
     def insert_beginning(self, node):
         self.first.head = node
@@ -38,6 +39,16 @@ class double_linked_list:
         else:
             node.tail.head = node.head
 
+    def append(self,node):
+        if self.first is None:
+            self.first = node
+            self.last = node
+        else:
+            node1 = self.last
+            node1.tail = node
+            node.head = node1
+            self.last = node
+
     def __str__(self):
         node = self.first
         result = "["
@@ -55,6 +66,19 @@ class double_linked_list:
             result = result + 1
             node = node.tail
         return result
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.current == self.last:
+            raise StopIteration
+        elif self.current == None:
+            self.current = self.first
+        else:
+            self.current = self.current.tail
+        return self.current
+
 
     def to_list(self):
         node = self.first
