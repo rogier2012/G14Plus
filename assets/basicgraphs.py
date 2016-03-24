@@ -242,3 +242,7 @@ class graph():
         Returns False, because for now these graphs are always undirected.
         """
         return self._directed
+
+
+
+
