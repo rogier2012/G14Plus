@@ -151,7 +151,7 @@ def bijection(alpha):
 
 def pathsBench():
     t1 = timeMs()
-    L = loadgraph("../graphs/threepaths2560.gr", graphclass=graph)
+    L = loadgraph("../graphs/threepaths1280.gr", graphclass=graph)
     fast_partitioning(L)
     # refine(L, [], [])
     print("Time runned: " + str((timeMs() - t1)) + "ms")
@@ -199,11 +199,6 @@ def fast_partitioning(G):
     color_list = dict()
     queue = list()
     # # *** INITIALISATIE ***
-    # for vertex in G.V():
-    #     if not vertex.deg() in color_list.keys():
-    #         color_list[vertex.deg()] = colorclass(vertex.deg())
-    #
-    #     color_list[vertex.deg()].addvertex(vertex)
     degID = dict()
     for v in G.V():
         if v.deg() in degID.keys():
@@ -215,28 +210,19 @@ def fast_partitioning(G):
             v.setColorClass(color_list[len1])
             degID[v.deg()] = len1
 
-    # for w in sorted(color_list, key=color_list.get):
-    #     queue.append(color_list[w])
     for w in color_list:
         queue.append(color_list[w])
         color_list[w].inQueue()
     queue.pop(len(queue) - 1)
     # print(queue)
 
-    # for color in color_list.values():
-    #     print(color)
-    #
-    # print("------")
-    # ***
     counter = 0
     while len(queue) > 0:
         # print(queue)
         color_entry = queue.pop()
         # Voor alle colors behalve color_entry
-        neighbourhoodOfColor, neighbourhoodOfColor_dict = get_neighbourhood_color(color_entry)
+        neighbourhoodOfColor_dict = get_neighbourhood_color(color_entry)
         # print("Type: " + str(type(color_list.values())))
-        relative_color_list = list(color_list.values())
-        relative_color_list.remove(color_entry)
         color_set = set()
         for vertex in neighbourhoodOfColor_dict:
             color_set.add(vertex.colorclss)
@@ -302,16 +288,16 @@ def fast_partitioning(G):
 
 
 def get_neighbourhood_color(colorentry):
-    result = []
+    # result = []
     result_dict = dict()
     for vertex in colorentry.getvertices():
         for neighbour in vertex.nbs():
-            result.append(neighbour)
+            # result.append(neighbour)
             if neighbour not in result_dict:
                 result_dict[neighbour] = 1
             else:
                 result_dict[neighbour] += 1
-    return result, result_dict
+    return result_dict
 
 
 
