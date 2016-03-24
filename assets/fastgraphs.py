@@ -3,10 +3,12 @@ from assets.basicgraphs import graph, edge, GraphError, vertex
 
 class vertex(vertex):
     colorclss = None
+
     def __init__(self, graph, label=0):
         self._graph = graph
         self._label = label
         self._inclist = []
+        self._neighbourlist = []
         # incl = []
         # for e in self._graph._E:
         #     if e.incident(self):
@@ -14,14 +16,22 @@ class vertex(vertex):
 
     def addedge(self, edge):
         self._inclist.append(edge)
+        self._neighbourlist.append(edge.otherend(self))
+
 
     def deleteedge(self, edge):
         self._inclist.remove(edge)
 
     def inclist(self):
         return self._inclist
+
+
     def setColorClass(self, colorclls):
         self.colorclss = colorclls
+
+
+    def nbs(self):
+        return self._neighbourlist
 
 
 class graph(graph):
@@ -83,9 +93,11 @@ class colorclass():
     head = None
     tail = None
     in_queue = False
+
     def __init__(self, id, vertices=[]):
         self._vertices = vertices
-        self._id = id
+        self.id = id
+
 
     def getvertices(self):
         return self._vertices
@@ -97,7 +109,7 @@ class colorclass():
         return len(self._vertices) < len(other._vertices)
 
     def __repr__(self):
-        return "( ID = " + str(self._id) + " List of Vertices = " + str(self._vertices) + ")"
+        return "( ID = " + str(self.id) + " List of Vertices = " + str(self._vertices) + ")"
 
     def setvertices(self, vertices):
         self._vertices = vertices
@@ -107,6 +119,9 @@ class colorclass():
 
     def notInQueue(self):
         self.in_queue = False
+
+
+
 class queue():
     def __init__(self):
         self._queue = dict()
@@ -128,3 +143,9 @@ class queue():
             return True
         else:
             return False
+
+
+
+
+
+
