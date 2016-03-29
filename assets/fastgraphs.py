@@ -2,22 +2,17 @@ from assets.basicgraphs import graph, edge, GraphError, vertex
 
 
 class vertex(vertex):
-    colorclss = None
-
     def __init__(self, graph, label=0):
         self._graph = graph
         self._label = label
         self._inclist = []
         self._neighbourlist = []
-        # incl = []
-        # for e in self._graph._E:
-        #     if e.incident(self):
-        #         incl.append(e)
+        # self._neighbourclass = dict()
+        self.colorclss = None
 
     def addedge(self, edge):
         self._inclist.append(edge)
         self._neighbourlist.append(edge.otherend(self))
-
 
     def deleteedge(self, edge):
         self._inclist.remove(edge)
@@ -25,10 +20,28 @@ class vertex(vertex):
     def inclist(self):
         return self._inclist
 
+    # def set_neighbour_class(self, neigbour, neighbour_class_id):
+    #     if neighbour_class_id in self._neighbourclass:
+    #         self._neighbourclass[neighbour_class_id].append(neigbour)
+    #     else:
+    #         self._neighbourclass[neighbour_class_id] = [neigbour]
+    #
+    # def get_length_neighbour_class(self,neighbour_class_id):
+    #     if neighbour_class_id in self._neighbourclass:
+    #         return len(self._neighbourclass[neighbour_class_id])
+    #     else:
+    #         return 0
+    #
+    # def change_neighbour_class(self,neighbour, neighbour_class_id, new_neighbour_class_id):
+    #     self._neighbourclass[neighbour_class_id].remove(neighbour)
+    #     self.set_neighbour_class(neighbour,new_neighbour_class_id)
+    #
+    #
+    # def get_neighbour_classes(self):
+    #     return self._neighbourclass
 
     def setColorClass(self, colorclls):
         self.colorclss = colorclls
-
 
     def nbs(self):
         return self._neighbourlist
@@ -46,7 +59,6 @@ class graph(graph):
         edge.tail().deleteedge(edge)
         self._E.remove(edge)
 
-
     def addvertex(self, label=-1):
         """
         Add a vertex to the graph.
@@ -58,7 +70,6 @@ class graph(graph):
         u = vertex(self, label)
         self._V.append(u)
         return u
-
 
     def addedge(self, tail, head):
         if self._simple:
@@ -81,7 +92,6 @@ class graph(graph):
         self._E.append(e)
         return e
 
-
     def adj(self, u, v):
         """
         Returns True iff vertices <u> and <v> are adjacent.
@@ -94,10 +104,9 @@ class colorclass():
     tail = None
     in_queue = False
 
-    def __init__(self, id, vertices=[]):
+    def __init__(self, id, vertices=list()):
         self._vertices = vertices
         self.id = id
-
 
     def getvertices(self):
         return self._vertices
@@ -109,7 +118,7 @@ class colorclass():
         return len(self._vertices) < len(other._vertices)
 
     def __repr__(self):
-        return "( ID = " + str(self.id) + " List of Vertices = " + str(self._vertices) + ")"
+        return "(ID = " + str(self.id) + ", V = " + str(self._vertices) + ")"
 
     def setvertices(self, vertices):
         self._vertices = vertices
@@ -119,7 +128,6 @@ class colorclass():
 
     def notInQueue(self):
         self.in_queue = False
-
 
 
 class queue():
@@ -143,9 +151,3 @@ class queue():
             return True
         else:
             return False
-
-
-
-
-
-
