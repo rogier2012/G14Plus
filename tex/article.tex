@@ -42,7 +42,7 @@
 \usepackage{booktabs} % Horizontal rules in tables
 \usepackage{float} % Required for tables and figures in the multi-column environment - they need to be placed in specific locations with the [H] (e.g. \begin{table}[H])
 \usepackage{hyperref} % For hyperlinks in the PDF
-
+\usepackage[dutch]{babel}
 \usepackage{lettrine} % The lettrine is the first enlarged letter at the beginning of the text
 \usepackage{paralist} % Used for the compactitem environment which makes bullet points with less space between them
 
@@ -67,18 +67,19 @@
 %	TITLE SECTION
 %----------------------------------------------------------------------------------------
 
-\newcommand{\articletitle}{Isomorphisms and Their Use in the Ancient Times}
-\newcommand{\shorttitle}{Isomorphisms in Ancient Times}
+\newcommand{\articletitle}{Fast partition refinement, a Python implementation}
+\newcommand{\shorttitle}{Python fast partitioning}
 
 \title{\vspace{-15mm}\fontsize{24pt}{10pt}\selectfont\textbf{\articletitle}} % Article title
 
 \author{
 \large
-\textsc{John Smith, Maarten Koopmans, and Pietje Blank}\thanks{Thanks to our helpful mentor.}\\[2mm] % Your name
+\textsc{Christiaan van den Bogaard, Dion Ikink, Fleur Seuren, and Rogier Monshouwer}\thanks{Thanks to our helpful mentor.}\\[2mm] % Your name
 \normalsize University of Twente \\ % Your institution
-\normalsize \href{mailto:john@smith.com}{john@smith.com}, 
-\href{mailto:Maarten@Koopmans.nl}{Maarten@Koopmans.nl},
-\href{mailto:Pietje@Blank.nl}{Pietje@Blank.nl}% Your email addresses
+\normalsize \href{mailto:d.t.r.ikink@student.utwente.nl}{d.t.r.ikink@student.utwente.nl}, 
+\href{mailto:c.h.m.vandenbogaard@student.utwente.nl}{c.h.m.vandenbogaard@student.utwente.nl} \\
+\normalsize\href{mailto:f.seuren@student.utwente.nl}{f.seuren@student.utwente.nl}, % Your email addresses
+\href{mailto:r.monshouwer@student.utwente.nl}{r.monshouwer@student.utwente.nl}
 }
 
 \date{\today}
@@ -109,10 +110,12 @@
 
 
 %------------------------------------------------
-\section{Introduction}
+\section{Introductie}
 
 %\lettrine[nindent=0em,lines=3]{L} orem ipsum dolor sit amet, consectetur adipiscing elit.
-\lipsum[2-3] % Dummy text
+\paragraph{}\noindent Graaf isomorfisme (GI) is een van de meest bestudeerde onderwerpen binnen de wiskunde en theoretische informatica. Het probleem heeft zich tot een nieuwe klasse binnen de problemen die in polynomiale tijd zijn op te lossen zijn en degene die dat niet zijn. Een van de bestaande technieken om het GI probleem op te lossen is het aanwijzen van kleuren aan punten op basis van zijn eigenschappen: Color refinement. Door een disjuncte vereniging te nemen van twee grafen en color refinement toe te passen is het mogelijk dat iedere kleur bestaat uit precies twee punten. Dan bestaat er een bijectie die de punten projecteert op de andere.
+\paragraph{} \noindent Wij presenteren in dit artikel een Python implementatie van een algoritme om DFA te minimaliseren toegepast op grafen. Dit algoritme ontwikkelt door Hopcroft~\cite{MR0403320} blijkt ook voor het GI probleem te werken in de tijd complexiteitklasse van $O(m \log_{2} (n)$ met $m= \text{aantal lijnen}$ en $n = \text{aantal punten}$. Het artikel zal het originele algoritme uitleggen en de gedachte achter het algoritme. Daarna zal het artikel de toepasbaarheid op grafentheorie uitleggen en van uit daar een implementatie presenteren. Deze implementatie zal worden onderbouwt met een bewijs dat het werkt en enkele berekende resultaten vergeleken met een standaard $O(n^2)$ implementatie.
+
 
 %------------------------------------------------
 
@@ -121,7 +124,7 @@
 Describe \lipsum[1] % Dummy text
 
 %------------------------------------------------
-\section{Methods}
+\section{Methoden}
 This results in the following, exhaustive list of possibilities. 
 \begin{compactitem}
 \item Donec dolor arcu, rutrum id molestie in, viverra sed diam
@@ -135,7 +138,7 @@ This results in the following, exhaustive list of possibilities.
 \lipsum[4] % Dummy text
 
 %------------------------------------------------
-\section{Results}
+\section{Resultaten}
 
 The results with this algorithm are given in Table~\ref{table:example}.
 \begin{table}[H]
@@ -157,7 +160,7 @@ Richard & Miles & $2$ \\
 \lipsum[5] % Dummy text
 
 %------------------------------------------------
-\subsection{Subsection One}
+\subsection{Implementatie}
 \lipsum[1]
 The following therefore holds for all
 planar graphs $G$ with $n$ vertices, $m$ edges, and $r$ regions.
@@ -168,7 +171,10 @@ n-m+r=2
 \end{equation}
 
 %------------------------------------------------
-\subsection{Subsection Two}
+\subsection{Bewijs}
+
+%------------------------------------------------
+\subsection{Berekende resultaten}
 
 The following conclusion follows directly from \eqref{eq:emc}.
 \lipsum[6] % Dummy text
@@ -182,7 +188,7 @@ We immediately conclude the following.
 \begin{corollary}
 Whenever two planar graphs $G$ and $G'$ are isomorphic, their maximum degree vertices have the same degree. 
 \end{corollary}
-This observation first appeared in \cite{Fig2009}, and was later generalized to arbitrary graphs in \cite{Lang2011}.
+This observation first appeared in , and was later generalized to arbitrary graphs in .
 In our implementation, we have therefore used the following algorithmic idea.
 \begin{verbatim}
 def gcd(a,b):
@@ -195,10 +201,10 @@ def gcd(a,b):
         r = a%b
     return b
 \end{verbatim}
-For more information on programming in {\tt python}, we refer to \cite{Lang2011}.
+For more information on programming in {\tt python}, we refer to\cite{jaco} \cite{MR0403320}.
 
 %------------------------------------------------
-\section{Conclusions}
+\section{Conclusie \& Discussie}
 
 
 \lipsum[8] % Dummy text. 
@@ -209,19 +215,8 @@ For more information on programming in {\tt python}, we refer to \cite{Lang2011}
 %----------------------------------------------------------------------------------------
  
 % Bibliography - this is intentionally simple in this template
-\begin{thebibliography}{99}
-
-\bibitem{Fig2009}
-Figueredo, A.~J.\ and Wolf, P.\ S.~A.\ (2009).
-Assortative pairing and life history strategy - a cross-cultural study.
-\emph{Human Nature \& Arts}, 20:317-330.
-
-\bibitem{Lang2011}
-R.\ Langerak  (2011).
-How to write a {\tt python} computer program.
-\emph{Annals of Improbable Research}, 2:16-27.
-
-\end{thebibliography}
+\bibliographystyle{plain}
+\bibliography{referenties}
 
 %----------------------------------------------------------------------------------------
 

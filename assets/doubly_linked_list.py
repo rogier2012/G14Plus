@@ -29,6 +29,18 @@ class double_linked_list:
             node.tail.head = newnode
         node.tail = newnode
 
+    def append(self,node):
+        if self.first is None:
+            self.first = node
+        if self.last is None:
+            self.last = node
+            self.first.tail = node
+        else:
+            self.last.tail = node
+            node.head = self.last
+            self.last = node
+
+
     def remove(self, node):
         if node.head is None:
             self.first = node.tail
@@ -90,10 +102,10 @@ class double_linked_list:
         return result
 
 
-class color_class_node:
+class color(double_linked_list):
+    inqueue = False
+
+class color_node:
     head = None
     tail = None
-    list_vertices = None
-
-    def __init__(self, list_vertices):
-        self.list_vertices = list_vertices
+    color = 0
