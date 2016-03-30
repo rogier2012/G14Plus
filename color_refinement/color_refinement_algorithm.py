@@ -270,9 +270,10 @@ def fast_partitioning(G, D, I):
 
         color_entry.notInQueue()
     # print(timer)
-    totallist = list()
-    for color1 in color_list:
-        totallist.append(color_list[color1].getvertices())
+    # totallist = list()
+    # for color1 in color_list:
+    #     totallist.append(color_list[color1].getvertices())
+    totallist = [color_list[color1].getvertices() for color1 in color_list]
     return totallist
 
 
