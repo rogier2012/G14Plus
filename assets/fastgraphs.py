@@ -123,7 +123,7 @@ class colorclass():
     def setvertices(self, vertices):
         self._vertices = vertices
 
-    def inqueue(self):
+    def inQueue(self):
         self.in_queue = True
 
     def notInQueue(self):
