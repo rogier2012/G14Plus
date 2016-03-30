@@ -227,8 +227,10 @@ def fast_partitioning(G, D, I):
         D[index].setColorClass(newcolor)
         I[index].setColorClass(newcolor)
     timer = 0
-    while len(queue)>0:
+    while queue.len_greater_than_zero():
+        # print("Voor: " + str(queue))
         color_entry = queue.pop()
+        # print("Na: " + str(queue))
         # Voor alle colors behalve color_entry
         # neighbourhoodOfColor_dict, color_set = get_neighbourhood_color(color_entry)
         # d_counts = generate_d_counts(color_set, neighbourhoodOfColor_dict)
@@ -267,7 +269,7 @@ def fast_partitioning(G, D, I):
                         queue.extend(newColorList)
 
         color_entry.notInQueue()
-    print(timer)
+    # print(timer)
     totallist = list()
     for color1 in color_list:
         totallist.append(color_list[color1].getvertices())

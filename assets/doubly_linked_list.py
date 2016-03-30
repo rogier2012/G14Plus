@@ -50,10 +50,16 @@ class doubly_linked_list:
             node.tail.head = node.head
 
     def pop(self):
-        node = self.first.tail
-        node1 = self.first
-        self.first = node
-        return node1
+
+        node = self.last
+        if node.head is not None:
+            new_last = node.head
+            new_last.tail = None
+            self.last = new_last
+        else:
+            self.first = None
+            self.last = None
+        return node
 
     def extend(self, linked_list):
         if linked_list.first is not None:
@@ -72,6 +78,7 @@ class doubly_linked_list:
             if node.tail is not None:
                 result = result + ", "
             node = node.tail
+        result = result + "]"
         return result
 
     def __len__(self):
