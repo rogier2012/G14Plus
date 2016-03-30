@@ -51,7 +51,7 @@ class doubly_linked_list:
             node.tail.head = node.head
 
     def pop(self):
-        node = self.first.head
+        node = self.first.tail
         node1 = self.first
         self.first = node
         return node1

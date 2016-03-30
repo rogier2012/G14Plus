@@ -217,7 +217,6 @@ def fast_partitioning(G, D, I):
                 v.setColorClass(color_list[len1])
                 degID[v.deg()] = len1
 
-
     for w in color_list:
         queue.append(color_list[w])
         color_list[w].inQueue()
@@ -229,6 +228,7 @@ def fast_partitioning(G, D, I):
         D[index].setColorClass(newcolor)
         I[index].setColorClass(newcolor)
     d_counts_obj.generate(color_list)
+
     while len(queue) > 0:
         color_entry = queue.pop()
         # Voor alle colors behalve color_entry
@@ -322,9 +322,9 @@ print("Bijective: " + str(bijection(alpha1)))
 writeDOT(GH, "example.dot")
 
 timer = 0
-# for i in range(0, 10):
+for i in range(0, 10):
 #     # timer = timer + countAutomorphisms()
-#     timer = timer + pathsBench()
+    timer = timer + pathsBench()
 print("Average time over 10 rounds: " + str(timer // 10))
 # pathsBench()
 # countAutomorphisms()
