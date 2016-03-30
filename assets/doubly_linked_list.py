@@ -39,7 +39,6 @@ class doubly_linked_list:
             node.head = self.last
             self.last = node
 
-
     def remove(self, node):
         if node.head is None:
             self.first = node.tail

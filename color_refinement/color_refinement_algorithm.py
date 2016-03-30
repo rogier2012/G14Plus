@@ -201,8 +201,7 @@ def branching_rules(findSingleIso=False, writeDot=False):
 
 def fast_partitioning(G, D, I):
     color_list = dict()
-    queue = list()
-    d_counts_obj = dcounts()
+    queue = doubly_linked_list()
 
     # # *** INITIALISATIE ***
     degID = dict()
@@ -216,10 +215,10 @@ def fast_partitioning(G, D, I):
                 color_list[len1] = colorclass(len1, [v])
                 v.setColorClass(color_list[len1])
                 degID[v.deg()] = len1
-
     for w in color_list:
         queue.append(color_list[w])
         color_list[w].inQueue()
+
 
     for index in range(len(D)):
         len1 = len(color_list) + 1
@@ -227,15 +226,13 @@ def fast_partitioning(G, D, I):
         color_list[len1] = newcolor
         D[index].setColorClass(newcolor)
         I[index].setColorClass(newcolor)
-    d_counts_obj.generate(color_list)
-
-    while len(queue) > 0:
+    timer = 0
+    while len(queue)>0:
         color_entry = queue.pop()
         # Voor alle colors behalve color_entry
         # neighbourhoodOfColor_dict, color_set = get_neighbourhood_color(color_entry)
         # d_counts = generate_d_counts(color_set, neighbourhoodOfColor_dict)
         d_counts = generate_d_counts_on_color(color_entry)
-        # d_counts = d_counts_obj.get_d_counts(color_entry)
         for color in d_counts:
             Dcount = d_counts[color]
 
@@ -257,7 +254,6 @@ def fast_partitioning(G, D, I):
 
                     newColorList.append(newcolor)
                     newcolor.inQueue()
-                d_counts_obj.update(color,newColorList)
                 if color.in_queue:
                     queue.extend(newColorList)
                 else:
@@ -271,6 +267,7 @@ def fast_partitioning(G, D, I):
                         queue.extend(newColorList)
 
         color_entry.notInQueue()
+    print(timer)
     totallist = list()
     for color1 in color_list:
         totallist.append(color_list[color1].getvertices())
