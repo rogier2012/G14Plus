@@ -201,7 +201,7 @@ def branching_rules(findSingleIso=False, writeDot=False):
 
 def fast_partitioning(G, D, I):
     color_list = dict()
-    queue = doubly_linked_list()
+    queue = list()
     d_counts_obj = dcounts()
 
     # # *** INITIALISATIE ***

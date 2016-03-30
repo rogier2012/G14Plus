@@ -57,10 +57,11 @@ class doubly_linked_list:
         return node1
 
     def extend(self, linked_list):
-        node = self.last
-        node.tail = linked_list.first
-        linked_list.first.head = node
-        self.last = linked_list.last
+        if linked_list.first is not None:
+            node = self.last
+            node.tail = linked_list.first
+            linked_list.first.head = node
+            self.last = linked_list.last
 
 
 
@@ -104,6 +105,9 @@ class doubly_linked_list:
 
         return result
 
+
+    def len_greater_than_zero(self):
+        return self.first is not None
 
 class color(doubly_linked_list):
     inqueue = False
