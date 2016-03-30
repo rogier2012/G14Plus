@@ -322,9 +322,9 @@ print("Bijective: " + str(bijection(alpha1)))
 writeDOT(GH, "example.dot")
 
 timer = 0
-for i in range(0, 10):
-    # timer = timer + countAutomorphisms()
-    timer = timer + pathsBench()
+# for i in range(0, 10):
+#     # timer = timer + countAutomorphisms()
+#     timer = timer + pathsBench()
 print("Average time over 10 rounds: " + str(timer // 10))
 # pathsBench()
 # countAutomorphisms()

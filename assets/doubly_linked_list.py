@@ -34,7 +34,6 @@ class doubly_linked_list:
             self.first = node
         if self.last is None:
             self.last = node
-            self.first.tail = node
         else:
             self.last.tail = node
             node.head = self.last
@@ -106,7 +105,7 @@ class doubly_linked_list:
         return result
 
 
-class color(double_linked_list):
+class color(doubly_linked_list):
     inqueue = False
 
 class color_node:
