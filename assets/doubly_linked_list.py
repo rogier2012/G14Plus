@@ -1,4 +1,4 @@
-class double_linked_list:
+class doubly_linked_list:
     first = None
     last = None
     current = None
@@ -51,15 +51,19 @@ class double_linked_list:
         else:
             node.tail.head = node.head
 
-    def append(self,node):
-        if self.first is None:
-            self.first = node
-            self.last = node
-        else:
-            node1 = self.last
-            node1.tail = node
-            node.head = node1
-            self.last = node
+    def pop(self):
+        node = self.first.head
+        node1 = self.first
+        self.first = node
+        return node1
+
+    def extend(self, linked_list):
+        node = self.last
+        node.tail = linked_list.first
+        linked_list.first.head = node
+        self.last = linked_list.last
+
+
 
     def __str__(self):
         node = self.first

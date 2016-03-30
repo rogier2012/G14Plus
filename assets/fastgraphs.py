@@ -130,24 +130,15 @@ class colorclass():
         self.in_queue = False
 
 
-class queue():
+class dcounts():
     def __init__(self):
-        self._queue = dict()
+        self.total_dcounts = dict()
 
-    def addtoqueue(self, color):
-        if not color in self._queue:
-            self._queue[color] = 0
-        else:
-            return False
+    def update(self, oldcolor, new_colors):
+        pass
 
-    def removefromqueue(self, color):
-        if color in self._queue:
-            self._queue.pop(color)
-        else:
-            return False
+    def get_d_counts(self,color):
+        return self.total_dcounts[color]
 
-    def inqueue(self, color):
-        if color in self._queue:
-            return True
-        else:
-            return False
+    def generate(self,color_list):
+        pass
