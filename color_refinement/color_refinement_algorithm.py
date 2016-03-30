@@ -204,77 +204,73 @@ def fast_partitioning(G, D, I):
     queue = doubly_linked_list()
 
     # # *** INITIALISATIE ***
-    deg_id = dict()
+    degID = dict()
     for v in G.V():
         if v not in D and v not in I:
-            if v.deg() in deg_id.keys():
-                color_list[deg_id[v.deg()]].addvertex(v)
-                v.setColorClass(color_list[deg_id[v.deg()]])
+            if v.deg() in degID.keys():
+                color_list[degID[v.deg()]].addvertex(v)
+                v.setColorClass(color_list[degID[v.deg()]])
             else:
                 len1 = len(color_list) + 1
                 color_list[len1] = colorclass(len1, [v])
                 v.setColorClass(color_list[len1])
-                deg_id[v.deg()] = len1
-
+                degID[v.deg()] = len1
     for w in color_list:
         queue.append(color_list[w])
         color_list[w].inQueue()
 
+
     for index in range(len(D)):
         len1 = len(color_list) + 1
-        new_color = colorclass(len1, [D[index], I[index]])
-        color_list[len1] = new_color
-        D[index].setColorClass(new_color)
-        I[index].setColorClass(new_color)
-
+        newcolor = colorclass(len1, [D[index], I[index]])
+        color_list[len1] = newcolor
+        D[index].setColorClass(newcolor)
+        I[index].setColorClass(newcolor)
     timer = 0
     
     while queue.len_greater_than_zero():
         color_entry = queue.pop()
+
         d_counts = generate_d_counts_on_color(color_entry)
-        
-        for color_entry in d_counts:
-            d_count = d_counts[color_entry]
+        for color in d_counts:
+            Dcount = d_counts[color]
 
-            if len(d_count) > 1:
+            if len(Dcount) > 1:
                 # split
-                color_pair = d_count.popitem()
-                color_entry.setvertices(color_pair[1])
-                new_color_list = doubly_linked_list()
-                max_size_color = color_entry
+                colorPair = Dcount.popitem()
+                color.setvertices(colorPair[1])
+                newColorList = doubly_linked_list()
+                max_size_color = color
+                for new_color_class in Dcount:
+                    newcolor = colorclass(len(color_list) + 1, Dcount[new_color_class])
+                    if len(newcolor.getvertices()) > len(max_size_color.getvertices()):
+                        max_size_color = newcolor
 
-                for new_color_class in d_count:
-                    new_color = colorclass(len(color_list) + 1, d_count[new_color_class])
-                    if len(new_color.getvertices()) > len(max_size_color.getvertices()):
-                        max_size_color = new_color
+                    color_list[newcolor.id] = newcolor
 
-                    color_list[new_color.id] = new_color
+                    for vertex in Dcount[new_color_class]:
+                        vertex.setColorClass(newcolor)
 
-                    for vertex in d_count[new_color_class]:
-                        vertex.setColorClass(new_color)
-
-                    new_color_list.append(new_color)
-                    new_color.inqueue()
-
-                if color_entry.in_queue:
-                    queue.extend(new_color_list)
+                    newColorList.append(newcolor)
+                    newcolor.inQueue()
+                if color.in_queue:
+                    queue.extend(newColorList)
                 else:
-                    if max_size_color == color_entry:
-                        queue.extend(new_color_list)
+                    if max_size_color == color:
+                        queue.extend(newColorList)
                     else:
-                        queue.append(color_entry)
-                        color_entry.inqueue()
-                        new_color_list.remove(max_size_color)
+                        queue.append(color)
+                        color.inQueue()
+                        newColorList.remove(max_size_color)
                         max_size_color.notInQueue()
-                        queue.extend(new_color_list)
+                        queue.extend(newColorList)
 
         color_entry.notInQueue()
     # print(timer)
-
-    total_list = list()
+    totallist = list()
     for color1 in color_list:
-        total_list.append(color_list[color1].getvertices())
-    return total_list
+        totallist.append(color_list[color1].getvertices())
+    return totallist
 
 
 def generate_d_counts_on_color(color_entry):
