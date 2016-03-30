@@ -68,8 +68,6 @@ class doubly_linked_list:
             linked_list.first.head = node
             self.last = linked_list.last
 
-
-
     def __str__(self):
         node = self.first
         result = "["

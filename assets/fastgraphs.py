@@ -8,7 +8,7 @@ class vertex(vertex):
         self._inclist = []
         self._neighbourlist = []
         # self._neighbourclass = dict()
-        self.colorclss = None
+        self.colorclass = None
 
     def addedge(self, edge):
         self._inclist.append(edge)
@@ -20,28 +20,8 @@ class vertex(vertex):
     def inclist(self):
         return self._inclist
 
-    # def set_neighbour_class(self, neigbour, neighbour_class_id):
-    #     if neighbour_class_id in self._neighbourclass:
-    #         self._neighbourclass[neighbour_class_id].append(neigbour)
-    #     else:
-    #         self._neighbourclass[neighbour_class_id] = [neigbour]
-    #
-    # def get_length_neighbour_class(self,neighbour_class_id):
-    #     if neighbour_class_id in self._neighbourclass:
-    #         return len(self._neighbourclass[neighbour_class_id])
-    #     else:
-    #         return 0
-    #
-    # def change_neighbour_class(self,neighbour, neighbour_class_id, new_neighbour_class_id):
-    #     self._neighbourclass[neighbour_class_id].remove(neighbour)
-    #     self.set_neighbour_class(neighbour,new_neighbour_class_id)
-    #
-    #
-    # def get_neighbour_classes(self):
-    #     return self._neighbourclass
-
-    def setColorClass(self, colorclls):
-        self.colorclss = colorclls
+    def setColorClass(self, colorclass):
+        self.colorclass = colorclass
 
     def nbs(self):
         return self._neighbourlist
