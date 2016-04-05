@@ -357,14 +357,72 @@ def gi_problem(graphlist):
 def aut_problem(graphlist):
     graphs = loadgraph("../graphs/" + graphlist + ".grl", graphclass=graph, readlist=True)[0]
     print("Graph:   Number of automorphisms:")
+    isomorphisms = dict()
+
     for i in range(len(graphs)):
         G = graphs[i]
-        H = graphs[i]
-        GH = disjointunion(G, H)
-        numIso = countIsomorphism(GH, G, H, [], [], 1, False)
-        if numIso > 0:
-            print(str(i) + ":       " + str(numIso))
+        isos_found = False
+        for isos in isomorphisms:
+            H = graphs[isos]
+            GH = disjointunion(G, H)
+            if countIsomorphism(GH, G, H, [], [], 1, True) > 0:
+                print(str(i) + ":       " + str(isomorphisms[isos]))
+                isos_found = True
 
-gi_problem("trees90")
-aut_problem("trees90")
-# countAutomorphisms(True)
+        if not isos_found:
+            H = graphs[i]
+            GH = disjointunion(G, H)
+            numIso = countIsomorphism(GH, G, H, [], [], 1, False)
+            if numIso > 0:
+                print(str(i) + ":       " + str(numIso))
+                isomorphisms[i] = numIso
+
+def program():
+    run = True
+    while run:
+        print("Choose your problem below:")
+        print("     1. GI Problem")
+        print("     2. AUT Problem")
+        print("     3. Close")
+        int1 = int(input("Enter your input: "))
+        if int1 == 1:
+            print("Enter the graphlist file:")
+
+            str = input("Enter your input: ")
+            print("")
+            file_found = False
+            while not file_found:
+                try:
+                    gi_problem(str)
+                    file_found = True
+                except FileNotFoundError:
+                    print("File not found, please enter a valid filename")
+                    print("Enter the graphlist file:")
+                    str = input("Enter your input: ")
+                    print("")
+
+
+            print("")
+        elif int1 == 2:
+            print("Enter the graphlist file:")
+            str = input("Enter your input: ")
+            print("")
+            file_found = False
+            while not file_found:
+                try:
+                    aut_problem(str)
+                    file_found = True
+                except FileNotFoundError:
+                    print("File not found, please enter a valid filename")
+                    print("Enter the graphlist file:")
+                    str = input("Enter your input: ")
+                    print("")
+            print("")
+
+        elif int1 == 3:
+            run = False
+
+
+# gi_problem("trees90")
+# aut_problem("trees90")
+program()
