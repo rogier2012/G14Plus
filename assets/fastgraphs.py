@@ -9,6 +9,7 @@ class vertex(vertex):
         self._neighbourlist = []
         # self._neighbourclass = dict()
         self.colorclass = None
+        self.oldgraph= None
 
     def addedge(self, edge):
         self._inclist.append(edge)

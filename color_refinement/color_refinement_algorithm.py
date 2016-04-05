@@ -9,7 +9,7 @@ from assets.doubly_linked_list import *
 
 
 def refine(G, D, I):
-    time1 = time_ms()
+    time1 = timeMs()
 
     V = G.V()
     alpha_list = []
@@ -34,7 +34,7 @@ def refine(G, D, I):
             I[i].colornum = i + 1
             next_list = [D[i], I[i]]
             result_list.append(next_list)
-    time2 = time_ms() - time1
+    time2 = timeMs() - time1
     # print("Initialisation time: " + str(time2 // 1000) + "s")
     partTime = 0
     coloringTime = 0
@@ -42,7 +42,7 @@ def refine(G, D, I):
         alpha_list = result_list
         # print(str(alpha_list) + " with length: " + str(len(alpha_list)))
         result_list = []
-        part1 = time_ms()
+        part1 = timeMs()
         for color_list in alpha_list:
             initial_list = []
             new_list = []
@@ -61,14 +61,14 @@ def refine(G, D, I):
 
             result_list.append(initial_list)
             result_list.extend(new_list)
-        partTime = partTime + (time_ms() - part1)
-        coloring1 = time_ms()
+        partTime = partTime + (timeMs() - part1)
+        coloring1 = timeMs()
         for colornumber in range(len(result_list)):
             for vertexnum in range(len(result_list[colornumber])):
                 result_list[colornumber][vertexnum].colornum = colornumber
-        coloringTime = coloringTime + (time_ms() - coloring1)
+        coloringTime = coloringTime + (timeMs() - coloring1)
 
-    time3 = time_ms() - time1
+    time3 = timeMs() - time1
     # print("Loop time: " + str(time3 // 1000) + "s")
     # print("Partitioning time: " + str(partTime // 1000) + "s")
     # print("Coloring time: " + str(coloringTime // 1000) + "s")
@@ -79,7 +79,7 @@ def individual_refinement(G, D, I):
     return fast_partitioning(G, D, I)
 
 
-def time_ms():
+def timeMs():
     return int(round(time.time() * 1000))
 
 
@@ -92,6 +92,8 @@ def listOfNodeNeighbourhoods(color_list):
 
 def countIsomorphism(GH, G, H, D, I, branching_rule, findSingleIso=False):
     alpha1 = individual_refinement(GH, D, I)
+    if len(alpha1) == 2 and alpha1[1][0].oldgraph == H:
+        return 0
     if not balanced(alpha1):
         return 0
     if bijection(alpha1):
@@ -142,19 +144,21 @@ def balanced(alpha):
 
 
 def bijection(alpha):
-    more = True
+    bijection = True
     for color_list in alpha:
         if len(color_list) != 2:
-            more = False
-    return more
+            bijection = False
+        if color_list[0].oldgraph == color_list[1].oldgraph:
+            bijection = False
+    return bijection
 
 
 def pathsBench():
-    t1 = time_ms()
+    t1 = timeMs()
     L = loadgraph("../graphs/threepaths1280.gr", graphclass=graph)
-    fast_partitioning(L)
+    fast_partitioning(L, [], [])
     # refine(L, [], [])
-    timing = (time_ms() - t1)
+    timing = (timeMs() - t1)
     # print("Time runned: " + str(timing) + "ms")
     writeDOT(L, "example.dot")
     return timing
@@ -166,14 +170,14 @@ def countAutomorphisms(findSingleIso=False, writeDot=False):
 
     L = loadgraph("../graphs/colorref_smallexample_4_7.grl", graphclass=graph, readlist=True)
     G = L[0][0]
-    H = L[0][2]
+    H = L[0][1]
     GH = disjointunion(G, H)
 
-    t1 = time_ms()
+    t1 = timeMs()
 
     numberofIso = countIsomorphism(GH, G, H, [], [], 1, findSingleIso)
     print("Number of Isomorphisms: " + str(numberofIso))
-    timing = (time_ms() - t1)
+    timing = (timeMs() - t1)
     # print("Time runned: " + str(timing) + "ms")
     if writeDot:
         writeDOT(GH, "examplegraph.dot")
@@ -190,48 +194,60 @@ def branching_rules(findSingleIso=False, writeDot=False):
         H = L[0][7]
         GH = disjointunion(G, H)
 
-        t1 = time_ms()
+        t1 = timeMs()
 
         numberofIso = countIsomorphism(GH, G, H, [], [], rule, findSingleIso)
         print("Number of Isomorphisms: " + str(numberofIso))
-        print("Time runned: " + str((time_ms() - t1)) + "ms for branching rule: " + str(rule))
+        print("Time runned: " + str((timeMs() - t1)) + "ms for branching rule: " + str(rule))
         if writeDot:
             writeDOT(GH, "examplegraph.dot")
 
 
-def fast_partitioning(G):
+def fast_partitioning(G, D, I):
     color_list = dict()
-    queue = doubly_linked_list()
+    queue = list()
 
     # *** INITIALISATIE ***
     deg_id = dict()
 
     for v in G.V():
-        if v.deg() in deg_id.keys():
-            color_list[deg_id[v.deg()]].addvertex(v)
-            v.setColorClass(color_list[deg_id[v.deg()]])
-
-        else:
-            len1 = len(color_list) + 1
-            color_list[len1] = colorclass(len1, [v])
-            v.setColorClass(color_list[len1])
-            deg_id[v.deg()] = len1
+        if v not in D and v not in I:
+            if v.deg() in deg_id.keys():
+                color_list[deg_id[v.deg()]].addvertex(v)
+                v.setColorClass(color_list[deg_id[v.deg()]])
+            else:
+                len1 = len(color_list) + 1
+                color_list[len1] = colorclass(len1, [v])
+                v.setColorClass(color_list[len1])
+                deg_id[v.deg()] = len1
 
     for w in color_list:
         queue.append(color_list[w])
         color_list[w].inQueue()
 
-    while queue.len_greater_than_zero():
+    for index in range(len(D)):
+        len1 = len(color_list) + 1
+        next_color = colorclass(len1, [D[index], I[index]])
+        color_list[len1] = next_color
+        D[index].setColorClass(next_color)
+        I[index].setColorClass(next_color)
+
+    timer = 0
+
+    while len(queue) > 0:
         color_from_queue = queue.pop()
 
         d_counts = generate_d_counts_on_color(color_from_queue)
+
+        # neighbourhood_color_dict, color_set = neighbour_color_dict(color_from_queue)
+
         for color_entry in d_counts:
             d_count = d_counts[color_entry]
 
             if len(d_count) > 1:
                 color_pair = d_count.popitem()
                 color_entry.setvertices(color_pair[1])
-                new_color_list = doubly_linked_list()
+                new_color_list = list()
                 max_size_color = color_entry
 
                 for new_color_class in d_count:
@@ -261,15 +277,15 @@ def fast_partitioning(G):
 
         color_from_queue.notInQueue()
 
-    total_list = [color_list[element].getvertices() for element in color_list]
-
+    total_list = list()
+    for color_entry in color_list:
+        total_list.append(color_list[color_entry].getvertices())
     return total_list
 
 
 def generate_d_counts_on_color(color_entry):
     neighbourhood_color_dict = dict()
     color_set = set()
-
     for vertex in color_entry.getvertices():
         for neighbour in vertex.nbs():
             if neighbour not in neighbourhood_color_dict:
@@ -287,7 +303,6 @@ def generate_d_counts_on_color(color_entry):
                 nbs_count = neighbourhood_color_dict[vertex]
             else:
                 nbs_count = 0
-
             if nbs_count in d_count:
                 d_count[nbs_count].append(vertex)
             else:
@@ -299,27 +314,48 @@ def generate_d_counts_on_color(color_entry):
     return result
 
 
-L = loadgraph("../graphs/colorref_smallexample_4_7.grl", graphclass=graph, readlist=True)
-G = L[0][1]
-# refine(G, [], [])
-writeDOT(G, "grpah.dot")
-# fast_partitioning(G)
+def neighbour_color_dict(color_entry):
+    neighbourhood_color_dict = dict()
+    color_set = set()
+    for vertex in color_entry.getvertices():
+        for neighbour in vertex.nbs():
+            if neighbour not in neighbourhood_color_dict:
+                neighbourhood_color_dict[neighbour] = 1
+            else:
+                neighbourhood_color_dict[neighbour] += 1
+            color_set.add(neighbour.colorclass)
+    return neighbourhood_color_dict, color_set
 
-L = loadgraph("../graphs/colorref_smallexample_4_7.grl", graphclass=graph, readlist=True)
-G = L[0][1]
-H = L[0][3]
-GH = disjointunion(G, H)
-alpha1 = fast_partitioning(GH)
-print(alpha1)
-print("Balanced: " + str(balanced(alpha1)))
-print("Bijective: " + str(bijection(alpha1)))
-writeDOT(GH, "example.dot")
 
-timer = 0
-x = 10
-for i in range(0, x):
-    timer += pathsBench()
+def generate_d_count(color, neighbourhood_color_dict):
+    d_count = dict()
+    for vertex in color.getvertices():
+        if vertex in neighbourhood_color_dict:
+            nbs_count = neighbourhood_color_dict[vertex]
+        else:
+            nbs_count = 0
+        if nbs_count in d_count:
+            d_count[nbs_count].append(vertex)
+        else:
+            d_count[nbs_count] = [vertex]
+    return d_count
 
-print("Average time over " + str(x) + " rounds: " + str(timer // x) + " ms")
-# pathsBench()
-# countAutomorphisms()
+
+def gi_problem(graphlist):
+    graphs = loadgraph("../graphs/" + graphlist + ".grl", graphclass=graph, readlist=True)[0]
+    print("Sets of isomorphic graphs:")
+    for i in range(len(graphs)):
+        for j in range(i, len(graphs)):
+
+            if i != j:
+                G = graphs[i]
+                H = graphs[j]
+                GH = disjointunion(G, H)
+                numIso = countIsomorphism(GH, G, H, [], [], 1, True)
+                if numIso > 0:
+                    print("[" + str(i) + ", " + str(j) + "]")
+
+
+gi_problem("colorref_smallexample_6_15")
+
+# countAutomorphisms(True)
