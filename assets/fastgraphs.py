@@ -4,7 +4,7 @@ from assets.basicgraphs import graph, edge, GraphError, vertex
 class vertex(vertex):
     def __init__(self, graph, label=0):
         self._graph = graph
-        self.label = label
+        self._label = label
         self._inclist = []
         self._neighbourlist = []
         # self._neighbourclass = dict()
@@ -15,8 +15,9 @@ class vertex(vertex):
         self._inclist.append(edge)
         self._neighbourlist.append(edge.otherend(self))
 
-    def deleteedge(self, edge):
+    def delete_edge(self, edge):
         self._inclist.remove(edge)
+        self._neighbourlist.remove(edge.otherend(self))
 
     def inclist(self):
         return self._inclist
@@ -27,17 +28,22 @@ class vertex(vertex):
     def nbs(self):
         return self._neighbourlist
 
+    def get_label(self):
+        return self._label
+
 
 class graph(graph):
-    def deletevertext(self, vertex):
-        edgelist = vertex.inclist
-        for edge in edgelist:
-            self.deleteedge(edge)
-        self._V.remove(vertex)
+    def delete_vertex(self, vertex):
+        if vertex in self._V:
+            edgelist = []
+            edgelist.extend(vertex.inclist())
+            for edge in edgelist:
+                self.delete_edge(edge)
+            self._V.remove(vertex)
 
-    def deleteedge(self, edge):
-        edge.head().deleteedge(edge)
-        edge.tail().deleteedge(edge)
+    def delete_edge(self, edge):
+        edge.head().delete_edge(edge)
+        edge.tail().delete_edge(edge)
         self._E.remove(edge)
 
     def addvertex(self, label=-1):

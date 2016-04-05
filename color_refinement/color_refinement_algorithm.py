@@ -147,7 +147,7 @@ def bijection(alpha, length):
     for color_list in alpha:
         if len(color_list) != 2:
             return False
-        if len(color_list) == 2 and (color_list[0].label > length or color_list[1].label < length):
+        if len(color_list) == 2 and (color_list[0].get_label() > length or color_list[1].get_label() < length):
             return False
     return True
 
@@ -158,23 +158,19 @@ def pathsBench():
     fast_partitioning(L, [], [])
     # refine(L, [], [])
     timing = (timeMs() - t1)
-    # print("Time runned: " + str(timing) + "ms")
+    print("Time runned: " + str(timing) + "ms")
     writeDOT(L, "example.dot")
     return timing
 
 
 def countAutomorphisms(findSingleIso=False, writeDot=False):
-    # L = loadgraph("../graphs/colorref_smallexample_4_7.grl", graphclass=graph, readlist=True)
-
-
-    L = loadgraph("../graphs/colorref_smallexample_4_7.grl", graphclass=graph, readlist=True)
+    L = loadgraph("../graphs/cographs1.grl", graphclass=graph, readlist=True)
     G = L[0][0]
-    H = L[0][1]
+    H = L[0][3]
+
     GH = disjointunion(G, H)
-
     t1 = timeMs()
-
-    numberofIso = countIsomorphism(GH, G, H, [], [], 1, findSingleIso)
+    numberofIso = countIsomorphism(GH, G, H, D, I, 1, findSingleIso)
     print("Number of Isomorphisms: " + str(numberofIso))
     timing = (timeMs() - t1)
     # print("Time runned: " + str(timing) + "ms")
@@ -237,8 +233,6 @@ def fast_partitioning(G, D, I):
         color_from_queue = queue.pop()
 
         d_counts = generate_d_counts_on_color(color_from_queue)
-
-        # neighbourhood_color_dict, color_set = neighbour_color_dict(color_from_queue)
 
         for color_entry in d_counts:
             d_count = d_counts[color_entry]
@@ -312,33 +306,28 @@ def generate_d_counts_on_color(color_entry):
 
     return result
 
+def twins(graph):
+    neighbourlist = dict()
+    pointer = list()
+    twinlist = list()
 
-def neighbour_color_dict(color_entry):
-    neighbourhood_color_dict = dict()
-    color_set = set()
-    for vertex in color_entry.getvertices():
-        for neighbour in vertex.nbs():
-            if neighbour not in neighbourhood_color_dict:
-                neighbourhood_color_dict[neighbour] = 1
-            else:
-                neighbourhood_color_dict[neighbour] += 1
-            color_set.add(neighbour.colorclass)
-    return neighbourhood_color_dict, color_set
+    for vertex in graph.V():
+        nbs = vertex.nbs()
+        nbs1 = []
+        nbs1.extend(nbs)
+        nbs1.append(vertex)
 
+        if nbs in pointer:
+            twinlist.append([vertex,neighbourlist.get(pointer.index(nbs))])
 
-def generate_d_count(color, neighbourhood_color_dict):
-    d_count = dict()
-    for vertex in color.getvertices():
-        if vertex in neighbourhood_color_dict:
-            nbs_count = neighbourhood_color_dict[vertex]
+        elif nbs1 in pointer:
+            twinlist.append([vertex, neighbourlist.get(pointer.index(nbs1))])
+
         else:
-            nbs_count = 0
-        if nbs_count in d_count:
-            d_count[nbs_count].append(vertex)
-        else:
-            d_count[nbs_count] = [vertex]
-    return d_count
+            neighbourlist[len(neighbourlist)] = vertex
+            pointer.append(vertex.nbs())
 
+    return twinlist
 
 def gi_problem(graphlist):
     graphs = loadgraph("../graphs/" + graphlist + ".grl", graphclass=graph, readlist=True)[0]
@@ -424,6 +413,4 @@ def program():
             run = False
 
 
-# gi_problem("trees90")
-# aut_problem("trees90")
 program()
