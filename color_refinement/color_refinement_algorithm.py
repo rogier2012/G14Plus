@@ -356,26 +356,27 @@ def gi_problem(graphlist):
 
 def aut_problem(graphlist):
     graphs = loadgraph("../graphs/" + graphlist + ".grl", graphclass=graph, readlist=True)[0]
-    print("Graph:   Number of automorphisms:")
-    isomorphisms = dict()
-
+    print("Sets of isomorphic graphs:   Number of automorphisms:")
+    isomorphisms = []
     for i in range(len(graphs)):
-        G = graphs[i]
-        isos_found = False
-        for isos in isomorphisms:
-            H = graphs[isos]
-            GH = disjointunion(G, H)
-            if countIsomorphism(GH, G, H, [], [], 1, True) > 0:
-                print(str(i) + ":       " + str(isomorphisms[isos]))
-                isos_found = True
+        for j in range(i, len(graphs)):
 
-        if not isos_found:
-            H = graphs[i]
-            GH = disjointunion(G, H)
-            numIso = countIsomorphism(GH, G, H, [], [], 1, False)
-            if numIso > 0:
-                print(str(i) + ":       " + str(numIso))
-                isomorphisms[i] = numIso
+            if i != j:
+                G = graphs[i]
+                H = graphs[j]
+                GH = disjointunion(G, H)
+                numIso = countIsomorphism(GH, G, H, [], [], 1, True)
+                if numIso > 0:
+                    isomorphisms.append([i,j])
+    for k in isomorphisms:
+        i = k[0]
+        G = graphs[i]
+        H = graphs[i]
+        GH = disjointunion(G, H)
+        numIso = countIsomorphism(GH, G, H, [], [], 1, False)
+        if numIso > 0:
+            print(str(k) + ":                      " + str(numIso))
+
 
 def program():
     run = True
