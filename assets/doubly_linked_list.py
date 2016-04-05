@@ -68,8 +68,6 @@ class doubly_linked_list:
             linked_list.first.head = node
             self.last = linked_list.last
 
-
-
     def __str__(self):
         node = self.first
         result = "["
@@ -115,8 +113,6 @@ class doubly_linked_list:
     def len_greater_than_zero(self):
         return self.first is not None
 
-class color(doubly_linked_list):
-    inqueue = False
 
 class color_node:
     head = None
