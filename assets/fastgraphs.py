@@ -4,7 +4,7 @@ from assets.basicgraphs import graph, edge, GraphError, vertex
 class vertex(vertex):
     def __init__(self, graph, label=0):
         self._graph = graph
-        self._label = label
+        self.label = label
         self._inclist = []
         self._neighbourlist = []
         # self._neighbourclass = dict()

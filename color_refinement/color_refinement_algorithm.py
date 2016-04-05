@@ -96,7 +96,7 @@ def countIsomorphism(GH, G, H, D, I, branching_rule, findSingleIso=False):
         return 0
     if not balanced(alpha1):
         return 0
-    if bijection(alpha1):
+    if bijection(alpha1, len(GH.V())/2):
         return 1
 
     color = None
@@ -135,22 +135,21 @@ def neighbourhood(u):
 
 
 def balanced(alpha):
-    even = True
     for color_list in alpha:
         if len(color_list) % 2 == 1:
-            even = False
+            return False
 
-    return even
+    return True
 
 
-def bijection(alpha):
-    bijection = True
+def bijection(alpha, length):
+
     for color_list in alpha:
         if len(color_list) != 2:
-            bijection = False
-        if color_list[0].oldgraph == color_list[1].oldgraph:
-            bijection = False
-    return bijection
+            return False
+        if len(color_list) == 2 and (color_list[0].label > length or color_list[1].label < length):
+            return False
+    return True
 
 
 def pathsBench():
@@ -355,7 +354,17 @@ def gi_problem(graphlist):
                 if numIso > 0:
                     print("[" + str(i) + ", " + str(j) + "]")
 
+def aut_problem(graphlist):
+    graphs = loadgraph("../graphs/" + graphlist + ".grl", graphclass=graph, readlist=True)[0]
+    print("Graph:   Number of automorphisms:")
+    for i in range(len(graphs)):
+        G = graphs[i]
+        H = graphs[i]
+        GH = disjointunion(G, H)
+        numIso = countIsomorphism(GH, G, H, [], [], 1, False)
+        if numIso > 0:
+            print(str(i) + ":       " + str(numIso))
 
-gi_problem("colorref_smallexample_6_15")
-
+gi_problem("trees90")
+aut_problem("trees90")
 # countAutomorphisms(True)
