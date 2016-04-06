@@ -1,7 +1,5 @@
 import sys
 
-
-
 def branchingrule1(alpha_list):
     color = None
     length = 2

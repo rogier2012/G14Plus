@@ -236,32 +236,50 @@ return result
 %------------------------------------------------
 \section{Berekende resultaten}
 
-The following conclusion follows directly from \eqref{eq:emc}.
-\lipsum[6] % Dummy text
-\begin{theorem}
-Whenever two graphs $G$ and $G'$ are isomorphic, they share the same degree sequences.
-\end{theorem}
-\begin{proof}
-Obvious.
-\end{proof}
-We immediately conclude the following.
-\begin{corollary}
-Whenever two planar graphs $G$ and $G'$ are isomorphic, their maximum degree vertices have the same degree. 
-\end{corollary}
-This observation first appeared in , and was later generalized to arbitrary graphs in .
-In our implementation, we have therefore used the following algorithmic idea.
-\begin{verbatim}
-def gcd(a,b):
-    if b > a:
-        a,b = b,a
-    r = a%b
-    while r>0:
-        a = b
-        b = r
-        r = a%b
-    return b
-\end{verbatim}
-For more information on programming in {\tt python}, we refer to\cite{jaco} \cite{MR0403320}.
+De resultaten van de metingen zijn gegeven in Tabel~\ref{table:resultaten}.
+\begin{table}[H]
+\caption{Resultaten}\label{table:resultaten}
+\centering
+\begin{tabular}{lrrr}
+\toprule
+Graaf & Fast Refine (ms) & Refine (ms) & Verschil \\
+\midrule
+\midrule
+bigtrees1 & $56,2$ & $59,4$ & $5,69$\% \\
+bigtrees2 & $137,6$ & $255,5$ & $85,68$\% \\
+bigtrees3 & $1865,5$ & $33138$ & $1676,36$\% \\
+cographs1 & $35,7$ & $70,6$ & $97,76$\% \\
+colorref\_largeexample\_4\_1026 & $932,4$ & $2834,1$ & $203,96$\% \\
+colorref\_largeexample\_6\_960 & $1925,5$ & $35804$ & $1759,47$\% \\
+colorref\_smallexample\_2\_49 & $3,2$ & $5,1$ & $59,38$\% \\
+colorref\_smallexample\_4\_7 & $2$ & $2,4$ & $20,00$\% \\
+colorref\_smallexample\_4\_16 & $4,5$ & $6,4$ & $42,22$\% \\
+colorref\_smallexample\_6\_15 & $9,3$ & $14,1$ & $51,61$\% \\
+cubes3 & $8,7$ & $10,1$ & $16,09$\% \\
+cubes4 & $39,2$ & $47,3$ & $20,66$\% \\
+cubes5 & $124,1$ & $228,1$ & $83,80$\% \\
+products72 & $678,8$ & $1262,6$ & $86,00$\% \\
+threepaths160 & $4,4$ & $5,7$ & $29,55$\% \\
+threepaths320 & $10$ & $10,5$ & $5,00$\% \\
+threepaths640 & $20,7$ & $21,5$ & $3,86$\% \\
+threepaths1280 & $36,6$ & $39,1$ & $6,83$\% \\
+threepaths2560 & $72$ & $88,6$ & $23,06$\% \\
+torus24 & $63,8$ & $100,3$ & $57,21$\% \\
+torus144 & $57594$ & $176635$ & $206,69$\% \\
+trees36 & $39,5$ & $80,4$ & $103,54$\% \\
+trees90 & $67,1$ & $159,2$ & $137,26$\% \\
+wheeljoin14 & $271,7$ & $410$ & $50,90$\% \\
+wheelstar12 & $460,6$ & $902,7$ & $95,98$\% \\
+modulesC & $242922$ & $397950$ & $63,82$\% \\
+
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+Om toeval uit te sluiten zijn alle tests tien keer uitgevoerd per algoritme. De gemeten tijden, zoals ze in Tabel~\ref{table:resultaten} te zien zijn, zijn de gemiddelden van de tien uitgevoerde tests. In de laatste kolom is het verschil in uitvoertijd opgenomen, weergegeven in percentages. Een percentage van $100$\% betekent dat het Fast Refine-algoritme tweemaal zo snel was als het Refine-algoritme bij het uitvoeren van de test (een verbetering van $100$\% ten opzichte van Refine).
+
+Wat opvalt is dat het Fast Refine-algoritme pas bij grote grafen significant sneller is. bigtrees1 bevat vier grafen, elk met 44 vertices. bigtrees3 bevat ook vier grafen, maar elk van deze grafen heeft maarliefst 227 vertices. bigtrees3 heeft dus ruim vijf maal zo veel vertices als bigtrees1. Voor bigtrees1 is Fast Refine ongeveer 6\% sneller dan Refine, terwijl dat percentage voor bigtrees3 vele malen hoger ligt: Fast Refine is bijna achttien keer sneller! 
 
 %------------------------------------------------
 \section{Conclusie \& Discussie}
