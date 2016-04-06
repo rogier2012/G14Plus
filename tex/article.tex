@@ -30,6 +30,8 @@
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{proposition}[theorem]{Proposition}
 \newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}{Definition}[section]
+
 
 \usepackage[sc]{mathpazo} % Use the Palatino font
 \usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
@@ -113,64 +115,43 @@
 
 
 %------------------------------------------------
-\section{Introductie}
-
-%\lettrine[nindent=0em,lines=3]{L} orem ipsum dolor sit amet, consectetur adipiscing elit.
-\begin{quote} 
-\textit{Gegeven twee eindige graven G en H, bestaat er een isomorfisme tussen G en H.}
+\begin{quote}
+\textit{''Gegeven twee eindige graven G en H, bestaat er een isomorfisme tussen G en H?''}
 \end{quote}
 
-\paragraph{} \noindent Het bovenstaande probleem staat bekend als het graaf isomorfisme probleem  (GI), ��n van de meest bestudeerde onderwerpen binnen de discrete wiskunde en theoretische informatica. Hoewel dit probleem voor verschillende klassen van graven is opgelost  en er honderden onderzoeken over zijn gepubliceerd is er nog altijd geen effici�nte oplossing gevonden die toepasbaar is op alle mogelijk graven. Read en Corneill spraken zelfs van een graafisomorfismeziekte. 
-Niet voor niets bevindt de complexiteit van dit probleem zich in een geheel nieuwe complexiteitsklasse, tussen de problemen die oplosbaar zijn in polynomiale tijd (P) en de beslisproblemen wiens oplossingen verifieerbaar zijn in polynomiale tijd (NP-complete).  
- \paragraph{} \noindent Een van de bestaande technieken om het GI probleem op te lossen voor bepaalde soorten graven is partition refinement. Het idee hierachter is om de vertices op basis van hun buren te verdelen in verschillende groepen en deze partities steeds verder te verfijnen totdat dit niet meer mogelijk is. Op dat moment is het triviaal om te bepalen of er een isomorfisme mogelijk is en zoja welke of niet.
-\paragraph{} \noindent Het is dus van belang een effici�nt algoritme voor partition refinement te vinden.  In dit artikel wordt een Python implementatie van zo?n effici�nt algoritme gepresenteerd. Oorspronkelijk wordt dit algoritme gebruikt om effici�nt deterministische eindige automaten te minimaliseren.. Dit algoritme ontwikkelt door Hopcroft~\cite{MR0403320} blijkt echter ook voor het GI probleem te werken in de tijd complexiteitklasse van $O(m \log_{2} (n)$ met $m= \text{aantal lijnen}$ en $n = \text{aantal punten}$. Het artikel zal het originele algoritme uitleggen en de gedachte achter het algoritme. Daarna zal het artikel de toepasbaarheid op grafentheorie uitleggen en van uit daar een implementatie presenteren. Deze implementatie zal worden onderbouwt met een bewijs dat het werkt en een complexiteitsklasse heeft van  $O(m \log_{2} (n)$  en enkele berekende resultaten vergeleken met een standaard $O(n^2)$ implementatie.
+Het bovenstaande probleem staat bekend als het graaf isomorfisme probleem  (GI), één van de meest bestudeerde onderwerpen binnen de discrete wiskunde en theoretische informatica. Hoewel dit probleem voor verschillende klassen van graven is opgelost  en er honderden onderzoeken over zijn gepubliceerd is er nog altijd geen efficiënte oplossing gevonden die toepasbaar is op alle mogelijk graven. Niet voor niets bevindt de complexiteit van dit probleem zich in een geheel nieuwe complexiteitsklasse, tussen de problemen die oplosbaar zijn in polynomiale tijd (P) en de beslisproblemen wiens oplossingen verifieerbaar zijn in polynomiale tijd (NP-complete).
 
+Een van de bestaande technieken die veel gebruikt wordt om het GI probleem op te lossen is ''partition refinement''. In dit artikel zal het idee achter ''partition refinement'' uitgelegd worden. Daarnaast zal er zeer effici\"ente Python implementatie van deze techniek gegeven worden. Dit algoritme, dat gebaseerd is op een door Hopcroft~\cite{MR0403320} bedacht algoritme voor het minimaliseren van DFA's heeft namelijk een complexiteitklasse van $O(m \log_{2} (n)$ met $m= \text{aantal lijnen}$ en $n = \text{aantal punten}$, terwijl een standaard implementatie maar een complexiteitsklasse van $O(n^2)$ heeft.
 
 %------------------------------------------------
+\section{Theoretische onderbouwing}
+In deze sectie zal de theorie achter zowel ''partition refinement'' als het algoritme van Hopcroft worden uitgelegd.
 
-\section{Scope \& Doelstellingen}
+\subsection{Partition refinement}
+Het idee achter partition refinement is dat een isomorfisme de omgeving, de verzameling buren, van een punt $v$ in stand houdt. Punt $v$ in graaf $G$ heeft dus dezelfde omgeving als zijn afbeelding $f(v)$ in H. Hieruit volgt dat de graad van $v$ gelijk is aan de graad van $f(v)$. Er kan dus een initi\"ele partitie gemaakt worden op basis van graad. Voor de duidelijkheid zal er gesproken worden over verschillende kleuren in plaats van verschillende partities.
 
-Describe \lipsum[1] % Dummy text
+Omdat alle punten nu een bepaalde kleur hebben kan deze initi\"ele partitie verfijnd worden, namelijk op basis van de kleuromgeving van punt $v$. Deze kleuromgeving is als volgt gedefinieerd:
 
+\begin{definition}
+Neem $\alpha$, een partitie van graaf $G$ met $k$ verschillende kleuren en  $\alpha^{c}$ de verzameling punten van $G$ met kleur $c \in \{1,\ldots,k\}$. Twee punten $u,v \in V(G)$ hebben een \textbf{verschillende kleuromgeving} als er een kleur $c \in \{1,\ldots,k\}$ is zodanig dat $|N(u)\cap\alpha^{c}| \neq |N(v)\cap\alpha^{c}|$. Als dit niet geldt hebben de twee punten een \textbf{gelijke kleuromgeving}
+\end{definition}
+VERWIJZING!!!!
+
+De partitie wordt nu dus verfijnd door elke groep op te splitsen in punten met een verschillende kleuromgeving, waarbij elke nieuwe groep uiteraard weer een nieuwe kleur krijgt. Omdat er weer punten met nieuwe kleuren zijn bijgekomen kan ook deze partitie weer verfijnd worden op basis van kleuromgeving. Dit proces wordt herhaald tot het niet meer mogelijk is een groep op te splitsen in nieuwe groepen met verschillende kleuromgevingen. Op dat moment bevinden zich in elke groep alleen maar elementen met dezelfde kleuromgeving, er wordt dan gesproken van een stabiele partitie.
+
+Zoals eerder vermeld was behoud een isomorfisme de omgeving van een bepaald punt, een isomorfisme behoudt dus ook de kleuromgeving van een bepaald punt. In twee isomorfe graven bevindt zich dus een gelijke stabiele partitie. Met behulp van zo'n stabiele partitie kan er dan ofwel een isomorfisme gedefinieerd worden ofwel geconcludeerd worden dat er geen isomorfisme bestaat en dat de twee graven niet isomorf zijn.
+
+\subsection{Hopcrofts algoritme}
+Het nadeel van bovenstaand algoritme is dat, hoewel het een enorme verbetering is ten opzichte van een brute force methode nog steeds een complexiteit van $O(n^2)$ heeft, nog niet heel effici\"ent dus. Daarom is er gezocht naar een snellere implementatie van dit algoritme, zoals het algoritme van Hopcroft. Dat werkt als volgt.
+
+
+Er wordt nog steeds begonnen met een initi\"ele partitie op basis van de graden van verschillende punten.
 %------------------------------------------------
-\section{Methoden}
-This results in the following, exhaustive list of possibilities. 
-\begin{compactitem}
-\item Donec dolor arcu, rutrum id molestie in, viverra sed diam
-\item Curabitur feugiat
-\item turpis sed auctor facilisis
-\item arcu eros accumsan lorem, at posuere mi diam sit amet tortor
-\item Fusce fermentum, mi sit amet euismod rutrum
-\item sem lorem molestie diam, iaculis aliquet sapien tortor non nisi
-\item Pellentesque bibendum pretium aliquet
-\end{compactitem}
-\lipsum[4] % Dummy text
 
-%------------------------------------------------
-\section{Resultaten}
-
-The results with this algorithm are given in Table~\ref{table:example}.
-\begin{table}[H]
-\caption{Example table}\label{table:example}
-\centering
-\begin{tabular}{llr}
-\toprule
-\multicolumn{2}{c}{Name} \\
-\cmidrule(r){1-2}
-First name & Last Name & Grade \\
-\midrule
-John & Doe & $7.5$ \\
-Richard & Miles & $2$ \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-
-\lipsum[5] % Dummy text
-
-%------------------------------------------------
 \subsection{Implementatie}
 Onze implementatie 
+
+
 \begin{algorithm}[H]
  \KwData{Een graaf $G(V,E)$ }
  \KwResult{Een stabiele partitie $a_{i}$ of G }
@@ -247,7 +228,7 @@ return result
 \subsection{Bewijs}
 
 %------------------------------------------------
-\subsection{Berekende resultaten}
+\section{Berekende resultaten}
 
 The following conclusion follows directly from \eqref{eq:emc}.
 \lipsum[6] % Dummy text
