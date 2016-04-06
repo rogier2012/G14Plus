@@ -330,16 +330,29 @@ def twins(graph):
 def gi_problem(graphlist):
     graphs = loadgraph("graphs/" + graphlist + ".grl", graphclass=graph, readlist=True)[0]
     print("Sets of isomorphic graphs:")
+    isomorphisms = []
+
     for i in range(len(graphs)):
         for j in range(i, len(graphs)):
 
-            if i != j:
-                G = graphs[i]
-                H = graphs[j]
-                GH = disjointunion(G, H)
-                numIso = countIsomorphism(GH, G, H, [], [], 1, True)
-                if numIso > 0:
-                    print("[" + str(i) + ", " + str(j) + "]")
+
+            G = graphs[i]
+            H = graphs[j]
+            GH = disjointunion(G, H)
+            numIso = countIsomorphism(GH, G, H, [], [], 1, True)
+            if numIso > 0:
+                found = False
+                for isos in isomorphisms:
+                    if isos[0] == i:
+                        isos.append(j)
+                        found = True
+                    for dingen in isos:
+                        if i == dingen:
+                            found = True
+                if not found:
+                    isomorphisms.append([i])
+    for row in isomorphisms:
+        print(str(row))
 
 def aut_problem(graphlist):
     graphs = loadgraph("graphs/" + graphlist + ".grl", graphclass=graph, readlist=True)[0]
