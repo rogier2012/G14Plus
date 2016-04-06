@@ -348,13 +348,22 @@ def aut_problem(graphlist):
     for i in range(len(graphs)):
         for j in range(i, len(graphs)):
 
-            if i != j:
-                G = graphs[i]
-                H = graphs[j]
-                GH = disjointunion(G, H)
-                numIso = countIsomorphism(GH, G, H, [], [], 1, True)
-                if numIso > 0:
-                    isomorphisms.append([i,j])
+            G = graphs[i]
+            H = graphs[j]
+            GH = disjointunion(G, H)
+            numIso = countIsomorphism(GH, G, H, [], [], 1, True)
+            if numIso > 0:
+                found = False
+                for isos in isomorphisms:
+                    if isos[0] == i:
+                        isos.append(j)
+                        found = True
+                    for dingen in isos:
+                        if i == dingen:
+                            found = True
+                if not found:
+                    isomorphisms.append([i])
+    listoflist = []
     for k in isomorphisms:
         i = k[0]
         G = graphs[i]
@@ -362,8 +371,20 @@ def aut_problem(graphlist):
         GH = disjointunion(G, H)
         numIso = countIsomorphism(GH, G, H, [], [], 1, False)
         if numIso > 0:
-            print(str(k) + ":                      " + str(numIso))
+            # print(str(k) + ": " + str(numIso))
+            listoflist.append([k,numIso])
+    print(listoflist)
+    for row in listoflist:
+        print(" ".join(row))
 
+def aut_single_graph(graphfile):
+
+    G = loadgraph("graphs/" + graphfile + ".gr", graphclass=graph)
+    H = loadgraph("graphs/" + graphfile + ".gr", graphclass=graph)
+    GH = disjointunion(G, H)
+    numIso = countIsomorphism(GH, G, H, [], [], 1, False)
+    if numIso > 0:
+        print("Number of automorphisms: " +str(numIso))
 
 def program():
     run = True
@@ -371,7 +392,8 @@ def program():
         print("Choose your problem below:")
         print("     1. GI Problem")
         print("     2. AUT Problem")
-        print("     3. Close")
+        print("     3. Single AUT problem")
+        print("     4. Close")
         int1 = int(input("Enter your input: "))
         if int1 == 1:
             print("Enter the graphlist file:")
@@ -388,8 +410,6 @@ def program():
                     print("Enter the graphlist file:")
                     str = input("Enter your input: ")
                     print("")
-
-
             print("")
         elif int1 == 2:
             print("Enter the graphlist file:")
@@ -406,8 +426,24 @@ def program():
                     str = input("Enter your input: ")
                     print("")
             print("")
-
         elif int1 == 3:
+            print("Enter the graph file:")
+            str = input("Enter your input: ")
+            print("")
+            file_found = False
+            while not file_found:
+                try:
+                    aut_single_graph(str)
+                    file_found = True
+                except FileNotFoundError:
+                    print("File not found, please enter a valid filename")
+                    print("Enter the graphlist file:")
+                    str = input("Enter your input: ")
+                    print("")
+            print("")
+
+
+        elif int1 == 4:
             run = False
 
 
