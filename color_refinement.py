@@ -328,7 +328,7 @@ def twins(graph):
     return twinlist
 
 def gi_problem(graphlist):
-    graphs = loadgraph("../graphs/" + graphlist + ".grl", graphclass=graph, readlist=True)[0]
+    graphs = loadgraph("graphs/" + graphlist + ".grl", graphclass=graph, readlist=True)[0]
     print("Sets of isomorphic graphs:")
     for i in range(len(graphs)):
         for j in range(i, len(graphs)):
@@ -342,7 +342,7 @@ def gi_problem(graphlist):
                     print("[" + str(i) + ", " + str(j) + "]")
 
 def aut_problem(graphlist):
-    graphs = loadgraph("../graphs/" + graphlist + ".grl", graphclass=graph, readlist=True)[0]
+    graphs = loadgraph("graphs/" + graphlist + ".grl", graphclass=graph, readlist=True)[0]
     print("Sets of isomorphic graphs:   Number of automorphisms:")
     isomorphisms = []
     for i in range(len(graphs)):
