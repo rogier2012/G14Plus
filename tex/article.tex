@@ -60,7 +60,7 @@
 \pagestyle{fancy} % All pages have headers and footers
 \fancyhead{} % Blank out the default header
 \fancyfoot{} % Blank out the default footer
-\fancyhead[C]{C. Bogaard, van den, D. Ikink, R. Monshouwer, F.Seuren: \shorttitle} % Custom header text
+\fancyhead[C]{J.\ Smith, M.\ Koopmans, P.\ Blank: \shorttitle} % Custom header text
 \fancyfoot[RO,LE]{\thepage} % Custom footer text
 
 %----------------------------------------------------------------------------------------
@@ -74,11 +74,11 @@
 
 \author{
 \large
-\textsc{Christiaan van den Bogaard, Dion Ikink, Fleur Seuren, \& Rogier Monshouwer}\thanks{Tutor: Jasper de Jong}\\[2mm] % Your name
+\textsc{Christiaan van den Bogaard, Dion Ikink, Fleur Seuren, and Rogier Monshouwer}\thanks{Thanks to our helpful mentor.}\\[2mm] % Your name
 \normalsize University of Twente \\ % Your institution
 \normalsize \href{mailto:d.t.r.ikink@student.utwente.nl}{d.t.r.ikink@student.utwente.nl}, 
 \href{mailto:c.h.m.vandenbogaard@student.utwente.nl}{c.h.m.vandenbogaard@student.utwente.nl} \\
-\normalsize\href{mailto:f.seuren@student.utwente.nl}{f.m.seuren@student.utwente.nl}, % Your email addresses
+\normalsize\href{mailto:f.seuren@student.utwente.nl}{f.seuren@student.utwente.nl}, % Your email addresses
 \href{mailto:r.monshouwer@student.utwente.nl}{r.monshouwer@student.utwente.nl}
 }
 
@@ -107,42 +107,41 @@
 
 \begin{multicols}{2} % Two-column layout throughout the main article text
 
+
+
 %------------------------------------------------
-\section{Inleiding}
+\section{Introductie}
 
 %\lettrine[nindent=0em,lines=3]{L} orem ipsum dolor sit amet, consectetur adipiscing elit.
-\paragraph{}\noindent Graaf isomorfisme (GI) is een van de meest bestudeerde onderwerpen binnen de wiskunde en theoretische informatica. Het probleem heeft zich tot een nieuwe klasse binnen de problemen die in polynomiale tijd zijn op te lossen zijn en degene die dat niet zijn. Een van de bestaande technieken om het GI probleem op te lossen is het aanwijzen van kleuren aan punten op basis van zijn eigenschappen: Color refinement. Door een disjuncte vereniging te nemen van twee grafen en color refinement toe te passen is het mogelijk dat iedere kleur bestaat uit precies twee punten. Dan bestaat er een bijectie die de punten projecteert op de andere.
-\paragraph{} \noindent Wij presenteren in dit artikel een Python implementatie van een algoritme om DFA te minimaliseren toegepast op grafen. Dit algoritme ontwikkelt door Hopcroft~\cite{MR0403320} blijkt ook voor het GI probleem te werken in de tijd complexiteitklasse van $O(m \log_{2} (n)$ met $m= \text{aantal lijnen}$ en $n = \text{aantal punten}$. Het artikel zal het originele algoritme uitleggen en de gedachte achter het algoritme. Daarna zal het artikel de toepasbaarheid op grafentheorie uitleggen en van uit daar een implementatie presenteren. Deze implementatie zal worden onderbouwt met een bewijs dat het werkt en enkele berekende resultaten vergeleken met een standaard $O(n^2)$ implementatie.
+\begin{quote} 
+\textit{Gegeven twee eindige graven G en H, bestaat er een isomorfisme tussen G en H.}
+\end{quote}
+
+\paragraph{} \noindent Het bovenstaande probleem staat bekend als het graaf isomorfisme probleem  (GI), één van de meest bestudeerde onderwerpen binnen de discrete wiskunde en theoretische informatica. Hoewel dit probleem voor verschillende klassen van graven is opgelost  en er honderden onderzoeken over zijn gepubliceerd is er nog altijd geen efficiënte oplossing gevonden die toepasbaar is op alle mogelijk graven. Read en Corneill spraken zelfs van een graafisomorfismeziekte. 
+Niet voor niets bevindt de complexiteit van dit probleem zich in een geheel nieuwe complexiteitsklasse, tussen de problemen die oplosbaar zijn in polynomiale tijd (P) en de beslisproblemen wiens oplossingen verifieerbaar zijn in polynomiale tijd (NP-complete).  
+ \paragraph{} \noindent Een van de bestaande technieken om het GI probleem op te lossen voor bepaalde soorten graven is partition refinement. Het idee hierachter is om de vertices op basis van hun buren te verdelen in verschillende groepen en deze partities steeds verder te verfijnen totdat dit niet meer mogelijk is. Op dat moment is het triviaal om te bepalen of er een isomorfisme mogelijk is en zoja welke of niet.
+Het is dus van belang een efficiënt algoritme voor partition refinement te vinden.  In dit artikel wordt een Python implementatie van zo?n efficiënt algoritme gepresenteerd. Oorspronkelijk wordt dit algoritme gebruikt om efficiënt deterministische eindige automaten te minimaliseren.. Dit algoritme ontwikkelt door Hopcroft~\cite{MR0403320} blijkt echter ook voor het GI probleem te werken in de tijd complexiteitklasse van $O(m \log_{2} (n)$ met $m= \text{aantal lijnen}$ en $n = \text{aantal punten}$. Het artikel zal het originele algoritme uitleggen en de gedachte achter het algoritme. Daarna zal het artikel de toepasbaarheid op grafentheorie uitleggen en van uit daar een implementatie presenteren. Deze implementatie zal worden onderbouwt met een bewijs dat het werkt en een complexiteitsklasse heeft van  $O(m \log_{2} (n)$  en enkele berekende resultaten vergeleken met een standaard $O(n^2)$ implementatie.
 
 
 %------------------------------------------------
 
-\section{Implementatie}
+\section{Scope \& Doelstellingen}
 
-Dezelfde techniek die gebruikt wordt om het proces van DFA minimalisatie te versnellen kan ook toegepast binnen het graaf
-isomorphisme probleem. Het gaat er daarbij om om een de ruwste stabiele partitie te vinden voor graaf G. Dit is mogelijk
-door het volgende lemma te implementeren:
+Describe \lipsum[1] % Dummy text
 
-\begin{theorem}
-Neem $C$, een kleurklasse in de huidige partitie en $\forall i \geq 0$, neem $D_{i}$ de verzameling vertices met precies
-$i$ buren in $C$. Dan geldt voor alle kleurklassen $C' \neq C$ in de huidige partitie:
-Door $C'$ te vervangen door alle $C'_{i} = C' \cup D$ wordt de ruwste partitie gevonden voor de betreffende graaf.
-\end{theorem}
-
-Hieruit volgt dus dat de methode van DFA minimalisatie op bepaalde punten aangepast moet worden voor het GI probleem:
-Op de volgende manier is dit geprobeerd te implementeren.
-
-Allereerst is er een initi\"ele partitie gemaakt door alle vertices in verschillende kleurklassen te scheiden op basis
-van hun graad. Deze kleurklassen zijn gesorteerd op basis van grootte en allen behalve de grootste zijn toegevoegd aan een queue, die vanaf Q genoemd wordt.
-
-Vervolgens is deze partitie verfijnd volgens de volgende methode (die in het theorem staat)
-
-De kleurklasse wordt uit de queue gehaald en de partitie wordt opnieuw verfijnd volgens het theorem.
-
-Zodra er geen partitie meer mogelijk is heb je de ruwste stabiele verfijning gevonden.
-
-....
-
+%------------------------------------------------
+\section{Methoden}
+This results in the following, exhaustive list of possibilities. 
+\begin{compactitem}
+\item Donec dolor arcu, rutrum id molestie in, viverra sed diam
+\item Curabitur feugiat
+\item turpis sed auctor facilisis
+\item arcu eros accumsan lorem, at posuere mi diam sit amet tortor
+\item Fusce fermentum, mi sit amet euismod rutrum
+\item sem lorem molestie diam, iaculis aliquet sapien tortor non nisi
+\item Pellentesque bibendum pretium aliquet
+\end{compactitem}
+\lipsum[4] % Dummy text
 
 %------------------------------------------------
 \section{Resultaten}

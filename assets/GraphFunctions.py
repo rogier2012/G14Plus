@@ -29,10 +29,12 @@ def disjointunion(G, H):
     HMap = {}
     for n in G.V():
         value = K.addvertex()
+        value.oldgraph = G
         key = n
         GMap[key] = value
     for n in H.V():
         value = K.addvertex()
+        value.oldgraph = H
         key = n
         HMap[key] = value
 

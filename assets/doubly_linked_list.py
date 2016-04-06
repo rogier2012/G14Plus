@@ -1,6 +1,7 @@
-class double_linked_list:
+class doubly_linked_list:
     first = None
     last = None
+    current = None
 
     def insert_beginning(self, node):
         self.first.head = node
@@ -33,12 +34,10 @@ class double_linked_list:
             self.first = node
         if self.last is None:
             self.last = node
-            self.first.tail = node
         else:
             self.last.tail = node
             node.head = self.last
             self.last = node
-
 
     def remove(self, node):
         if node.head is None:
@@ -50,6 +49,25 @@ class double_linked_list:
         else:
             node.tail.head = node.head
 
+    def pop(self):
+
+        node = self.last
+        if node.head is not None:
+            new_last = node.head
+            new_last.tail = None
+            self.last = new_last
+        else:
+            self.first = None
+            self.last = None
+        return node
+
+    def extend(self, linked_list):
+        if linked_list.first is not None:
+            node = self.last
+            node.tail = linked_list.first
+            linked_list.first.head = node
+            self.last = linked_list.last
+
     def __str__(self):
         node = self.first
         result = "["
@@ -58,6 +76,7 @@ class double_linked_list:
             if node.tail is not None:
                 result = result + ", "
             node = node.tail
+        result = result + "]"
         return result
 
     def __len__(self):
@@ -67,6 +86,19 @@ class double_linked_list:
             result = result + 1
             node = node.tail
         return result
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.current == self.last:
+            raise StopIteration
+        elif self.current == None:
+            self.current = self.first
+        else:
+            self.current = self.current.tail
+        return self.current
+
 
     def to_list(self):
         node = self.first
@@ -78,8 +110,9 @@ class double_linked_list:
         return result
 
 
-class color(double_linked_list):
-    inqueue = False
+    def len_greater_than_zero(self):
+        return self.first is not None
+
 
 class color_node:
     head = None
