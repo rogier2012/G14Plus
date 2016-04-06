@@ -142,10 +142,15 @@ De partitie wordt nu dus verfijnd door elke groep op te splitsen in punten met e
 Zoals eerder vermeld was behoud een isomorfisme de omgeving van een bepaald punt, een isomorfisme behoudt dus ook de kleuromgeving van een bepaald punt. In twee isomorfe graven bevindt zich dus een gelijke stabiele partitie. Met behulp van zo'n stabiele partitie kan er dan ofwel een isomorfisme gedefinieerd worden ofwel geconcludeerd worden dat er geen isomorfisme bestaat en dat de twee graven niet isomorf zijn.
 
 \subsection{Hopcrofts algoritme}
-Het nadeel van bovenstaand algoritme is dat, hoewel het een enorme verbetering is ten opzichte van een brute force methode nog steeds een complexiteit van $O(n^2)$ heeft, nog niet heel effici\"ent dus. Daarom is er gezocht naar een snellere implementatie van dit algoritme, zoals het algoritme van Hopcroft. Dat werkt als volgt.
+Het nadeel van bovenstaand algoritme is dat, hoewel het een enorme verbetering is ten opzichte van een brute force methode nog steeds een complexiteit van $O(n^2)$ heeft, nog niet heel effici\"ent dus. Daarom is er gezocht naar een snellere implementatie van dit algoritme, zoals het algoritme van Hopcroft. Er wordt dus nog steeds gezocht naar een stabiele partitie $\alpha$ voor graaf $G$ alleen we zoeken deze in een zo minimaal aantal stappen, de ruwste stabiele partitie.
 
+\begin{lemma}
+Neem C een kleurgroep in de huidige partitie $\alpha$ en definieer voor alle $i \geq 0$ $D_{i}$ als het aantal punten met precies $i$ buren in $C$. Door elke kleurgroep $C' \neq C$ in de huidige partitie te vervangen door de niet-lege kleurgroepen $C'_{i} := C'\cap D_{i}$ wordt de ruwste stabiele partitie voor graaf $G$ gevonden.
+\end{lemma}
 
-Er wordt nog steeds begonnen met een initi\"ele partitie op basis van de graden van verschillende punten.
+MOET IK DIT BEWIJZEN??? IK ZOU NAMELIJK NIET WETEN HOE?
+
+De verfijning die hierboven beschreven staat kan ge\"implementeerd worden met een complexiteitsklasse van $O(|E(C)|)$, in de volgende sectie zal de Python implementatie voor dit algoritme beschreven worden en bewezen worden dat deze daadwerkelijk een complexiteitsklasse van $O(|E(C)|)$ heeft.
 %------------------------------------------------
 
 \subsection{Implementatie}
