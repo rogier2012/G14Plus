@@ -45,7 +45,10 @@
 \usepackage[dutch]{babel}
 \usepackage{lettrine} % The lettrine is the first enlarged letter at the beginning of the text
 \usepackage{paralist} % Used for the compactitem environment which makes bullet points with less space between them
-
+\usepackage{algorithmicx}
+\usepackage[]{algorithm2e}
+\usepackage{algpseudocode}
+\usepackage{pifont}
 \usepackage{abstract} % Allows abstract customization
 \renewcommand{\abstractnamefont}{\normalfont\bfseries} % Set the "Abstract" text to bold
 \renewcommand{\abstracttextfont}{\normalfont\small\itshape} % Set the abstract itself to small italic text
@@ -165,10 +168,44 @@ Richard & Miles & $2$ \\
 The following therefore holds for all
 planar graphs $G$ with $n$ vertices, $m$ edges, and $r$ regions.
 
-\begin{equation}
-\label{eq:emc}
-n-m+r=2
-\end{equation}
+\begin{algorithm}[H]
+ \KwData{Een Graaf $G(V,E)$ }
+ \KwResult{Een stabiele partitie $a_{i}$ of G }
+initalization \;
+ \ForAll{ $v$ $\in$ $V(G)$ }{
+	$\alpha(v) := v.degree()$
+}
+ $queue := [\alpha]$\;
+ \While{$queue$ nonempty}{
+  $c := dequeue(queue)$\;
+  $d\_count := generate\_dcount(c)$\;
+  \ForAll{$ color_{i} \in d\_count$}{
+   \If{ $d\_count(color_{i}) > 1 $ }{
+	$new\_color := x_{1} \in d\_counts(color_{i})$ \;
+	\ForAll{ $ x_{i} \in d\_counts(color_{i}) | x_{i} \neq x_{1} $}{
+	$c_{i} = x_{i} $ 
+	}
+   \eIf{$ new\_color \in queue $}{
+	$ queue = \{c_{i}\} \cup queue $ \;
+  } {
+	neem grootste partitie
+	$ F := max(\{ c_{i}, new\_color \} ) $ \;
+	$ queue = \{ \{ new\_color \} / F \} \cup queue $
+
+}	
+
+
+
+  }
+ }
+}
+ \caption{fast partition refinement}
+\end{algorithm}
+
+
+
+
+
 
 %------------------------------------------------
 \subsection{Bewijs}
