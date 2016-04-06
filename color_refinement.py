@@ -343,7 +343,7 @@ def gi_problem(graphlist):
 
 def aut_problem(graphlist):
     graphs = loadgraph("graphs/" + graphlist + ".grl", graphclass=graph, readlist=True)[0]
-    print("Sets of isomorphic graphs:   Number of automorphisms:")
+    print("Sets of isomorphic graphs:                   Number of automorphisms:")
     isomorphisms = []
     for i in range(len(graphs)):
         for j in range(i, len(graphs)):
@@ -372,10 +372,9 @@ def aut_problem(graphlist):
         numIso = countIsomorphism(GH, G, H, [], [], 1, False)
         if numIso > 0:
             # print(str(k) + ": " + str(numIso))
-            listoflist.append([k,numIso])
-    print(listoflist)
+            listoflist.append([str(k),str(numIso)])
     for row in listoflist:
-        print(" ".join(row))
+        print("%-40s %6s" % (row[0],row[1]))
 
 def aut_single_graph(graphfile):
 
