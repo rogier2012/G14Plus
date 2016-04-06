@@ -120,10 +120,10 @@
 \textit{Gegeven twee eindige graven G en H, bestaat er een isomorfisme tussen G en H.}
 \end{quote}
 
-\paragraph{} \noindent Het bovenstaande probleem staat bekend als het graaf isomorfisme probleem  (GI), één van de meest bestudeerde onderwerpen binnen de discrete wiskunde en theoretische informatica. Hoewel dit probleem voor verschillende klassen van graven is opgelost  en er honderden onderzoeken over zijn gepubliceerd is er nog altijd geen efficiënte oplossing gevonden die toepasbaar is op alle mogelijk graven. Read en Corneill spraken zelfs van een graafisomorfismeziekte. 
+\paragraph{} \noindent Het bovenstaande probleem staat bekend als het graaf isomorfisme probleem  (GI), ï¿½ï¿½n van de meest bestudeerde onderwerpen binnen de discrete wiskunde en theoretische informatica. Hoewel dit probleem voor verschillende klassen van graven is opgelost  en er honderden onderzoeken over zijn gepubliceerd is er nog altijd geen efficiï¿½nte oplossing gevonden die toepasbaar is op alle mogelijk graven. Read en Corneill spraken zelfs van een graafisomorfismeziekte. 
 Niet voor niets bevindt de complexiteit van dit probleem zich in een geheel nieuwe complexiteitsklasse, tussen de problemen die oplosbaar zijn in polynomiale tijd (P) en de beslisproblemen wiens oplossingen verifieerbaar zijn in polynomiale tijd (NP-complete).  
  \paragraph{} \noindent Een van de bestaande technieken om het GI probleem op te lossen voor bepaalde soorten graven is partition refinement. Het idee hierachter is om de vertices op basis van hun buren te verdelen in verschillende groepen en deze partities steeds verder te verfijnen totdat dit niet meer mogelijk is. Op dat moment is het triviaal om te bepalen of er een isomorfisme mogelijk is en zoja welke of niet.
-\paragraph{} \noindent Het is dus van belang een efficiënt algoritme voor partition refinement te vinden.  In dit artikel wordt een Python implementatie van zo?n efficiënt algoritme gepresenteerd. Oorspronkelijk wordt dit algoritme gebruikt om efficiënt deterministische eindige automaten te minimaliseren.. Dit algoritme ontwikkelt door Hopcroft~\cite{MR0403320} blijkt echter ook voor het GI probleem te werken in de tijd complexiteitklasse van $O(m \log_{2} (n)$ met $m= \text{aantal lijnen}$ en $n = \text{aantal punten}$. Het artikel zal het originele algoritme uitleggen en de gedachte achter het algoritme. Daarna zal het artikel de toepasbaarheid op grafentheorie uitleggen en van uit daar een implementatie presenteren. Deze implementatie zal worden onderbouwt met een bewijs dat het werkt en een complexiteitsklasse heeft van  $O(m \log_{2} (n)$  en enkele berekende resultaten vergeleken met een standaard $O(n^2)$ implementatie.
+\paragraph{} \noindent Het is dus van belang een efficiï¿½nt algoritme voor partition refinement te vinden.  In dit artikel wordt een Python implementatie van zo?n efficiï¿½nt algoritme gepresenteerd. Oorspronkelijk wordt dit algoritme gebruikt om efficiï¿½nt deterministische eindige automaten te minimaliseren.. Dit algoritme ontwikkelt door Hopcroft~\cite{MR0403320} blijkt echter ook voor het GI probleem te werken in de tijd complexiteitklasse van $O(m \log_{2} (n)$ met $m= \text{aantal lijnen}$ en $n = \text{aantal punten}$. Het artikel zal het originele algoritme uitleggen en de gedachte achter het algoritme. Daarna zal het artikel de toepasbaarheid op grafentheorie uitleggen en van uit daar een implementatie presenteren. Deze implementatie zal worden onderbouwt met een bewijs dat het werkt en een complexiteitsklasse heeft van  $O(m \log_{2} (n)$  en enkele berekende resultaten vergeleken met een standaard $O(n^2)$ implementatie.
 
 
 %------------------------------------------------
@@ -175,7 +175,7 @@ The following therefore holds for all
 planar graphs $G$ with $n$ vertices, $m$ edges, and $r$ regions.
 
 \begin{algorithm}[H]
- \KwData{Een Graaf $G(V,E)$ }
+ \KwData{Een graaf $G(V,E)$ }
  \KwResult{Een stabiele partitie $a_{i}$ of G }
 initalization \;
  \ForAll{ $v$ $\in$ $V(G)$ }{
@@ -205,10 +205,43 @@ initalization \;
   }
  }
 }
+
  \caption{fast partition refinement}
 \end{algorithm}
+\pagebreak
+
+\begin{algorithm}[H]
+ \KwData{Een partitie $C$}
+ \KwResult{Een Mapping $ \beta(c') \mapsto \gamma(neighbourcount) \mapsto \{ V_{i} \} $}
+Een partitie mapt naar een mapping van een aantal buren, die weer mapt aan een lijst met vertices die dat aantal buren hebben. Zo kunnen wij gemakkelijk splitsen in nieuwe partities \;
+ \ForAll{ $v$ $\in$ $C$ }{
+\ForAll{ $v'$ $\in$ $N(v)$ }{
+	$ neighbour\_count(v') =+ 1 $ \;
+	$ colorset = colorset \cup  neighbour.colorclass  $  \;
+}	
+}
 
 
+  \ForAll{$ color_{i} \in colorset $}{
+
+	
+	\ForAll{ $ v \in C $ }{
+	\eIf{ $ v \in neighbour\_count $} {
+	 	$ nbscount := neighbour\_count(v) $ \;
+	} {
+	$ nbscount := 0 $ \;
+	$ d\_count(0) \cup v $ \;
+	}
+}
+$ result(c) \cup d\_count $
+
+	
+  }
+return result
+ 
+
+\caption{$ generate\_dcount $}
+\end{algorithm}
 
 
 
