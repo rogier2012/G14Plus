@@ -264,9 +264,12 @@ De complexiteit van $Refine(C)$ van een graaf is $O(|E(C)|) $,  waarbij  $ E(C)$
 \end{lemma}
 
 Bewijs:
-Uit het algoritme $ generate\_dcount(C) $ ziet men dat er geitereerd wordt door eerst $ \forall v \in C $ en daarna $  \forall v' \in N(v) $. Dat is dus door $\forall e \in E(v) $ wat in totaal dus $ E(C) $ is. 
+De operatie $ Refine(C) $ kan gezien worden als $ \forall_{C'} $  $ C' \neq C $ $ Refine(C, C') $. $Refine(C, C') $ itereert langs $ E(C') $  incident met $ C$ . 
+Laten we de notatie $ E(C', C) $ het aantal lijnen noemen vanuit $ C' $ naar $ C $
+Er geldt dus ook dat $ \forall_{C'}  $  $ C' \neq C $  $ E(C', C) \leqslant E(C) $
+Dus de operatie $ Refine(C) $ heeft een complexiteit van $O(|E(C)|$ 
 
-daarna w
+
 
 %------------------------------------------------
 \section{Berekende resultaten}
