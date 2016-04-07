@@ -153,7 +153,7 @@ MOET IK DIT BEWIJZEN??? IK ZOU NAMELIJK NIET WETEN HOE?
 De verfijning die hierboven beschreven staat kan ge\"implementeerd worden met een complexiteitsklasse van $O(|E(C)|)$, in de volgende sectie zal de Python implementatie voor dit algoritme beschreven worden en bewezen worden dat deze daadwerkelijk een complexiteitsklasse van $O(|E(C)|)$ heeft.
 %------------------------------------------------
 
-\subsection{Implementatie}
+\section{Implementatie}
 Het algoritme staat hieronder in psuedocode, maar we zullen het ook kort even toelichten. We beginnen alle vertices $v_i$ in te delen in een partitie $C_j$ op basis van degree. Vervolgens stoppen wij alle partities in een queue.
 Zolang Q niet leeg is, poppen wij een color C uit Q. 
 Dan kan je partities $ C' $ splitsen in nieuwe partities op basis van hoeveel buren ze in C hebben. Dit doen we door $ \forall V_i \in C $ te bekijken wat hun buren $V'$ zijn. Hoe vaak $V'$ hierin wordt  gezien als buur wordt bijgehouden in een $neighbour\_count$. Zodra je door alle $V'$ bent geitereerd, bekijk alle $C'$ van de vertices $V'$. Zodra er tussen $ \forall{V'} \in C $ er een verschil in $neighbour\_count$ zit, maak je nieuwe partities bijbehorende bij die $neighbour\_count$. Zo wordt bijv $ \forall_{V' \in C'}  [ neighbour\_count(V') = 0] $ een partitie.
@@ -209,7 +209,7 @@ Een partitie mapt naar een mapping van een aantal buren, die weer mapt aan een l
   \ForAll{$ color_{i} \in colorset $}{
 
 	
-	\ForAll{ $ v \in C $ }{
+	\ForAll{ $ v \in color_{i} $ }{
 	\eIf{ $ v \in neighbour\_count $} {
 	 	$ nbscount := neighbour\_count(v) $ \;
 	} {
@@ -232,6 +232,17 @@ return result
 
 %------------------------------------------------
 \subsection{Bewijs}
+
+We gaan hier bewijzen dat de tijdscomplexiteit van  $ Refine(C) $ $ O(|E(C)|)$ ,  waar $ E(C) $ het aantal lijnen is.
+
+\begin{lemma}
+De complexiteit van $Refine(C)$ van een graaf is $O(|E(C)|) $,  waarbij  $ E(C)$ het aantal lijnen incident met vertices in $C$
+\end{lemma}
+
+Bewijs:
+Uit het algoritme $ generate\_dcount(C) $ ziet men dat er geitereerd wordt door eerst $ \forall v \in C $ en daarna $  \forall v' \in N(v) $. Dat is dus door $\forall e \in E(v) $ wat in totaal dus $ E(C) $ is. 
+
+daarna w
 
 %------------------------------------------------
 \section{Berekende resultaten}
