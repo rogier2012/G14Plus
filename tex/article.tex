@@ -114,6 +114,7 @@
 
 
 %------------------------------------------------
+\section*{Introduction}
 \begin{quote}
 \textit{''Gegeven twee eindige graven G en H, bestaat er een isomorfisme tussen G en H?''}
 \end{quote}
@@ -145,8 +146,6 @@ Zoals eerder vermeld was behoud een isomorfisme de omgeving van een bepaald punt
 \item Er bestaat geen isomorfisme en dat de twee graven niet isomorf zijn.
 \item Het kan zijn dat er het nog geen bijectie ontstaat en het dus nog niet zeker is of er een isomorfisme is.
 \end{enumerate}
-
-1.  Er kan een isomorfisme gedefinieerd worden. 2. Er bestaat geen isomorfisme en dat de twee graven niet isomorf zijn. 3. Het kan zijn dat er het nog geen bijectie ontstaat en het dus nog niet zeker is of er een isomorfisme is.
 
 \subsection{Hopcrofts algoritme}
 Het nadeel van bovenstaand algoritme is dat, hoewel het een enorme verbetering is ten opzichte van een brute force methode nog steeds een complexiteit van $O(n^2)$ heeft, nog niet heel effici\"ent dus. Daarom is er gezocht naar een snellere implementatie van dit algoritme, zoals het algoritme van Hopcroft. Er wordt dus nog steeds gezocht naar een stabiele partitie $\alpha$ voor graaf $G$ alleen we zoeken deze in een zo minimaal aantal stappen, de ruwste stabiele partitie.
@@ -248,8 +247,8 @@ $ result(c) \cup d\_count $
   }
 return result
  
-
 \caption{$ generate\_dcount $}
+
 \end{algorithm}
 
 
@@ -278,7 +277,7 @@ Om toeval uit te sluiten zijn alle tests tien keer uitgevoerd voor beide algorit
 
 Wat opvalt is dat F.R. pas bij grote grafen significant sneller is. bigtrees1 bevat vier grafen, elk met 44 vertices. bigtrees3 bevat ook vier grafen, maar elk van deze grafen heeft maar liefst 227 vertices. bigtrees3 heeft dus ruim vijf maal zo veel vertices als bigtrees1. Voor bigtrees1 is F.R. ongeveer 6\% sneller dan R., terwijl dat percentage voor bigtrees3 vele malen hoger ligt: F.R. is bijna achttien keer sneller.
 
-De 'threepaths' grafen zijn complexe problemen voor het Color Refinement-algoritme om op te lossen. Ze bevatten lange paden en in elk pad kunnen er maximaal twee vertices van kleur veranderen (zie Figuur~\ref{paths}). Dit heeft tot gevolg dat R. zeer veel tijd nodig heeft om tot een stabiele partitie te komen. F.R. pakt het probleem zoals verwacht veel efficiënter aan. Voor een van de grotere grafen (threepaths5120) is F.R. ruim 25 keer sneller.
+De 'threepaths' grafen zijn complexe problemen voor het Color Refinement-algoritme om op te lossen. Ze bevatten lange paden en in elk pad kunnen er maximaal twee vertices van kleur veranderen (zie Figuur~\ref{paths}). Dit heeft tot gevolg dat R. zeer veel tijd nodig heeft om tot een stabiele partitie te komen. F.R. pakt het probleem zoals verwacht veel effici\"enter aan. Voor een van de grotere grafen (threepaths5120) is F.R. ruim 25 keer sneller.
 
 \begin{figure}[H]
 \centering
@@ -288,11 +287,11 @@ De 'threepaths' grafen zijn complexe problemen voor het Color Refinement-algorit
 
 
 %------------------------------------------------
-\section{Conclusie \& Discussie}
+\section{Conclusie}
 Het blijkt dus dat Hopcrofts algoritme een slimme manier is om een graaf te partitioneren.
 
-\lipsum[8] % Dummy text.
-
+\section{Discussie}
+De onderzoeksresulaten komen niet \'e\'en op \'e\'en overeen met de tijdscomplexiteitsklasse
 
 %----------------------------------------------------------------------------------------
 %	REFERENCE LIST
@@ -356,26 +355,5 @@ Om toeval uit te sluiten zijn alle tests tien keer uitgevoerd per algoritme. De 
 
 Wat opvalt is dat het Fast Refine-algoritme pas bij grote grafen significant sneller is. bigtrees1 bevat vier grafen, elk met 44 vertices. bigtrees3 bevat ook vier grafen, maar elk van deze grafen heeft maar liefst 227 vertices. bigtrees3 heeft dus ruim vijf maal zo veel vertices als bigtrees1. Voor bigtrees1 is Fast Refine ongeveer 6\% sneller dan Refine, terwijl dat percentage voor bigtrees3 vele malen hoger ligt: Fast Refine is bijna achttien keer sneller.
 
-%------------------------------------------------
-\section{Conclusie}
-Het blijkt dus dat Hopcrofts algoritme een slimme manier is om een graaf te partitioneren.
-
-\section{Discussie}
-De onderzoeksresulaten komen niet ��n op ��n overeen met de tijdscomplexiteitsklasse
-
-\lipsum[8] % Dummy text. 
-
-
-%----------------------------------------------------------------------------------------
-%	REFERENCE LIST
-%----------------------------------------------------------------------------------------
- 
-% Bibliography - this is intentionally simple in this template
-\bibliographystyle{plain}
-\bibliography{referenties}
-
-%----------------------------------------------------------------------------------------
-
-\end{multicols}
 
 \end{document}
