@@ -2,12 +2,12 @@ import time
 
 from assets.fastgraphs import graph, colorclass
 from assets.graphIO import loadgraph, writeDOT
-from assets.graphfunctions import disjointunion
+from assets.GraphFunctions import disjointunion
 from color_refinement.branch_algorithms import *
 
 
 def refine(G, D, I):
-    time1 = timeMs()
+    timer = timeMs()
 
     V = G.V()
     alpha_list = []
@@ -32,13 +32,12 @@ def refine(G, D, I):
             I[i].colornum = i + 1
             next_list = [D[i], I[i]]
             result_list.append(next_list)
-    time2 = timeMs() - time1
-    # print("Initialisation time: " + str(time2 // 1000) + "s")
+
     partTime = 0
     coloringTime = 0
+
     while alpha_list != result_list:
         alpha_list = result_list
-        # print(str(alpha_list) + " with length: " + str(len(alpha_list)))
         result_list = []
         part1 = timeMs()
         for color_list in alpha_list:
@@ -59,17 +58,16 @@ def refine(G, D, I):
 
             result_list.append(initial_list)
             result_list.extend(new_list)
-        partTime = partTime + (timeMs() - part1)
+        partTime += timeMs() - part1
         coloring1 = timeMs()
         for colornumber in range(len(result_list)):
             for vertexnum in range(len(result_list[colornumber])):
                 result_list[colornumber][vertexnum].colornum = colornumber
-        coloringTime = coloringTime + (timeMs() - coloring1)
+        coloringTime += timeMs() - coloring1
 
-    time3 = timeMs() - time1
-    # print("Loop time: " + str(time3 // 1000) + "s")
-    # print("Partitioning time: " + str(partTime // 1000) + "s")
-    # print("Coloring time: " + str(coloringTime // 1000) + "s")
+    timer = timeMs() - timer
+    print("[REFINE] Execution time:", timer)
+
     return alpha_list
 
 
@@ -197,6 +195,7 @@ def branching_rules(findSingleIso=False, writeDot=False):
 
 
 def fast_partitioning(G, D, I):
+    timer = timeMs()
     color_list = dict()
     queue = list()
 
@@ -224,8 +223,6 @@ def fast_partitioning(G, D, I):
         color_list[len1] = next_color
         D[index].setColorClass(next_color)
         I[index].setColorClass(next_color)
-
-    timer = 0
 
     while len(queue) > 0:
         color_from_queue = queue.pop()
@@ -271,6 +268,9 @@ def fast_partitioning(G, D, I):
     total_list = list()
     for color_entry in color_list:
         total_list.append(color_list[color_entry].getvertices())
+
+    timer2 = timeMs() - timer
+    print("[FAST REFINE] Execution time:", timer2)
     return total_list
 
 

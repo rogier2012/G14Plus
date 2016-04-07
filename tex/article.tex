@@ -23,8 +23,7 @@
 \documentclass[twoside]{article}
 
 \usepackage{lipsum} % Package to generate dummy text throughout this template
-
-\usepackage{amsmath,amssymb,amsthm} % Mathematical Symbols, styles, etc
+\usepackage{amsmath,amssymb,amsthm,appendix} % Mathematical Symbols, styles, etc
 
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
@@ -65,7 +64,7 @@
 \pagestyle{fancy} % All pages have headers and footers
 \fancyhead{} % Blank out the default header
 \fancyfoot{} % Blank out the default footer
-\fancyhead[C]{R.\ Monshouwer, C.H.M.\ van den Bogaard, F.\ Seuren, D.T.R. Ikink: \shorttitle} % Custom header text
+\fancyhead[C]{C.H.M.\ van den Bogaard, D.T.R. Ikink, F.\ Seuren, R.\ Monshouwer: \shorttitle} % Custom header text
 \fancyfoot[RO,LE]{\thepage} % Custom footer text
 
 %----------------------------------------------------------------------------------------
@@ -81,8 +80,8 @@
 \large
 \textsc{Christiaan van den Bogaard, Dion Ikink, Fleur Seuren, and Rogier Monshouwer}\thanks{Thanks to our helpful mentor.}\\[2mm] % Your name
 \normalsize University of Twente \\ % Your institution
-\normalsize \href{mailto:d.t.r.ikink@student.utwente.nl}{d.t.r.ikink@student.utwente.nl}, 
-\href{mailto:c.h.m.vandenbogaard@student.utwente.nl}{c.h.m.vandenbogaard@student.utwente.nl} \\
+\normalsize \href{mailto:c.h.m.vandenbogaard@student.utwente.nl}{c.h.m.vandenbogaard@student.utwente.nl}, 
+\href{mailto:d.t.r.ikink@student.utwente.nl}{d.t.r.ikink@student.utwente.nl} \\
 \normalsize\href{mailto:f.seuren@student.utwente.nl}{f.seuren@student.utwente.nl}, % Your email addresses
 \href{mailto:r.monshouwer@student.utwente.nl}{r.monshouwer@student.utwente.nl}
 }
@@ -236,7 +235,39 @@ return result
 %------------------------------------------------
 \section{Berekende resultaten}
 
-De resultaten van de metingen zijn gegeven in Tabel~\ref{table:resultaten}.
+De resultaten van de metingen zijn gegeven in Appendix~\ref{AppendixA}.
+
+Om toeval uit te sluiten zijn alle tests tien keer uitgevoerd voor beide algoritmes. De gemeten tijden zijn de gemiddelden van de tien uitgevoerde tests. In de laatste kolom is het verschil in uitvoertijd opgenomen, weergegeven als percentages. Een percentage van $100$\% betekent dat het Fast Refine-algoritme tweemaal zo snel was als het Refine-algoritme bij het uitvoeren van de test (een verbetering van $100$\% ten opzichte van Refine).
+
+Wat opvalt is dat het Fast Refine-algoritme pas bij grote grafen significant sneller is. bigtrees1 bevat vier grafen, elk met 44 vertices. bigtrees3 bevat ook vier grafen, maar elk van deze grafen heeft maar liefst 227 vertices. bigtrees3 heeft dus ruim vijf maal zo veel vertices als bigtrees1. Voor bigtrees1 is Fast Refine ongeveer 6\% sneller dan Refine, terwijl dat percentage voor bigtrees3 vele malen hoger ligt: Fast Refine is bijna achttien keer sneller.
+
+De grootste snelheidswinst is te zien bij \'threepaths\' grafen. 
+
+%------------------------------------------------
+\section{Conclusie \& Discussie}
+Het blijkt dus dat Hopcrofts algoritme een slimme manier is om een graaf te partitioneren. 
+
+\lipsum[8] % Dummy text. 
+
+
+%----------------------------------------------------------------------------------------
+%	REFERENCE LIST
+%----------------------------------------------------------------------------------------
+ 
+% Bibliography - this is intentionally simple in this template
+\bibliographystyle{plain}
+\bibliography{referenties}
+\end{multicols}
+
+%----------------------------------------------------------------------------------------
+
+%----------------------------------------------------------------------------------------
+%	APPENDICES
+%----------------------------------------------------------------------------------------
+\newpage
+\section{Appendices}
+\subsection{Appendix A: Meetresultaten} \label{AppendixA}
+
 \begin{table}[H]
 \caption{Resultaten}\label{table:resultaten}
 \centering
@@ -275,29 +306,5 @@ modulesC & $242922$ & $397950$ & $63,82$\% \\
 \bottomrule
 \end{tabular}
 \end{table}
-
-
-Om toeval uit te sluiten zijn alle tests tien keer uitgevoerd per algoritme. De gemeten tijden, zoals ze in Tabel~\ref{table:resultaten} te zien zijn, zijn de gemiddelden van de tien uitgevoerde tests. In de laatste kolom is het verschil in uitvoertijd opgenomen, weergegeven in percentages. Een percentage van $100$\% betekent dat het Fast Refine-algoritme tweemaal zo snel was als het Refine-algoritme bij het uitvoeren van de test (een verbetering van $100$\% ten opzichte van Refine).
-
-Wat opvalt is dat het Fast Refine-algoritme pas bij grote grafen significant sneller is. bigtrees1 bevat vier grafen, elk met 44 vertices. bigtrees3 bevat ook vier grafen, maar elk van deze grafen heeft maarliefst 227 vertices. bigtrees3 heeft dus ruim vijf maal zo veel vertices als bigtrees1. Voor bigtrees1 is Fast Refine ongeveer 6\% sneller dan Refine, terwijl dat percentage voor bigtrees3 vele malen hoger ligt: Fast Refine is bijna achttien keer sneller! 
-
-%------------------------------------------------
-\section{Conclusie \& Discussie}
-Het blijkt dus dat Hopcrofts algoritme een slimme manier is om een graaf te partitioneren. 
-
-\lipsum[8] % Dummy text. 
-
-
-%----------------------------------------------------------------------------------------
-%	REFERENCE LIST
-%----------------------------------------------------------------------------------------
- 
-% Bibliography - this is intentionally simple in this template
-\bibliographystyle{plain}
-\bibliography{referenties}
-
-%----------------------------------------------------------------------------------------
-
-\end{multicols}
 
 \end{document}

@@ -2,7 +2,7 @@ import time
 
 from assets.fastgraphs import graph, colorclass
 from assets.graphIO import loadgraph, writeDOT
-from assets.graphfunctions import disjointunion
+from assets.GraphFunctions import disjointunion
 from color_refinement.branch_algorithms import *
 
 
@@ -67,9 +67,11 @@ def refine(G, D, I):
         coloringTime = coloringTime + (timeMs() - coloring1)
 
     time3 = timeMs() - time1
+    print("[REFINE] Execution time:", time3)
     # print("Loop time: " + str(time3 // 1000) + "s")
     # print("Partitioning time: " + str(partTime // 1000) + "s")
     # print("Coloring time: " + str(coloringTime // 1000) + "s")
+
     return alpha_list
 
 
@@ -152,7 +154,7 @@ def bijection(alpha, length):
 
 def pathsBench():
     t1 = timeMs()
-    L = loadgraph("../graphs/threepaths1280.gr", graphclass=graph)
+    L = loadgraph("../graphs/threepaths640.gr", graphclass=graph)
     fast_partitioning(L, [], [])
     # refine(L, [], [])
     timing = (timeMs() - t1)
@@ -197,6 +199,7 @@ def branching_rules(findSingleIso=False, writeDot=False):
 
 
 def fast_partitioning(G, D, I):
+    timer = timeMs()
     color_list = dict()
     queue = list()
 
@@ -224,8 +227,6 @@ def fast_partitioning(G, D, I):
         color_list[len1] = next_color
         D[index].setColorClass(next_color)
         I[index].setColorClass(next_color)
-
-    timer = 0
 
     while len(queue) > 0:
         color_from_queue = queue.pop()
@@ -271,6 +272,10 @@ def fast_partitioning(G, D, I):
     total_list = list()
     for color_entry in color_list:
         total_list.append(color_list[color_entry].getvertices())
+
+    timer2 = timeMs() - timer
+    print("[FAST REFINE] Execution time:", timer2)
+
     return total_list
 
 
@@ -328,7 +333,7 @@ def twins(graph):
     return twinlist
 
 def gi_problem(graphlist):
-    graphs = loadgraph("../graphs/" + graphlist + ".grl", graphclass=graph, readlist=True)[0]
+    graphs = loadgraph("../graphs/" + graphlist + ".gr", graphclass=graph, readlist=True)[0]
     print("Sets of isomorphic graphs:")
     for i in range(len(graphs)):
         for j in range(i, len(graphs)):
@@ -412,3 +417,4 @@ def program():
 
 
 program()
+# pathsBench()
