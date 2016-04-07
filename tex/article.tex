@@ -156,7 +156,7 @@ De verfijning die hierboven beschreven staat kan ge\"implementeerd worden met ee
 \subsection{Implementatie}
 Het algoritme staat hieronder in psuedocode, maar we zullen het ook kort even toelichten. We beginnen alle vertices $v_i$ in te delen in een partitie $C_j$ op basis van degree. Vervolgens stoppen wij alle partities in een queue.
 Zolang Q niet leeg is, poppen wij een color C uit Q. 
-Dan kan je partities $ C' $ splitsen in nieuwe partities op basis van hoeveel buren ze in C hebben. Dit doen we door $ \forall V_i \in C $ te bekijken wat hun buren $V'$ zijn. Hoe vaak $V'$ hierin wordt  gezien als buur wordt bijgehouden in een $neighbour\_count$. Zodra je door alle $V'$ bent geitereerd, bekijk alle $C'$ van de vertices $V'$. Zodra er tussen $ \forall{V'} \in C $ er een verschil in $neighbour\_count$ zit, maak je nieuwe partities bijbehorende bij die $neighbour\_count$. Zo wordt bijv $ \forall V' \in C'  [ neighbour\_count(V') = 0] $ een partitie.
+Dan kan je partities $ C' $ splitsen in nieuwe partities op basis van hoeveel buren ze in C hebben. Dit doen we door $ \forall V_i \in C $ te bekijken wat hun buren $V'$ zijn. Hoe vaak $V'$ hierin wordt  gezien als buur wordt bijgehouden in een $neighbour\_count$. Zodra je door alle $V'$ bent geitereerd, bekijk alle $C'$ van de vertices $V'$. Zodra er tussen $ \forall{V'} \in C $ er een verschil in $neighbour\_count$ zit, maak je nieuwe partities bijbehorende bij die $neighbour\_count$. Zo wordt bijv $ \forall_{V' \in C'}  [ neighbour\_count(V') = 0] $ een partitie.
 
 \begin{algorithm}[H]
  \KwData{Een graaf $G(V,E)$ }
