@@ -23,7 +23,7 @@
 \documentclass[twoside]{article}
 
 \usepackage{lipsum} % Package to generate dummy text throughout this template
-\usepackage{amsmath,amssymb,amsthm,appendix} % Mathematical Symbols, styles, etc
+\usepackage{amsmath,amssymb,amsthm,appendix,graphicx} % Mathematical Symbols, styles, etc
 
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
@@ -248,11 +248,18 @@ daarna w
 
 De resultaten van de metingen zijn gegeven in Appendix~\ref{AppendixA}.
 
-Om toeval uit te sluiten zijn alle tests tien keer uitgevoerd voor beide algoritmes. De gemeten tijden zijn de gemiddelden van de tien uitgevoerde tests. In de laatste kolom is het verschil in uitvoertijd opgenomen, weergegeven als percentages. Een percentage van $100$\% betekent dat het Fast Refine-algoritme tweemaal zo snel was als het Refine-algoritme bij het uitvoeren van de test (een verbetering van $100$\% ten opzichte van Refine).
+Om toeval uit te sluiten zijn alle tests tien keer uitgevoerd voor beide algoritmes. De gemeten tijden zijn de gemiddelden van de tien uitgevoerde tests. In de laatste kolom is het verschil in uitvoertijd opgenomen, weergegeven als percentages. Een percentage van $100$\% betekent dat het Fast Refine-algoritme (F.R.) tweemaal zo snel was als het Refine-algoritme (R.) bij het uitvoeren van de test (een verbetering van $100$\% ten opzichte van Refine).
 
-Wat opvalt is dat het Fast Refine-algoritme pas bij grote grafen significant sneller is. bigtrees1 bevat vier grafen, elk met 44 vertices. bigtrees3 bevat ook vier grafen, maar elk van deze grafen heeft maar liefst 227 vertices. bigtrees3 heeft dus ruim vijf maal zo veel vertices als bigtrees1. Voor bigtrees1 is Fast Refine ongeveer 6\% sneller dan Refine, terwijl dat percentage voor bigtrees3 vele malen hoger ligt: Fast Refine is bijna achttien keer sneller.
+Wat opvalt is dat F.R. pas bij grote grafen significant sneller is. bigtrees1 bevat vier grafen, elk met 44 vertices. bigtrees3 bevat ook vier grafen, maar elk van deze grafen heeft maar liefst 227 vertices. bigtrees3 heeft dus ruim vijf maal zo veel vertices als bigtrees1. Voor bigtrees1 is F.R. ongeveer 6\% sneller dan R., terwijl dat percentage voor bigtrees3 vele malen hoger ligt: F.R. is bijna achttien keer sneller.
 
-De grootste snelheidswinst is te zien bij \'threepaths\' grafen. 
+De 'threepaths' grafen zijn complexe problemen voor het Color Refinement-algoritme om op te lossen. Ze bevatten lange paden en in elk pad kunnen er maximaal twee vertices van kleur veranderen (zie Figuur~\ref{paths}). Dit heeft tot gevolg dat R. zeer veel tijd nodig heeft om tot een stabiele partitie te komen. F.R. pakt het probleem zoals verwacht veel efficiënter aan. Voor een van de grotere grafen (threepaths5120) is F.R. ruim 25 keer sneller.
+
+\begin{figure}[H]
+\centering
+\includegraphics[]{paths.png}
+\caption{In graaf 1 is de partitie na de eerste stap van het algoritme gegeven. Graaf 2 is het resultaat van de volgende iteratie. Aangezien vertices B en F nu veranderd zijn, moeten alle vertices daartussen (C, D en E) ook opnieuw bekeken worden. Zoals hier te zien is kan het algoritme per iteratie maar voor twee vertices in een pad de coloring verfijnen. Graaf 3 geeft de stabiele coloring weer. \label{paths}}
+\end{figure}
+
 
 %------------------------------------------------
 \section{Conclusie \& Discussie}
