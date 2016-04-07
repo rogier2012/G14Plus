@@ -134,7 +134,7 @@ Omdat alle punten nu een bepaalde kleur hebben kan deze initi\"ele partitie verf
 \begin{definition}
 Neem $\alpha$, een partitie van graaf $G$ met $k$ verschillende kleuren en  $\alpha^{c}$ de verzameling punten van $G$ met kleur $c \in \{1,\ldots,k\}$. Twee punten $u,v \in V(G)$ hebben een \textbf{verschillende kleuromgeving} als er een kleur $c \in \{1,\ldots,k\}$ is zodanig dat $|N(u)\cap\alpha^{c}| \neq |N(v)\cap\alpha^{c}|$. Als dit niet geldt hebben de twee punten een \textbf{gelijke kleuromgeving}
 \end{definition}
-VERWIJZING!!!!
+\cite{slides_DFA}
 
 De partitie wordt nu dus verfijnd door elke groep op te splitsen in punten met een verschillende kleuromgeving, waarbij elke nieuwe groep uiteraard weer een nieuwe kleur krijgt. Omdat er weer punten met nieuwe kleuren zijn bijgekomen kan ook deze partitie weer verfijnd worden op basis van kleuromgeving. Dit proces wordt herhaald tot het niet meer mogelijk is een groep op te splitsen in nieuwe groepen met verschillende kleuromgevingen. Op dat moment bevinden zich in elke groep alleen maar elementen met dezelfde kleuromgeving, er wordt dan gesproken van een stabiele partitie.
 
@@ -146,10 +146,26 @@ Het nadeel van bovenstaand algoritme is dat, hoewel het een enorme verbetering i
 \begin{lemma}
 Neem C een kleurgroep in de huidige partitie $\alpha$ en definieer voor alle $i \geq 0$ $D_{i}$ als het aantal punten met precies $i$ buren in $C$. Door elke kleurgroep $C' \neq C$ in de huidige partitie te vervangen door de niet-lege kleurgroepen $C'_{i} := C'\cap D_{i}$ wordt de ruwste stabiele partitie voor graaf $G$ gevonden.
 \end{lemma}
+\cite{slides_DFA}
 
-MOET IK DIT BEWIJZEN??? IK ZOU NAMELIJK NIET WETEN HOE?
+De verfijning die hierboven beschreven staat kan ge\"implementeerd worden met een complexiteitsklasse van $O(|E(C)|)$. Dat komt omdat bij iedere iteratie van het algoritme het niet nodig is om de punten in alle overige kleurklassen te checken.
 
-De verfijning die hierboven beschreven staat kan ge\"implementeerd worden met een complexiteitsklasse van $O(|E(C)|)$, in de volgende sectie zal de Python implementatie voor dit algoritme beschreven worden en bewezen worden dat deze daadwerkelijk een complexiteitsklasse van $O(|E(C)|)$ heeft.
+\begin{lemma}
+Stel $C \subseteq V(G)$ wordt tijdens een iteratie gesplitst in $C_{0}, \ldots, C_{k}$. Dan geldt $\forall a \in \{0,\ldots,k\}$: als partitie $\alpha$ stabiel is voor $C$ en voor $C_{b}$ $\forall b \in \{0,\ldots,k\}/\{a\}$, dan is partitie $\alpha$ ook stabiel voor $C_{a}$.
+\end{lemma}
+
+\begin{proof}
+Stel $\alpha$ is niet stabiel voor $C_{a}$:\\
+Dan: $ u,v \in V(G)$ met $u \equiv_{\pi} v$ zodanig dat $u \in C_{a}$ en $v \not \in C_{a}$.\\
+Omdat partitie $\alpha$ stabiel was voor $C$ geldt: $u,v \in C$.\\
+Omdat $C_{0},\ldots,C_{a},\ldots,C{k}$ een partitie is van $C$ geldt: $\exists b \neq a $ zodanig dat $v \in C_{a}$ en $u \not \in C_{a}$.\\
+Dan geldt: $\alpha$ is niet stabiel voor $C_{b}$, een tegenstelling.
+\end{proof}
+\cite{slides_DFA}
+
+Het is dus niet nodig om de partitie te verfijnen voor alle kleurklassen, waardoor de tijdscomplexiteit stijgt.
+
+In de volgende sectie zal de Python implementatie voor een algoritme beschreven worden en bewezen worden dat deze een complexiteitsklasse van $O(|E^{-}(C)|)$ heeft.
 %------------------------------------------------
 
 \section{Implementatie}
