@@ -128,7 +128,7 @@ Een van de bestaande technieken die veel gebruikt wordt om het GI probleem op te
 In deze sectie wordt de theorie achter zowel ''partition refinement'' als het algoritme van Hopcroft uitgelegd.
 
 \subsection{Partition refinement}
-Het idee achter partition refinement is dat een isomorfisme de omgeving (de verzameling buren) van een punt $v$ in stand houdt. Punt $v$ in graaf $G$ heeft dus dezelfde omgeving als zijn afbeelding $\phi(v)$ in H. Hieruit volgt dat de graad van $v$ gelijk is aan de graad van $\phi(v)$. Er kan dus een initi\"ele partitie gemaakt worden op basis van graad. Voor de duidelijkheid zal er gesproken worden over verschillende kleuren in plaats van verschillende partities.
+Het idee achter partition refinement is dat een isomorfisme de omgeving (de verzameling buren) van een punt $v$ in stand houdt. Punt $v$ in graaf $G$ heeft dus dezelfde omgeving als zijn afbeelding $\phi(v)$ in H. Hieruit volgt dat de graad van $v$ gelijk is aan de graad van $\phi(v)$. Er kan dus een initi\"ele partitie gemaakt worden op basis van graad. In dit artikel betekent de kleuring van een graaf hetzelfde als de partionering van een graaf. Door een partitie een kleur toe te wijzen kunnen we makkelijke illustreren hoe de graaf wordt verdeeld. 
 
 Omdat alle punten nu een bepaalde kleur hebben kan deze initi\"ele partitie verfijnd worden, namelijk op basis van de kleuromgeving van punt $v$. Deze kleuromgeving is als volgt gedefinieerd:
 
@@ -178,8 +178,8 @@ In de volgende sectie zal de Python implementatie voor een algoritme beschreven 
 %------------------------------------------------
 
 \section{Implementatie}
-Het algoritme staat hieronder in psuedocode, maar we zullen het ook kort even toelichten. We beginnen alle vertices $v_i$ in te delen in een partitie $C_j$ op basis van degree. Vervolgens stoppen wij alle partities in een queue.
-Zolang Q niet leeg is, poppen wij een color C uit Q. 
+Het algoritme staat hieronder in psuedocode, maar we zullen het ook kort even toelichten. We beginnen alle vertices $v_i$ in te delen in een partitie $C_j$ op basis van degree. Vervolgens stoppen wij alle partities in een queue(Q).
+Zolang Q niet leeg is, halen wij de eerste color C uit Q. 
 Dan kan je partities $ C' $ splitsen in nieuwe partities op basis van hoeveel buren ze in C hebben. Dit doen we door $ \forall V_i \in C $ te bekijken wat hun buren $V'$ zijn. Hoe vaak $V'$ hierin wordt  gezien als buur wordt bijgehouden in een $neighbour\_count$. Zodra je door alle $V'$ bent geitereerd, bekijk alle $C'$ van de vertices $V'$. Zodra er tussen $ \forall{V'} \in C $ er een verschil in $neighbour\_count$ zit, maak je nieuwe partities bijbehorende bij die $neighbour\_count$. Zo wordt bijv $ \forall_{V' \in C'}  [ neighbour\_count(V') = 0] $ een partitie.
 
 \begin{algorithm}[H]
@@ -276,11 +276,11 @@ Dus de operatie $ Refine(C) $ heeft een complexiteit van $O(|E(C)|$
 
 De resultaten van de metingen zijn gegeven in Appendix~\ref{AppendixA}.
 
-Om toeval uit te sluiten zijn alle tests tien keer uitgevoerd voor beide algoritmes. De gemeten tijden zijn de gemiddelden van de tien uitgevoerde tests. In de laatste kolom is het verschil in uitvoertijd opgenomen, weergegeven als percentages. Een percentage van $100$\% betekent dat het Fast Refine-algoritme (F.R.) tweemaal zo snel was als het Refine-algoritme (R.) bij het uitvoeren van de test (een verbetering van $100$\% ten opzichte van Refine).
+Om toeval uit te sluiten zijn alle tests tien keer uitgevoerd voor beide algoritmes. De gemeten tijden zijn de gemiddelden van de tien uitgevoerde tests. In de laatste kolom is het verschil in uitvoertijd opgenomen, weergegeven als percentages. Een percentage van $100$\% betekent dat het Fast Refine-algoritme (FR) tweemaal zo snel was als het Refine-algoritme (R) bij het uitvoeren van de test (een verbetering van $100$\% ten opzichte van Refine).
 
-Wat opvalt is dat F.R. pas bij grote grafen significant sneller is. bigtrees1 bevat vier grafen, elk met 44 vertices. bigtrees3 bevat ook vier grafen, maar elk van deze grafen heeft maar liefst 227 vertices. bigtrees3 heeft dus ruim vijf maal zo veel vertices als bigtrees1. Voor bigtrees1 is F.R. ongeveer 6\% sneller dan R., terwijl dat percentage voor bigtrees3 vele malen hoger ligt: F.R. is bijna achttien keer sneller.
+Wat opvalt is dat FR pas bij grote grafen significant sneller is. bigtrees1 bevat vier grafen, elk met 44 vertices. bigtrees3 bevat ook vier grafen, maar elk van deze grafen heeft maar liefst 227 vertices. bigtrees3 heeft dus ruim vijf maal zo veel vertices als bigtrees1. Voor bigtrees1 is FR ongeveer 6\% sneller dan R, terwijl dat percentage voor bigtrees3 vele malen hoger ligt: FR is bijna achttien keer sneller.
 
-De 'threepaths' grafen zijn complexe problemen voor het Color Refinement-algoritme om op te lossen. Ze bevatten lange paden en in elk pad kunnen er maximaal twee vertices van kleur veranderen (zie Figuur~\ref{paths}). Dit heeft tot gevolg dat R. zeer veel tijd nodig heeft om tot een stabiele partitie te komen. F.R. pakt het probleem zoals verwacht veel effici\"enter aan. Voor een van de grotere grafen (threepaths5120) is F.R. ruim 25 keer sneller.
+De 'threepaths' grafen zijn complexe problemen voor het Color Refinement-algoritme om op te lossen. Ze bevatten lange paden en in elk pad kunnen er maximaal twee vertices van kleur veranderen (zie Figuur~\ref{paths}). Dit heeft tot gevolg dat R zeer veel tijd nodig heeft om tot een stabiele partitie te komen. FR pakt het probleem zoals verwacht veel effici\"enter aan. Voor een van de grotere grafen (threepaths5120) is FR ruim 25 keer sneller.
 
 \begin{figure}[H]
 \centering
@@ -291,10 +291,18 @@ De 'threepaths' grafen zijn complexe problemen voor het Color Refinement-algorit
 
 %------------------------------------------------
 \section{Conclusie}
-Het blijkt dus dat Hopcrofts algoritme een slimme manier is om een graaf te partitioneren. Het grote graaf isomorfisme blijkt een lastig opgaven te zijn. Color refinement is een veelzijdig gereedschap in de kist om het graaf isomorfisme op te lossen. Het helpt de graaf te onderscheiden in verschillende partities waardoor een bijectie kan ontstaan. John Hopcrofts idee achter DFA minimalisatie bleek een perfecte oplossing om zo snel mogelijk een graaf te partitioneren. Door de grootste partitie niet verder te bezoeken onstaat er een logaritmische partionering waar alleen het zoeken naar de verschillende partities een linear complexiteit te hebben. Dit is een hele verbetering ten opzichte van het standaard refine algoritme. Door beide algoritmes te implementeren in python konden we concluderen: 1. onze implementatie bewijst dat het mogelijk is om Hopcrofts algoritme te implementeren in de tijdscomplexiteitsklasse van orde $O(m\log_{2}(n))$. 2. Testgrafen laten zien dat FR altijd sneller is dan de eenvoudige versie R. Vooral voor complexe grafen zoals threepaths laat onze implementatie erg goede resultaten zien.
+Het blijkt dus dat Hopcrofts algoritme een slimme manier is om een graaf te partitioneren. Het grote graaf isomorfisme probleem blijkt een lastige opgave te zijn en color refinement is de veelzijdige hamer in de gereedschapskist om het graaf isomorfisme op te lossen. Het helpt de graaf te onderscheiden in verschillende partities waardoor een bijectie kan ontstaan. John Hopcrofts idee achter DFA minimalisatie bleek een perfecte oplossing om zo snel mogelijk een graaf te partitioneren. Door de grootste partitie niet verder te bezoeken onstaat er een logaritmische partionering waar alleen het zoeken naar de verschillende partities een linear complexiteit heeft. Dit is een hele verbetering ten opzichte van het standaard refine algoritme. Door beide algoritmes te implementeren in python konden we concluderen: 1. Onze implementatie bewijst dat het mogelijk is om Hopcrofts algoritme te implementeren in de tijdscomplexiteitsklasse van orde $O(m\log_{2}(n))$ door te bewijzen dat ``Refine`` in lineaire tijd loopt en een slimme queue regel zodat alleen de kleinste nieuwe partities in de queue komen. 2. Testgrafen laten zien dat FR altijd sneller is dan de eenvoudige versie R. Vooral voor complexe grafen zoals threepaths laat onze implementatie erg goede resultaten zien.
 
 \section{Discussie}
-De onderzoeksresulaten komen niet \'e\'en op \'e\'en overeen met de tijdscomplexiteitsklasse
+Hoewel onze implementatie al heel erg snel is, hebben we nog een aantal verbetering bedacht die door ons of anderen gebruikt kan worden voor een nog sneller algoritme. De eerste verbetering is een slimmere queue, waardoor het algoritme voor veel grafen in lineaire tijd kan partitioneren. Wij hebben dit gezien bij anderen en wij geloven dat dit ook een echte verbetering voor onze implementatie kan zijn. De tweede verbetering is bedoeld voor het tellen van het aantal automorfismen van een graaf. Dat hebben we in dit artikel niet uitgelegd maar het probleem is nauw verwant aan het graaf isomorfisme probleem. Een automorfisme van een graaf is een isomorfisme op zich zelf. Door de recursieboom van het aantal automorfisme te optimaliseren kunnen we samen met FR een effectief algoritme cre\"eren om het automorfisme probleem op te lossen.\cite{slides_aut}\\
+Verder kunnen we uit de berekende data nog niet concluderen dat de tijdscomplexiteitsklasse veranderd is ten opzichte van het standaard algoritme R. Dit kan komen doordat: 
+\begin{itemize}
+\item Algoritme R is ook erg goed ge\"implementeerd waardoor het in dezelfde tijdscomplexiteitsklasse valt.
+\item Algoritme FR is nog niet optimaal waardoor het dezelfde asymptotisch gedrag toont als R.
+\item De grafen die getest zijn waren nog niet groot genoeg om een goed onderscheid te kunnen maken tussen de twee algoritmes.
+\end{itemize}
+Om achter de oorzaak van dit probleem te komen moeten er nog verder onderzoek gedaan worden.
+
 
 %----------------------------------------------------------------------------------------
 %	REFERENCE LIST
@@ -352,11 +360,5 @@ modulesC & $242922$ & $397950$ & $63,82$\% \\
 \bottomrule
 \end{tabular}
 \end{table}
-
-
-Om toeval uit te sluiten zijn alle tests tien keer uitgevoerd per algoritme. De gemeten tijden, zoals ze in Tabel~\ref{table:resultaten} te zien zijn, zijn de gemiddelden van de tien uitgevoerde tests. In de laatste kolom is het verschil in uitvoertijd opgenomen, weergegeven in percentages. Een percentage van $100$\% betekent dat het Fast Refine-algoritme tweemaal zo snel was als het Refine-algoritme bij het uitvoeren van de test (een verbetering van $100$\% ten opzichte van Refine).
-
-Wat opvalt is dat het Fast Refine-algoritme pas bij grote grafen significant sneller is. bigtrees1 bevat vier grafen, elk met 44 vertices. bigtrees3 bevat ook vier grafen, maar elk van deze grafen heeft maar liefst 227 vertices. bigtrees3 heeft dus ruim vijf maal zo veel vertices als bigtrees1. Voor bigtrees1 is Fast Refine ongeveer 6\% sneller dan Refine, terwijl dat percentage voor bigtrees3 vele malen hoger ligt: Fast Refine is bijna achttien keer sneller.
-
 
 \end{document}
