@@ -2,7 +2,7 @@ import time
 
 from assets.fastgraphs import graph, colorclass
 from assets.graphIO import loadgraph, writeDOT
-from assets.GraphFunctions import disjointunion
+from assets.graphfunctions import disjointunion
 from color_refinement.branch_algorithms import *
 
 
@@ -67,7 +67,7 @@ def refine(G, D, I):
         coloringTime = coloringTime + (timeMs() - coloring1)
 
     time3 = timeMs() - time1
-    print("[REFINE] Execution time:", time3)
+    # print("[REFINE] Execution time:", time3)
     # print("Loop time: " + str(time3 // 1000) + "s")
     # print("Partitioning time: " + str(partTime // 1000) + "s")
     # print("Coloring time: " + str(coloringTime // 1000) + "s")
@@ -154,7 +154,7 @@ def bijection(alpha, length):
 
 def pathsBench():
     t1 = timeMs()
-    L = loadgraph("../graphs/threepaths640.gr", graphclass=graph)
+    L = loadgraph("../graphs/threepaths1280.gr", graphclass=graph)
     fast_partitioning(L, [], [])
     # refine(L, [], [])
     timing = (timeMs() - t1)
@@ -274,7 +274,7 @@ def fast_partitioning(G, D, I):
         total_list.append(color_list[color_entry].getvertices())
 
     timer2 = timeMs() - timer
-    print("[FAST REFINE] Execution time:", timer2)
+    # print("[FAST REFINE] Execution time:", timer2)
 
     return total_list
 
@@ -291,7 +291,6 @@ def generate_d_counts_on_color(color_entry):
             color_set.add(neighbour.colorclass)
 
     result = dict()
-
     for color in color_set:
         d_count = dict()
         for vertex in color.getvertices():
@@ -333,33 +332,54 @@ def twins(graph):
     return twinlist
 
 def gi_problem(graphlist):
-    graphs = loadgraph("../graphs/" + graphlist + ".gr", graphclass=graph, readlist=True)[0]
+    graphs = loadgraph("../graphs/" + graphlist + ".grl", graphclass=graph, readlist=True)[0]
     print("Sets of isomorphic graphs:")
+    isomorphisms = []
+
     for i in range(len(graphs)):
         for j in range(i, len(graphs)):
 
-            if i != j:
-                G = graphs[i]
-                H = graphs[j]
-                GH = disjointunion(G, H)
-                numIso = countIsomorphism(GH, G, H, [], [], 1, True)
-                if numIso > 0:
-                    print("[" + str(i) + ", " + str(j) + "]")
+            G = graphs[i]
+            H = graphs[j]
+            GH = disjointunion(G, H)
+            numIso = countIsomorphism(GH, G, H, [], [], 1, True)
+            if numIso > 0:
+                found = False
+                for isos in isomorphisms:
+                    if isos[0] == i:
+                        isos.append(j)
+                        found = True
+                    for dingen in isos:
+                        if i == dingen:
+                            found = True
+                if not found:
+                    isomorphisms.append([i])
+    for row in isomorphisms:
+        print(str(row))
 
 def aut_problem(graphlist):
     graphs = loadgraph("../graphs/" + graphlist + ".grl", graphclass=graph, readlist=True)[0]
-    print("Sets of isomorphic graphs:   Number of automorphisms:")
+    print("Sets of isomorphic graphs:                   Number of automorphisms:")
     isomorphisms = []
     for i in range(len(graphs)):
         for j in range(i, len(graphs)):
 
-            if i != j:
-                G = graphs[i]
-                H = graphs[j]
-                GH = disjointunion(G, H)
-                numIso = countIsomorphism(GH, G, H, [], [], 1, True)
-                if numIso > 0:
-                    isomorphisms.append([i,j])
+            G = graphs[i]
+            H = graphs[j]
+            GH = disjointunion(G, H)
+            numIso = countIsomorphism(GH, G, H, [], [], 1, True)
+            if numIso > 0:
+                found = False
+                for isos in isomorphisms:
+                    if isos[0] == i:
+                        isos.append(j)
+                        found = True
+                    for dingen in isos:
+                        if i == dingen:
+                            found = True
+                if not found:
+                    isomorphisms.append([i])
+    listoflist = []
     for k in isomorphisms:
         i = k[0]
         G = graphs[i]
@@ -367,7 +387,10 @@ def aut_problem(graphlist):
         GH = disjointunion(G, H)
         numIso = countIsomorphism(GH, G, H, [], [], 1, False)
         if numIso > 0:
-            print(str(k) + ":                      " + str(numIso))
+            # print(str(k) + ": " + str(numIso))
+            listoflist.append([str(k), str(numIso)])
+    for row in listoflist:
+        print("%-40s %6s" % (row[0], row[1]))
 
 
 def program():
