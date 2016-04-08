@@ -154,12 +154,14 @@ Het nadeel van bovenstaand algoritme is dat het, hoewel het een enorme verbeteri
 \begin{lemma}
 Neem C een kleurgroep in de huidige partitie $\alpha$ en definieer voor alle $i \geq 0$ $D_{i}$ als het aantal punten met precies $i$ buren in $C$. Door elke kleurgroep $C' \neq C$ in de huidige partitie te vervangen door de niet-lege kleurgroepen $C'_{i} := C'\cap D_{i}$ wordt de ruwste stabiele partitie voor graaf $G$ gevonden.
 \cite{slides_DFA}
+\label{verfijn}
 \end{lemma}
 
 De verfijning die hierboven beschreven staat kan ge\"implementeerd worden met een complexiteitsklasse van $O(|E^{-}(C)|)$. Dat komt omdat bij iedere iteratie van het algoritme het niet nodig is om de punten in alle overige kleurklassen te checken.
 
 \begin{lemma}
 Stel $C \subseteq V(G)$ wordt tijdens een iteratie gesplitst in $C_{0}, \ldots, C_{k}$. Dan geldt $\forall a \in \{0,\ldots,k\}$: als partitie $\alpha$ stabiel is voor $C$ en voor $C_{b}$ $\forall b \in \{0,\ldots,k\}/\{a\}$, dan is partitie $\alpha$ ook stabiel voor $C_{a}$.
+\label{weglaat}
 \end{lemma}
 
 \begin{proof}
