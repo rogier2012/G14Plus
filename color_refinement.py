@@ -1,14 +1,13 @@
 import time
+import glob
 
 from assets.fastgraphs import graph, colorclass
 from assets.graphIO import loadgraph, writeDOT
-from assets.GraphFunctions import disjointunion
+from assets.graphfunctions import disjointunion
 from color_refinement.branch_algorithms import *
 
 
 def refine(G, D, I):
-    timer = timeMs()
-
     V = G.V()
     alpha_list = []
     initial_list = []
@@ -65,14 +64,14 @@ def refine(G, D, I):
                 result_list[colornumber][vertexnum].colornum = colornumber
         coloringTime += timeMs() - coloring1
 
-    timer = timeMs() - timer
-    print("[REFINE] Execution time:", timer)
-
     return alpha_list
 
 
-def individual_refinement(G, D, I):
-    return fast_partitioning(G, D, I)
+def individual_refinement(G, D, I, fast=True):
+    if fast:
+        return fast_partitioning(G, D, I)
+    else:
+        return refine(G, D, I)
 
 
 def timeMs():
@@ -86,13 +85,13 @@ def listOfNodeNeighbourhoods(color_list):
     return result
 
 
-def countIsomorphism(GH, G, H, D, I, branching_rule, findSingleIso=False):
-    alpha1 = individual_refinement(GH, D, I)
+def countIsomorphism(GH, G, H, D, I, branching_rule, findSingleIso=False, fast=True):
+    alpha1 = individual_refinement(GH, D, I, fast)
     if len(alpha1) == 2 and alpha1[1][0].oldgraph == H:
         return 0
     if not balanced(alpha1):
         return 0
-    if bijection(alpha1, len(GH.V())/2):
+    if bijection(alpha1, len(GH.V()) / 2):
         return 1
 
     color = None
@@ -139,7 +138,6 @@ def balanced(alpha):
 
 
 def bijection(alpha, length):
-
     for color_list in alpha:
         if len(color_list) != 2:
             return False
@@ -195,7 +193,6 @@ def branching_rules(findSingleIso=False, writeDot=False):
 
 
 def fast_partitioning(G, D, I):
-    timer = timeMs()
     color_list = dict()
     queue = list()
 
@@ -269,8 +266,6 @@ def fast_partitioning(G, D, I):
     for color_entry in color_list:
         total_list.append(color_list[color_entry].getvertices())
 
-    timer2 = timeMs() - timer
-    print("[FAST REFINE] Execution time:", timer2)
     return total_list
 
 
@@ -304,6 +299,7 @@ def generate_d_counts_on_color(color_entry):
 
     return result
 
+
 def twins(graph):
     neighbourlist = dict()
     pointer = list()
@@ -316,7 +312,7 @@ def twins(graph):
         nbs1.append(vertex)
 
         if nbs in pointer:
-            twinlist.append([vertex,neighbourlist.get(pointer.index(nbs))])
+            twinlist.append([vertex, neighbourlist.get(pointer.index(nbs))])
 
         elif nbs1 in pointer:
             twinlist.append([vertex, neighbourlist.get(pointer.index(nbs1))])
@@ -327,19 +323,27 @@ def twins(graph):
 
     return twinlist
 
-def gi_problem(graphlist):
+
+def gi_problem(graphlist, fast=True, print_output=True):
     graphs = loadgraph("graphs/" + graphlist + ".grl", graphclass=graph, readlist=True)[0]
-    print("Sets of isomorphic graphs:")
+
+    if print_output:
+        print("Sets of isomorphic graphs:")
+
     isomorphisms = []
 
     for i in range(len(graphs)):
         for j in range(i, len(graphs)):
 
-
             G = graphs[i]
             H = graphs[j]
             GH = disjointunion(G, H)
-            numIso = countIsomorphism(GH, G, H, [], [], 1, True)
+
+            timer = timeMs()
+            numIso = countIsomorphism(GH, G, H, [], [], 1, True, fast)
+            timer = timeMs() - timer
+
+
             if numIso > 0:
                 found = False
                 for isos in isomorphisms:
@@ -351,8 +355,13 @@ def gi_problem(graphlist):
                             found = True
                 if not found:
                     isomorphisms.append([i])
-    for row in isomorphisms:
-        print(str(row))
+
+    if print_output:
+        for row in isomorphisms:
+            print(str(row))
+
+    return timer
+
 
 def aut_problem(graphlist):
     graphs = loadgraph("graphs/" + graphlist + ".grl", graphclass=graph, readlist=True)[0]
@@ -385,18 +394,19 @@ def aut_problem(graphlist):
         numIso = countIsomorphism(GH, G, H, [], [], 1, False)
         if numIso > 0:
             # print(str(k) + ": " + str(numIso))
-            listoflist.append([str(k),str(numIso)])
+            listoflist.append([str(k), str(numIso)])
     for row in listoflist:
-        print("%-40s %6s" % (row[0],row[1]))
+        print("%-40s %6s" % (row[0], row[1]))
+
 
 def aut_single_graph(graphfile):
-
     G = loadgraph("graphs/" + graphfile + ".gr", graphclass=graph)
     H = loadgraph("graphs/" + graphfile + ".gr", graphclass=graph)
     GH = disjointunion(G, H)
     numIso = countIsomorphism(GH, G, H, [], [], 1, False)
     if numIso > 0:
-        print("Number of automorphisms: " +str(numIso))
+        print("Number of automorphisms: " + str(numIso))
+
 
 def program():
     run = True
@@ -454,9 +464,35 @@ def program():
                     print("")
             print("")
 
-
         elif int1 == 4:
             run = False
 
 
+def benchmark(repeat=10, print_output=False):
+    graphs = list()
+    files = glob.glob("graphs/*.grl")
+
+    for file in files:
+        graphs.append(file[7:len(file) - 4])
+
+    for graph in graphs:
+        print(">>> " + graph + " <<<")
+        timer = 0
+
+        for _ in range(repeat):
+            timer += gi_problem(graph, True, print_output)
+
+        print("[FAST PARTITIONING]", str(timer / repeat), "ms (average over " + str(repeat) + " rounds)")
+
+        timer = 0
+
+        for _ in range(repeat):
+            timer += gi_problem(graph, False, print_output)
+
+        print("[REFINE]", str(timer / repeat), "ms (average over " + str(repeat) + " rounds)")
+        print("-----------------------\n\n")
+
+
+
 program()
+# benchmark(1)
