@@ -115,7 +115,7 @@ Graaf isomorfisme is een probleem dat wiskundigen al lang bezig houdt, want er i
 
 
 %------------------------------------------------
-\section*{Introduction}
+\section*{Inleiding}
 \begin{quote}
 \textit{''Gegeven twee eindige grafen $G$ en $H$, bestaat er een isomorfisme tussen $G$ en $H$?''}
 \end{quote}
@@ -188,50 +188,6 @@ We splitsen dus de partities $ C' $  in nieuwe partities op basis van hoeveel bu
 Vervolgens worden van al deze punten groepen $d\_count$ gemaakt op basis van dit aantal buren in $C$. $d\_count(0)$ is bijvoorbeeld de verzameling vertices in $C'$ zonder buren in $C$. Daarna wordt de verfijning toegepast en wordt $C'$ vervangen door de doorsnede van $C'$ met alle verschillende groepen $d\_count$.
 
 Zodra er dus een verschil zit tussen $C'$ en $d\_count(i) | i\geq 0$, wordt dit een nieuwe partitie bij die $neighbour\_count$. Deze nieuwe partities worden op hun beurt weer in de $Q$ gezet. De partitie met de meeste vertices wordt niet in $Q$ gezet, aangezien volgens lemma \ref{weglaat} die partitie stabiel is als alle andere partities ook stabiel zijn.
-
-\begin{algorithm}[H]
-\KwData{Een graaf $G(V,E)$ }
-\KwResult{Een stabiele partitie van $G$}
-initalization \;
-\Function{fast\_refinement}{$G$}: \\
-\ForAll{$v$ $\in$ $V(G)$}
-{$\alpha(v) := v.degree()$}
-$queue := [\alpha]$\;
-\While{$queue$ is nonempty}
-{$C := dequeue(queue)$\;
-$d\_count := generate\_dcounts(C)$\;
-\ForAll{$color_{i} \in d\_counts$}
-{\If{ $d\_counts(color_i) > 1 $ }
-{$new\_color := x_{1} \in d\_counts(color_{i})$ \;
-\ForAll{ $ x_{i} \in d\_counts(color_{i}) | x_{i} \neq x_{1} $}
-{$C_{i}.append(x_{i}) $ }
-\eIf{$ new\_color \in queue $}
-{$ queue = \{C_{i}\} \cup queue $ \;}
-{	$ F := max(\{|C_{i}|, new\_color \} ) $ \;
-$queue = \{ \{new\_color \} / F \} \cup queue $}}}}
-\caption{Fast Partition refinement}
-\EndFunction
-\end{algorithm}
-\pagebreak
-
-\begin{algorithm}[H]
-\KwData{Een partitie $C$}
-\KwResult{Een mapping $ \beta(c') \mapsto \gamma(neighbourcount) \mapsto \{ v_{i} \} $}
-Een partitie mapt naar een lijst getallen, die het aantal buren weergeven, die weer mappen naar een lijst met vertices die dat aantal buren hebben. Zo kunnen wij gemakkelijk splitsen in nieuwe partities \;
-\Function{generate\_dcounts}{$C$}
-\ForAll{ $v$ $\in$ $C$ }
-{\ForAll{ $v'$ $\in$ $N(v)$ }
-{$ neighbour\_count(v') + 1 $ \;
-$ colorset = colorset \cup  neighbour.colorclass  $  \;}}
-\ForAll{$ color_{i} \in colorset $}
-{\ForAll{ $ v \in color_{i} $ }{
-\eIf{ $ v \in neighbour\_count $} {
-$ nbscount := neighbour\_count(v) $ \;}
-{	$ nbscount := 0 $ \;
-	$ d\_count(0) \cup v $ \;}}
-$ result color_{i} \cup d\_count $}
-\caption{$ generate\_dcounts $}
-\end{algorithm}
 
 %------------------------------------------------
 \subsection{Bewijs}
@@ -309,6 +265,51 @@ Om achter de oorzaak van dit probleem te komen moeten er nog verder onderzoek ge
 %----------------------------------------------------------------------------------------
 %	APPENDICES
 %----------------------------------------------------------------------------------------
+\newpage
+\section{Pseudocode algoritmes}
+\begin{algorithm}[]
+\KwData{Een graaf $G(V,E)$ }
+\KwResult{Een stabiele partitie van $G$}
+initalization \;
+\Function{fast\_refinement}{$G$}: \\
+\ForAll{$v$ $\in$ $V(G)$}
+{$\alpha(v) := v.degree()$}
+$queue := [\alpha]$\;
+\While{$queue$ is nonempty}
+{$C := dequeue(queue)$\;
+$d\_count := generate\_dcounts(C)$\;
+\ForAll{$color_{i} \in d\_counts$}
+{\If{ $d\_counts(color_i) > 1 $ }
+{$new\_color := x_{1} \in d\_counts(color_{i})$ \;
+\ForAll{ $ x_{i} \in d\_counts(color_{i}) | x_{i} \neq x_{1} $}
+{$C_{i}.append(x_{i}) $ }
+\eIf{$ new\_color \in queue $}
+{$ queue = \{C_{i}\} \cup queue $ \;}
+{	$ F := max(\{|C_{i}|, new\_color \} ) $ \;
+$queue = \{ \{new\_color \} / F \} \cup queue $}}}}
+\caption{Fast Partition refinement}
+\EndFunction
+\end{algorithm}
+
+\begin{algorithm}[]
+\KwData{Een partitie $C$}
+\KwResult{Een mapping $ \beta(c') \mapsto \gamma(neighbourcount) \mapsto \{ v_{i} \} $}
+Een partitie mapt naar een lijst getallen, die het aantal buren weergeven, die weer mappen naar een lijst met vertices die dat aantal buren hebben. Zo kunnen wij gemakkelijk splitsen in nieuwe partities \;
+\Function{generate\_dcounts}{$C$}
+\ForAll{ $v$ $\in$ $C$ }
+{\ForAll{ $v'$ $\in$ $N(v)$ }
+{$ neighbour\_count(v') + 1 $ \;
+$ colorset = colorset \cup  neighbour.colorclass  $  \;}}
+\ForAll{$ color_{i} \in colorset $}
+{\ForAll{ $ v \in color_{i} $ }{
+\eIf{ $ v \in neighbour\_count $} {
+$ nbscount := neighbour\_count(v) $ \;}
+{	$ nbscount := 0 $ \;
+	$ d\_count(0) \cup v $ \;}}
+$ result color_{i} \cup d\_count $}
+\caption{$ generate\_dcounts $}
+\end{algorithm}
+
 \newpage
 \section{Appendices}
 \subsection{Appendix A: Meetresultaten} \label{AppendixA}
