@@ -192,8 +192,8 @@ initalization \;
  $queue := [\alpha]$\;
  \While{$queue$ nonempty}{
   $c := dequeue(queue)$\;
-  $d\_count := generate\_dcount(c)$\;
-  \ForAll{$ color_{i} \in d\_count$}{
+  $d\_count := generate\_dcounts(c)$\;
+  \ForAll{$ color_{i} \in d\_counts$}{
    \If{ $d\_count(color_{i}) > 1 $ }{
 	$new\_color := x_{1} \in d\_counts(color_{i})$ \;
 	\ForAll{ $ x_{i} \in d\_counts(color_{i}) | x_{i} \neq x_{1} $}{
@@ -247,7 +247,7 @@ $ result(c) \cup d\_count $
   }
 return result
  
-\caption{$ generate\_dcount $}
+\caption{$ generate\_dcounts $}
 
 \end{algorithm}
 
@@ -257,7 +257,7 @@ return result
 %------------------------------------------------
 \subsection{Bewijs}
 
-We gaan hier bewijzen dat de tijdscomplexiteit van  $ Refine(C) $ $ O(|E(C)|)$ ,  waar $ E(C) $ het aantal lijnen is.
+We gaan hier bewijzen dat de tijdscomplexiteit van onze implementatie dezelfde is als van  $ Refine(C) $ $ O(|E(C)|)$ ,  waar $ E(C) $ het aantal lijnen is. In $generate\_dcounts $ wordt voor alle partities incident met C bekeken of de partitie C` op te splitsen is en hoe dat moet.  $generate\_dcounts $ is dus eigenlijk gelijk aan $\forall C' Refine(C)$
 
 \begin{lemma}
 De complexiteit van $Refine(C)$ van een graaf is $O(|E(C)|) $,  waarbij  $ E(C)$ het aantal lijnen incident met vertices in $C$
