@@ -288,7 +288,7 @@ De 'threepaths' grafen zijn complexe problemen voor het Color Refinement-algorit
 
 %------------------------------------------------
 \section{Conclusie}
-Het blijkt dus dat Hopcrofts algoritme een slimme manier is om een graaf te partitioneren.
+Het blijkt dus dat Hopcrofts algoritme een slimme manier is om een graaf te partitioneren. Het grote graaf isomorfisme blijkt een lastig opgaven te zijn. Color refinement is een veelzijdig gereedschap in de kist om het graaf isomorfisme op te lossen. Het helpt de graaf te onderscheiden in verschillende partities waardoor een bijectie kan ontstaan. John Hopcrofts idee achter DFA minimalisatie bleek een perfecte oplossing om zo snel mogelijk een graaf te partitioneren. Door de grootste partitie niet verder te bezoeken onstaat er een logaritmische partionering waar alleen het zoeken naar de verschillende partities een linear complexiteit te hebben. Dit is een hele verbetering ten opzichte van het standaard refine algoritme. Door beide algoritmes te implementeren in python konden we concluderen: 1. onze implementatie bewijst dat het mogelijk is om Hopcrofts algoritme te implementeren in de tijdscomplexiteitsklasse van orde $O(m\log_{2}(n))$. 2. Testgrafen laten zien dat FR altijd sneller is dan de eenvoudige versie R. Vooral voor complexe grafen zoals threepaths laat onze implementatie erg goede resultaten zien.
 
 \section{Discussie}
 De onderzoeksresulaten komen niet \'e\'en op \'e\'en overeen met de tijdscomplexiteitsklasse
