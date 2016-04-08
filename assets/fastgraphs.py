@@ -1,11 +1,11 @@
 from assets.basicgraphs import graph, edge, GraphError, vertex
-
-
+from assets.doubly_linked_list import doubly_linked_list
+from collections import deque
 class vertex(vertex):
     def __init__(self, graph, label=0):
         self._graph = graph
         self._label = label
-        self._inclist = []
+        self._inclist = doubly_linked_list()
         self._neighbourlist = []
         # self._neighbourclass = dict()
         self.colorclass = None
@@ -30,6 +30,23 @@ class vertex(vertex):
 
     def get_label(self):
         return self._label
+
+
+
+
+class edge(edge):
+    def __init__(self, tail, head):
+        """
+        Creates an edge between vertices <tail> and <head>.
+        """
+        # tail and head must be vertex objects.
+        if not tail._graph == head._graph:
+            raise GraphError(
+                'Can only add edges between vertices of the same graph')
+        self._tail = tail
+        self._head = head
+        self.heads = None
+        self.tails = None
 
 
 class graph(graph):
@@ -87,19 +104,25 @@ class graph(graph):
 
 
 class colorclass():
-    head = None
-    tail = None
+    heads = None
+    tails = None
     in_queue = False
 
     def __init__(self, id, vertices=list()):
         self._vertices = vertices
         self.id = id
+        self._incident_edges = doubly_linked_list()
+        if len(vertices) > 0:
+            for vertex in self._vertices:
+
+                self._incident_edges.extend(vertex.inclist())
 
     def getvertices(self):
         return self._vertices
 
     def addvertex(self, vertex):
         self._vertices.append(vertex)
+        self._incident_edges.extend(vertex.inclist())
 
     def __lt__(self, other):
         return len(self._vertices) < len(other._vertices)
@@ -109,6 +132,14 @@ class colorclass():
 
     def setvertices(self, vertices):
         self._vertices = vertices
+        self._incident_edges = doubly_linked_list()
+        for vertex in vertices:
+            self._incident_edges.extend(vertex.inclist())
+
+    def del_vertex(self,vertex):
+        for edge in vertex.inclist():
+            self._incident_edges.remove(edge)
+        self._vertices.remove(vertex)
 
     def inQueue(self):
         self.in_queue = True
@@ -116,16 +147,11 @@ class colorclass():
     def notInQueue(self):
         self.in_queue = False
 
+    def get_incident_edges(self):
+        return self._incident_edges
 
-class dcounts():
-    def __init__(self):
-        self.total_dcounts = dict()
-
-    def update(self, oldcolor, new_colors):
-        pass
-
-    def get_d_counts(self,color):
-        return self.total_dcounts[color]
-
-    def generate(self,color_list):
-        pass
+    def update_incident_edges(self):
+        self._incident_edges = []
+        for vertex in self._vertices:
+            for edge in vertex.inclist():
+                self._incident_edges.append(edge)

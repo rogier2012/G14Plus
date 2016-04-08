@@ -2,7 +2,7 @@ import time
 
 from assets.fastgraphs import graph, colorclass
 from assets.graphIO import loadgraph, writeDOT
-from assets.GraphFunctions import disjointunion
+from assets.graphfunctions import disjointunion
 from color_refinement.branch_algorithms import *
 
 
@@ -154,7 +154,7 @@ def bijection(alpha, length):
 
 def pathsBench():
     t1 = timeMs()
-    L = loadgraph("../graphs/threepaths640.gr", graphclass=graph)
+    L = loadgraph("../graphs/threepaths1280.gr", graphclass=graph)
     fast_partitioning(L, [], [])
     # refine(L, [], [])
     timing = (timeMs() - t1)
@@ -220,10 +220,12 @@ def fast_partitioning(G, D, I):
     for w in color_list:
         queue.append(color_list[w])
         color_list[w].inQueue()
+        # color_list[w].update_incident_edges(G)
 
     for index in range(len(D)):
         len1 = len(color_list) + 1
         next_color = colorclass(len1, [D[index], I[index]])
+        # next_color.update_incident_edges()
         color_list[len1] = next_color
         D[index].setColorClass(next_color)
         I[index].setColorClass(next_color)
@@ -238,12 +240,14 @@ def fast_partitioning(G, D, I):
 
             if len(d_count) > 1:
                 color_pair = d_count.popitem()
-                color_entry.setvertices(color_pair[1])
+                # color_entry.setvertices(color_pair[1])
+                # color_entry.update_incident_edges()
                 new_color_list = list()
                 max_size_color = color_entry
 
                 for new_color_class in d_count:
                     new_color = colorclass(len(color_list) + 1, d_count[new_color_class])
+
                     if len(new_color.getvertices()) > len(max_size_color.getvertices()):
                         max_size_color = new_color
 
@@ -251,9 +255,11 @@ def fast_partitioning(G, D, I):
 
                     for vertex in d_count[new_color_class]:
                         vertex.setColorClass(new_color)
+                        color_entry.del_vertex(vertex)
 
                     new_color_list.append(new_color)
                     new_color.inQueue()
+                    # new_color.update_incident_edges()
 
                 if color_entry.in_queue:
                     queue.extend(new_color_list)
@@ -273,30 +279,38 @@ def fast_partitioning(G, D, I):
     for color_entry in color_list:
         total_list.append(color_list[color_entry].getvertices())
 
-    timer2 = timeMs() - timer
-    print("[FAST REFINE] Execution time:", timer2)
+    # timer2 = timeMs() - timer
+    # print("[FAST REFINE] Execution time:", timer2)
 
     return total_list
 
 
 def generate_d_counts_on_color(color_entry):
     neighbourhood_color_dict = dict()
+    neighbourhood_color_dict1 = dict()
     color_set = set()
-    for vertex in color_entry.getvertices():
-        for neighbour in vertex.nbs():
-            if neighbour not in neighbourhood_color_dict:
-                neighbourhood_color_dict[neighbour] = 1
+    color_set1 = set()
+    for edge in color_entry.get_incident_edges():
+        if edge.tail().colorclass != color_entry:
+            if edge.tail() not in neighbourhood_color_dict1:
+                neighbourhood_color_dict1[edge.tail()] = 1
             else:
-                neighbourhood_color_dict[neighbour] += 1
-            color_set.add(neighbour.colorclass)
+                neighbourhood_color_dict1[edge.tail()] += 1
+            color_set1.add(edge.tail().colorclass)
+        elif edge.head().colorclass != color_entry:
+            if edge.head() not in neighbourhood_color_dict1:
+                neighbourhood_color_dict1[edge.head()] = 1
+            else:
+                neighbourhood_color_dict1[edge.head()] += 1
+            color_set1.add(edge.head().colorclass)
+    print("hoi1")
+    result1 = dict()
 
-    result = dict()
-
-    for color in color_set:
+    for color in color_set1:
         d_count = dict()
         for vertex in color.getvertices():
-            if vertex in neighbourhood_color_dict:
-                nbs_count = neighbourhood_color_dict[vertex]
+            if vertex in neighbourhood_color_dict1:
+                nbs_count = neighbourhood_color_dict1[vertex]
             else:
                 nbs_count = 0
             if nbs_count in d_count:
@@ -305,9 +319,43 @@ def generate_d_counts_on_color(color_entry):
                 d_count[nbs_count] = [vertex]
 
         if len(d_count) > 1:
-            result[color] = d_count
+            result1[color] = d_count
 
-    return result
+    print("hoi")
+
+    # for vertex in color_entry.getvertices():
+    #     for neighbour in vertex.nbs():
+    #         if neighbour not in neighbourhood_color_dict:
+    #             neighbourhood_color_dict[neighbour] = 1
+    #         else:
+    #             neighbourhood_color_dict[neighbour] += 1
+    #         color_set.add(neighbour.colorclass)
+    #
+    #
+    #
+    # result = dict()
+    #
+    # for color in color_set:
+    #     d_count = dict()
+    #     for vertex in color.getvertices():
+    #         if vertex in neighbourhood_color_dict:
+    #             nbs_count = neighbourhood_color_dict[vertex]
+    #         else:
+    #             nbs_count = 0
+    #         if nbs_count in d_count:
+    #             d_count[nbs_count].append(vertex)
+    #         else:
+    #             d_count[nbs_count] = [vertex]
+    #
+    #     if len(d_count) > 1:
+    #         result[color] = d_count
+    # if result != result1:
+    #     print("result not same")
+    #     print(color_entry)
+    #     print(neighbourhood_color_dict)
+    #     print("-----------")
+    #     print(neighbourhood_color_dict1)
+    return result1
 
 def twins(graph):
     neighbourlist = dict()
@@ -333,7 +381,7 @@ def twins(graph):
     return twinlist
 
 def gi_problem(graphlist):
-    graphs = loadgraph("../graphs/" + graphlist + ".gr", graphclass=graph, readlist=True)[0]
+    graphs = loadgraph("../graphs/" + graphlist + ".grl", graphclass=graph, readlist=True)[0]
     print("Sets of isomorphic graphs:")
     for i in range(len(graphs)):
         for j in range(i, len(graphs)):
@@ -416,5 +464,11 @@ def program():
             run = False
 
 
-program()
+# program()
 # pathsBench()
+l = loadgraph("../graphs/colorref_smallexample_4_7.grl", graphclass=graph, readlist=True)
+G = l[0][1]
+H = l[0][3]
+GH = disjointunion(G,H)
+alpha1 = fast_partitioning(GH,[],[])
+print(alpha1)
