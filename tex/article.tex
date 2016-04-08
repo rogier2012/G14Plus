@@ -117,10 +117,10 @@ Graaf isomorfisme is een probleem dat wiskundigen al lang bezig houdt, want er i
 %------------------------------------------------
 \section*{Introduction}
 \begin{quote}
-\textit{''Gegeven twee eindige grafen G en H, bestaat er een isomorfisme tussen G en H?''}
+\textit{''Gegeven twee eindige grafen $G$ en $H$, bestaat er een isomorfisme tussen $G$ en $H$?''}
 \end{quote}
 
-Het bovenstaande probleem staat bekend als het graaf isomorfisme probleem  (GI), één van de meest bestudeerde onderwerpen binnen de discrete wiskunde en theoretische informatica. Hoewel dit probleem voor verschillende klassen van grafen is opgelost  en er honderden onderzoeken over zijn gepubliceerd, is er nog altijd geen effici\"ente oplossing gevonden die toepasbaar is op alle mogelijke grafen. Niet voor niets bevindt de complexiteit van dit probleem zich in een geheel nieuwe complexiteitsklasse, tussen de problemen die oplosbaar zijn in polynomiale tijd (P) en de beslisproblemen wiens oplossingen verifieerbaar zijn in polynomiale tijd (NP-complete).
+Het bovenstaande probleem staat bekend als het graaf isomorfisme probleem  (GI), één van de meest bestudeerde onderwerpen binnen de discrete wiskunde en theoretische informatica. Een isomorfisme tussen twee grafen vinden is op zich geen moeilijk probleem. Een oplossing zou kunnen zijn om van allee bijectieve functies van $G$ naar $H$ te controleren of deze een isomorfisme defini\"eren. Het probleem van deze oplossing is dat dit enorm veel tijd kost. Als je bijvoorbeeld voor twee grafen met 10 punten elke seconde \'e\'en bijectie zou onderzoeken ben je al 42 dagen bezig. Niet heel erg snel dus. Daarom is het echte probleem een algoritme te bedenken dat tussen twee willekeurige grafen effici\"ent kan beslissen of deze issomorf of niet isomorf zijn. Voor verschillende klassen van grafen is er inderdaad een algoritme gevonden maar hoewel er honderden onderzoeken over zijn gepubliceerd, is er nog altijd geen oplossing gevonden die toepasbaar is op alle mogelijke grafen. Niet voor niets bevindt de complexiteit van dit probleem zich in een geheel nieuwe complexiteitsklasse, tussen de problemen die oplosbaar zijn in polynomiale tijd (P) en de beslisproblemen wiens oplossingen verifieerbaar zijn in polynomiale tijd (NP-complete).
 
 Een van de bestaande technieken die veel gebruikt wordt om het GI probleem op te lossen is ''partition refinement''. In dit artikel wordt het idee achter ''partition refinement'' uitgelegd. Daarnaast wordt er een zeer effici\"ente Python implementatie van deze techniek gegeven. Dit algoritme, dat gebaseerd is op een door Hopcroft~\cite{MR0403320} bedacht algoritme voor het minimaliseren van DFA's heeft namelijk een complexiteitklasse van $O(m \log_{2} (n)$ met $m= \text{aantal lijnen}$ en $n = \text{aantal punten}$, terwijl een standaard implementatie maar een tijdscomplexiteitsklasse van $O(n^2)$ heeft.
 
@@ -129,7 +129,7 @@ Een van de bestaande technieken die veel gebruikt wordt om het GI probleem op te
 In deze sectie wordt de theorie achter zowel ''partition refinement'' als het algoritme van Hopcroft uitgelegd.
 
 \subsection{Partition refinement}
-Het idee achter partition refinement is dat een isomorfisme de omgeving (de verzameling buren) van een punt $v$ in stand houdt. Punt $v$ in graaf $G$ heeft dus dezelfde omgeving als zijn afbeelding $\phi(v)$ in H. Hieruit volgt dat de graad van $v$ gelijk is aan de graad van $\phi(v)$. Er kan dus een initi\"ele partitie gemaakt worden op basis van graad. In dit artikel betekent de kleuring van een graaf hetzelfde als de partionering van een graaf. Door een partitie een kleur toe te wijzen kunnen we makkelijke illustreren hoe de graaf wordt verdeeld. 
+Het idee achter partition refinement is dat een isomorfisme de omgeving (de verzameling buren) van een punt $v$ in stand houdt. Punt $v$ in graaf $G$ heeft dus dezelfde omgeving als zijn afbeelding $\phi(v)$ in H. Hieruit volgt dat de graad van $v$ gelijk is aan de graad van $\phi(v)$. Er kan dus een initi\"ele partitie gemaakt worden op basis van graad. In dit artikel betekent de kleuring van een graaf hetzelfde als de partionering van een graaf. Door een partitie een kleur toe te wijzen kunnen we makkelijke illustreren hoe de graaf wordt verdeeld.
 
 Omdat alle punten nu een bepaalde kleur hebben kan deze initi\"ele partitie verfijnd worden, namelijk op basis van de kleuromgeving van punt $v$. Deze kleuromgeving is als volgt gedefinieerd:
 
@@ -172,6 +172,7 @@ Dan geldt: $\alpha$ is niet stabiel voor $C_{b}$, een tegenstelling.
 \end{proof}
 
 Het is dus niet nodig om de partitie te verfijnen voor alle kleurklassen, waardoor het mogelijk is de verfijningsstap voor $C$ te implementeren met een tijd complexiteit van $O(|E^{-}(C)|)$, lineair over alle punten die buren hebben in $C$. In de volgende sectie zal de Python implementatie voor een algoritme beschreven worden en bewezen worden dat deze een complexiteitsklasse van $O(|E^{-}(C)|)$ heeft.
+
 %------------------------------------------------
 
 \section{Implementatie}
@@ -257,12 +258,13 @@ De resultaten van de metingen zijn gegeven in Appendix~\ref{AppendixA}.
 
 Om toeval uit te sluiten zijn alle tests tien keer uitgevoerd voor beide algoritmes. De gemeten tijden zijn de gemiddelden van de tien uitgevoerde tests. In de laatste kolom is het verschil in uitvoertijd opgenomen, weergegeven als percentages. Een percentage van $100\%$ betekent dat het Fast Refine-algoritme (FR) tweemaal zo snel was als het Refine-algoritme (R) bij het uitvoeren van de test (een verbetering van $100$\% ten opzichte van Refine).
 
-De 'threepaths' grafen zijn complexe problemen voor het Color Refinement-algoritme om op te lossen. Ze bevatten lange paden en in elk pad kunnen er maximaal twee vertices van kleur veranderen (zie Figuur~\ref{paths}). Dit heeft tot gevolg dat R zeer veel tijd nodig heeft om tot een stabiele partitie te komen. FR pakt het probleem zoals verwacht veel effici\"enter aan. Voor een van de grotere grafen (threepaths5120) is FR ruim 25 keer sneller.
+De 'threepaths' grafen, zie figuur \ref{paths} zijn complexe problemen voor het standaard partition refinment algoritme om op te lossen. Ze bevatten lange paden en in elk pad kunnen er maximaal twee vertices van kleur veranderen. In graaf 1 is de partitie na de eerste stap van het algoritme gegeven. Graaf 2 is het resultaat van de volgende iteratie. Aangezien vertices B en F nu veranderd zijn, moeten alle vertices daartussen (C, D en E) ook opnieuw bekeken worden. Zoals hier te zien is kan het algoritme per iteratie maar voor twee vertices in een pad de coloring verfijnen. Graaf 3 geeft de stabiele coloring weer. R heeft dus zeer veel tijd nodig heeft om tot een stabiele partitie te komen. FR pakt het probleem zoals verwacht veel effici\"enter aan. Voor een van de grotere grafen (threepaths5120) is FR ruim 25 keer sneller.
 
 \begin{figure}[H]
 \centering
 \includegraphics[]{paths.png}
-\caption{In graaf 1 is de partitie na de eerste stap van het algoritme gegeven. Graaf 2 is het resultaat van de volgende iteratie. Aangezien vertices B en F nu veranderd zijn, moeten alle vertices daartussen (C, D en E) ook opnieuw bekeken worden. Zoals hier te zien is kan het algoritme per iteratie maar voor twee vertices in een pad de coloring verfijnen. Graaf 3 geeft de stabiele coloring weer. \label{paths}}
+\caption{Schematische weergave van het partitioneren van een pad}
+\label{paths}
 \end{figure}
 
 
