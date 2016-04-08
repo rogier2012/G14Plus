@@ -36,6 +36,7 @@
 \usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
 \linespread{1.05} % Line spacing - Palatino needs more space between lines
 \usepackage{microtype} % Slightly tweak font spacing for aesthetics
+\usepackage[utf8]{inputenc}
 
 \usepackage[hmarginratio=1:1,top=32mm,columnsep=20pt]{geometry} % Document margins
 \usepackage{multicol} % Used for the two-column layout of the document
@@ -101,7 +102,7 @@
 
 \begin{abstract}
 
-\noindent \lipsum[1] % Dummy abstract text
+Graaf isomorfisme is een probleem dat wiskundigen al lang bezig houdt, want er is nog steeds geen algoritme gevonden dat het probleem efficiënt oplost. Het doel van ons onderzoek was het vinden en implementeren van een correct en zo efficiënt mogelijk algoritme om isomorfisme tussen grafen aan te tonen. De keuze is gevallen op het algoritme van Hopcroft, dat oorspronkelijk gebruikt werd voor DFA minimalisatie. Niet alleen hebben we dit algoritme geïmplementeerd, we hebben ook geprobeerd aan te tonen dat het algoritme een tijdscomplexiteit van orde $O(m\log_{2}(n))$ heeft. Dat laatste bleek lastiger dan we verwachtten, maar de implementatie is meerdere malen sneller dan veel andere algoritmes. Uiteraard is er ruimte voor verbetering, maar het doel van het onderzoek is bereikt: we hebben een snel en efficiënt algoritme in Python geschreven. Verdere toelichting wat betreft de implementatie en de onderzoeksresultaten vindt u in de rest van deze paper.
 
 \end{abstract}
 
@@ -116,12 +117,12 @@
 %------------------------------------------------
 \section*{Introduction}
 \begin{quote}
-\textit{''Gegeven twee eindige graven G en H, bestaat er een isomorfisme tussen G en H?''}
+\textit{''Gegeven twee eindige grafen G en H, bestaat er een isomorfisme tussen G en H?''}
 \end{quote}
 
-Het bovenstaande probleem staat bekend als het graaf isomorfisme probleem  (GI), \'e\'en van de meest bestudeerde onderwerpen binnen de discrete wiskunde en theoretische informatica. Hoewel dit probleem voor verschillende klassen van graven is opgelost  en er honderden onderzoeken over zijn gepubliceerd, is er nog altijd geen effici\"ente oplossing gevonden die toepasbaar is op alle mogelijke grafen. Niet voor niets bevindt de complexiteit van dit probleem zich in een geheel nieuwe complexiteitsklasse, tussen de problemen die oplosbaar zijn in polynomiale tijd (P) en de beslisproblemen wiens oplossingen verifieerbaar zijn in polynomiale tijd (NP-complete).
+Het bovenstaande probleem staat bekend als het graaf isomorfisme probleem  (GI), één van de meest bestudeerde onderwerpen binnen de discrete wiskunde en theoretische informatica. Hoewel dit probleem voor verschillende klassen van grafen is opgelost  en er honderden onderzoeken over zijn gepubliceerd, is er nog altijd geen effici\"ente oplossing gevonden die toepasbaar is op alle mogelijke grafen. Niet voor niets bevindt de complexiteit van dit probleem zich in een geheel nieuwe complexiteitsklasse, tussen de problemen die oplosbaar zijn in polynomiale tijd (P) en de beslisproblemen wiens oplossingen verifieerbaar zijn in polynomiale tijd (NP-complete).
 
-Een van de bestaande technieken die veel gebruikt wordt om het GI probleem op te lossen is ''partition refinement''. In dit artikel wordt het idee achter ''partition refinement'' uitgelegd. Daarnaast wordt er zeer effici\"ente Python implementatie van deze techniek gegeven worden. Dit algoritme, dat gebaseerd is op een door Hopcroft~\cite{MR0403320} bedacht algoritme voor het minimaliseren van DFA's heeft namelijk een complexiteitklasse van $O(m \log_{2} (n)$ met $m= \text{aantal lijnen}$ en $n = \text{aantal punten}$, terwijl een standaard implementatie maar een tijdscomplexiteitsklasse van $O(n^2)$ heeft.
+Een van de bestaande technieken die veel gebruikt wordt om het GI probleem op te lossen is ''partition refinement''. In dit artikel wordt het idee achter ''partition refinement'' uitgelegd. Daarnaast wordt er een zeer effici\"ente Python implementatie van deze techniek gegeven. Dit algoritme, dat gebaseerd is op een door Hopcroft~\cite{MR0403320} bedacht algoritme voor het minimaliseren van DFA's heeft namelijk een complexiteitklasse van $O(m \log_{2} (n)$ met $m= \text{aantal lijnen}$ en $n = \text{aantal punten}$, terwijl een standaard implementatie maar een tijdscomplexiteitsklasse van $O(n^2)$ heeft.
 
 %------------------------------------------------
 \section{Theoretische onderbouwing}
@@ -140,15 +141,15 @@ Neem $\alpha$, een partitie van graaf $G$ met $k$ verschillende kleuren en  $\al
 
 De partitie wordt nu dus verfijnd door elke groep op te splitsen in punten met een verschillende kleuromgeving, waarbij elke nieuwe groep uiteraard weer een nieuwe kleur krijgt. Omdat er weer punten met nieuwe kleuren zijn bijgekomen kan ook deze partitie weer verfijnd worden op basis van kleuromgeving. Dit proces wordt herhaald tot het niet meer mogelijk is om een groep op te splitsen in nieuwe groepen met verschillende kleuromgevingen. Op dat moment bevinden zich in elke groep alleen maar elementen met dezelfde kleuromgeving, er wordt dan gesproken van een stabiele partitie.
 
-Zoals eerder vermeld was behoud een isomorfisme de omgeving van een bepaald punt, een isomorfisme behoudt dus ook de kleuromgeving van een bepaald punt. In twee isomorfe graven bevindt zich dus een gelijke stabiele partitie. Met behulp van zo'n stabiele partitie kan een van deze drie situaties ontstaan.
+Zoals eerder vermeld was behoudt een isomorfisme de omgeving van een bepaald punt, een isomorfisme behoudt dus ook de kleuromgeving van een bepaald punt. In twee isomorfe grafen bevindt zich dus een gelijke stabiele partitie. Met behulp van zo'n stabiele partitie kan een van deze drie situaties ontstaan.
 \begin{enumerate}
 \item Er kan een isomorfisme gedefinieerd worden.
-\item Er bestaat geen isomorfisme en er wordt geconcludeerd dat  de twee graven niet isomorf zijn.
+\item Er bestaat geen isomorfisme en er wordt geconcludeerd dat  de twee grafen niet isomorf zijn.
 \item Het kan zijn dat er het nog geen bijectie ontstaat en het dus nog niet zeker is of er een isomorfisme is.
 \end{enumerate}
 
 \subsection{Hopcrofts algoritme}
-Het nadeel van bovenstaand algoritme is dat, hoewel het een enorme verbetering is ten opzichte van een brute force methode nog steeds een complexiteit van $O(n^2)$ heeft, nog niet heel effici\"ent dus. Daarom is er gezocht naar een snellere implementatie van dit algoritme, zoals het algoritme van Hopcroft. Er wordt dus nog steeds gezocht naar een stabiele partitie $\alpha$ voor graaf $G$ alleen we proberen om de tijdcomplexiteit van de verfijningsoperatie zo klein mogelijk te maken. We maken hierbij gebruik van de volgende verfijning:
+Het nadeel van bovenstaand algoritme is dat het, hoewel het een enorme verbetering is ten opzichte van een brute force methode, nog steeds een complexiteit van $O(n^2)$ heeft, wat het nog steeds niet efficiënt genoeg maakt. Daarom is er gezocht naar een snellere implementatie van dit algoritme, zoals het algoritme van Hopcroft. Er wordt dus nog steeds gezocht naar een stabiele partitie $\alpha$ voor graaf $G$ alleen we proberen om de tijdcomplexiteit van de verfijningsoperatie zo klein mogelijk te maken. We maken hierbij gebruik van de volgende verfijning:
 
 \begin{lemma}
 Neem C een kleurgroep in de huidige partitie $\alpha$ en definieer voor alle $i \geq 0$ $D_{i}$ als het aantal punten met precies $i$ buren in $C$. Door elke kleurgroep $C' \neq C$ in de huidige partitie te vervangen door de niet-lege kleurgroepen $C'_{i} := C'\cap D_{i}$ wordt de ruwste stabiele partitie voor graaf $G$ gevonden.
@@ -170,26 +171,26 @@ Dan geldt: $\alpha$ is niet stabiel voor $C_{b}$, een tegenstelling.
 \cite{slides_DFA}
 \end{proof}
 
-Het is dus niet nodig om de partitie te verfijnen voor alle kleurklassen, waardoor het mogelijk is de verfijningsstap voor $C$ te implementeren met een tijd complexiteit van $O(|E^{-}(C)|)$, lineair over alle puntendie buren hebben in $C$. In de volgende sectie zal de Python implementatie voor een algoritme beschreven worden en bewezen worden dat deze een complexiteitsklasse van $O(|E^{-}(C)|)$ heeft.
+Het is dus niet nodig om de partitie te verfijnen voor alle kleurklassen, waardoor het mogelijk is de verfijningsstap voor $C$ te implementeren met een tijd complexiteit van $O(|E^{-}(C)|)$, lineair over alle punten die buren hebben in $C$. In de volgende sectie zal de Python implementatie voor een algoritme beschreven worden en bewezen worden dat deze een complexiteitsklasse van $O(|E^{-}(C)|)$ heeft.
 %------------------------------------------------
 
 \section{Implementatie}
-Het algoritme staat hieronder in pseudocode, maar we zullen het ook kort even toelichten.
+Het algoritme hieronder staat beschreven in pseudocode, maar het wordt kort toegelicht.
 
-We beginnen door alle punten $v_i$ in te delen in een partitie $C_j$ op basis van degree. Vervolgens stoppen wij alle partities in een queue($Q$).
+We beginnen door alle punten $v_i$ in te delen in een partitie $C_j$ op basis van degree. Vervolgens vullen we een queue ($Q$) met alle partities.
 Zolang $Q$ niet leeg is, verfijnen we de eerste partitie $C$ in $Q$, op de manier beschreven in lemma \ref{verfijn} en verwijderen deze uit de queue.
 
-We splitsen dus de partities $ C' $  in nieuwe partities op basis van hoeveel buren hun punten in $C$ hebben. Dit doen we door voor alle $v_{i}$ in $C$ te bij te houden welke buren $N(v_{i})$ ze hebben. Bijvoorbeeld als $v_{i}$ in $C$ een buur $v_{x}$ in een bepaalde partitie $C'$, dan stijgt de $neighbour\_count$ van die vertex met 1. Nadat je over alle $v_{i} \in C$ ge\"itereerd bent weten we dus voor alle $v \not \in  C$ hoeveel buren deze in $C$ hebben.
+We splitsen dus de partities $ C' $  in nieuwe partities op basis van hoeveel buren hun punten in $C$ hebben. Dit doen we door voor alle $v_{i}$ in $C$ te bij te houden welke buren $N(v_{i})$ ze hebben. Bijvoorbeeld, als $v_{i}$ in $C$ een buur $v_{x}$ in een bepaalde partitie $C'$ heeft, dan stijgt de $neighbour\_count$ van die vertex met 1. Nadat over alle $v_{i} \in C$ geïtereerd is weten we dus voor alle $v \not \in  C$ hoeveel buren deze in $C$ hebben.
 
-Vervolgens worden van al deze punten groepen $d\_count$ gemaakt op basis van dit aantal buren in $C$. $d_count(0)$ is bijvoorbeeld de verzameling vertices in $C'$ zonder buren in $C$. Daarna wordt de verfijning toegepast en wordt $C'$ vervangen door de doorsnede van $C'$ met alle verschillende groepen $d_count$.
+Vervolgens worden van al deze punten groepen $d\_count$ gemaakt op basis van dit aantal buren in $C$. $d\_count(0)$ is bijvoorbeeld de verzameling vertices in $C'$ zonder buren in $C$. Daarna wordt de verfijning toegepast en wordt $C'$ vervangen door de doorsnede van $C'$ met alle verschillende groepen $d\_count$.
 
-Zodra er dus een verschil zit tussen $C'$ en $d_count{i}|i\geq 0$. Wordt dit dus een nieuwe partitiee bij die $neighbour\_count$. Deze nieuwe partities worden op hun beurt weer in de $Q$ gestopt behalve de grootste, aangezien volgens lemma \ref{weglaat}, die partitie ook stabiel is als alle andere partities, wel in de queue stabiel zijn.
+Zodra er dus een verschil zit tussen $C'$ en $d\_count(i) | i\geq 0$, wordt dit een nieuwe partitie bij die $neighbour\_count$. Deze nieuwe partities worden op hun beurt weer in de $Q$ gezet. De partitie met de meeste vertices wordt niet in $Q$ gezet, aangezien volgens lemma \ref{weglaat} die partitie stabiel is als alle andere partities ook stabiel zijn.
 
 \begin{algorithm}[H]
 \KwData{Een graaf $G(V,E)$ }
 \KwResult{Een stabiele partitie van $G$}
 initalization \;
-\Function{fast\_refinement}{$G$}:\\
+\Function{fast\_refinement}{$G$}: \\
 \ForAll{$v$ $\in$ $V(G)$}
 {$\alpha(v) := v.degree()$}
 $queue := [\alpha]$\;
@@ -205,7 +206,7 @@ $d\_count := generate\_dcounts(C)$\;
 {$ queue = \{C_{i}\} \cup queue $ \;}
 {	$ F := max(\{|C_{i}|, new\_color \} ) $ \;
 $queue = \{ \{new\_color \} / F \} \cup queue $}}}}
-\caption{fast partition refinement}
+\caption{Fast Partition refinement}
 \EndFunction
 \end{algorithm}
 \pagebreak
@@ -213,8 +214,8 @@ $queue = \{ \{new\_color \} / F \} \cup queue $}}}}
 \begin{algorithm}[H]
 \KwData{Een partitie $C$}
 \KwResult{Een mapping $ \beta(c') \mapsto \gamma(neighbourcount) \mapsto \{ v_{i} \} $}
-Een partitie mapt naar een lijst getallen, die het aantal buren weergeven, die weer mapt aan een lijst met vertices die dat aantal buren hebben. Zo kunnen wij gemakkelijk splitsen in nieuwe partities \;
-\Function{generate_dcounts}{$C$}
+Een partitie mapt naar een lijst getallen, die het aantal buren weergeven, die weer mappen naar een lijst met vertices die dat aantal buren hebben. Zo kunnen wij gemakkelijk splitsen in nieuwe partities \;
+\Function{generate\_dcounts}{$C$}
 \ForAll{ $v$ $\in$ $C$ }
 {\ForAll{ $v'$ $\in$ $N(v)$ }
 {$ neighbour\_count(v') + 1 $ \;
@@ -232,7 +233,7 @@ $ result color_{i} \cup d\_count $}
 %------------------------------------------------
 \subsection{Bewijs}
 
-We gaan hier bewijzen dat de tijdscomplexiteit van onze implementatie van het verfijningsalgoritme ($generate\_dcounts$) gelijk is aan $ O(|E^{-}(C)|)$,  waar $ E{-}(C) $ het aantal lijnen is die incident zijn met punten uit $C$.
+We gaan hier bewijzen dat de tijdscomplexiteit van onze implementatie van het verfijningsalgoritme ($generate\_dcounts$) gelijk is aan $ O(|E^{-}(C)|)$,  waar $ E{-}(C) $ het aantal lijnen is dat incident is met punten uit $C$.
 
 \begin{lemma}
 De complexiteit van\\ $generate\_dcounts(C)$ van een graaf is $O(|E^{-}(C)|) $,  waarbij  $E^{-}(C)$ het aantal lijnen incident met vertices in $C$.
@@ -255,8 +256,6 @@ Voor verschillende grafen en verschillende grootten van grafen hebben wij gekeke
 De resultaten van de metingen zijn gegeven in Appendix~\ref{AppendixA}.
 
 Om toeval uit te sluiten zijn alle tests tien keer uitgevoerd voor beide algoritmes. De gemeten tijden zijn de gemiddelden van de tien uitgevoerde tests. In de laatste kolom is het verschil in uitvoertijd opgenomen, weergegeven als percentages. Een percentage van $100\%$ betekent dat het Fast Refine-algoritme (FR) tweemaal zo snel was als het Refine-algoritme (R) bij het uitvoeren van de test (een verbetering van $100$\% ten opzichte van Refine).
-
-Wat opvalt is dat FR pas bij grote grafen significant sneller is. bigtrees1 bevat vier grafen, elk met 44 vertices. bigtrees3 bevat ook vier grafen, maar elk van deze grafen heeft maar liefst 227 vertices. bigtrees3 heeft dus ruim vijf maal zo veel vertices als bigtrees1. Voor bigtrees1 is FR ongeveer 6\% sneller dan R, terwijl dat percentage voor bigtrees3 vele malen hoger ligt: FR is bijna achttien keer sneller.
 
 De 'threepaths' grafen zijn complexe problemen voor het Color Refinement-algoritme om op te lossen. Ze bevatten lange paden en in elk pad kunnen er maximaal twee vertices van kleur veranderen (zie Figuur~\ref{paths}). Dit heeft tot gevolg dat R zeer veel tijd nodig heeft om tot een stabiele partitie te komen. FR pakt het probleem zoals verwacht veel effici\"enter aan. Voor een van de grotere grafen (threepaths5120) is FR ruim 25 keer sneller.
 
@@ -318,32 +317,32 @@ Om achter de oorzaak van dit probleem te komen moeten er nog verder onderzoek ge
 Graaf & Fast Refine (ms) & Refine (ms) & Verschil \\
 \midrule
 \midrule
-bigtrees1 & $56,2$ & $59,4$ & $5,69$\% \\
-bigtrees2 & $137,6$ & $255,5$ & $85,68$\% \\
-bigtrees3 & $1865,5$ & $33138$ & $1676,36$\% \\
-cographs1 & $35,7$ & $70,6$ & $97,76$\% \\
-colorref\_largeexample\_4\_1026 & $932,4$ & $2834,1$ & $203,96$\% \\
-colorref\_largeexample\_6\_960 & $1925,5$ & $35804$ & $1759,47$\% \\
-colorref\_smallexample\_2\_49 & $3,2$ & $5,1$ & $59,38$\% \\
-colorref\_smallexample\_4\_7 & $2$ & $2,4$ & $20,00$\% \\
-colorref\_smallexample\_4\_16 & $4,5$ & $6,4$ & $42,22$\% \\
-colorref\_smallexample\_6\_15 & $9,3$ & $14,1$ & $51,61$\% \\
-cubes3 & $8,7$ & $10,1$ & $16,09$\% \\
-cubes4 & $39,2$ & $47,3$ & $20,66$\% \\
-cubes5 & $124,1$ & $228,1$ & $83,80$\% \\
-products72 & $678,8$ & $1262,6$ & $86,00$\% \\
-threepaths160 & $4,4$ & $5,7$ & $29,55$\% \\
-threepaths320 & $10$ & $10,5$ & $5,00$\% \\
-threepaths640 & $20,7$ & $21,5$ & $3,86$\% \\
-threepaths1280 & $36,6$ & $39,1$ & $6,83$\% \\
-threepaths2560 & $72$ & $88,6$ & $23,06$\% \\
-torus24 & $63,8$ & $100,3$ & $57,21$\% \\
-torus144 & $57594$ & $176635$ & $206,69$\% \\
-trees36 & $39,5$ & $80,4$ & $103,54$\% \\
-trees90 & $67,1$ & $159,2$ & $137,26$\% \\
-wheeljoin14 & $271,7$ & $410$ & $50,90$\% \\
-wheelstar12 & $460,6$ & $902,7$ & $95,98$\% \\
-modulesC & $242922$ & $397950$ & $63,82$\% \\
+bigtrees1 & $12,4$ & $19,1$ & $54,03$\% \\
+bigtrees2 & $35,6$ & $82,8$ & $132,58$\% \\
+bigtrees3 & $435$ & $1364$ & $213,56$\% \\
+cographs1 & $3,9$ & $6,8$ & $74,36$\% \\
+colorref\_largeexample\_4\_1026 & $41,7$ & $314,9$ & $655,16$\% \\
+colorref\_largeexample\_6\_960 & $72,1$ & $1069,6$ & $1383,50$\% \\
+colorref\_smallexample\_2\_49 & $1$ & $2,1$ & $110,00$\% \\
+colorref\_smallexample\_4\_7 & $0,1$ & $0,2$ & $100,00$\% \\
+colorref\_smallexample\_4\_16 & $0,1$ & $0,5$ & $400,00$\% \\
+colorref\_smallexample\_6\_15 & $0,8$ & $1$ & $25,00$\% \\
+cubes3 & $0,6$ & $0,7$ & $16,67$\% \\
+cubes4 & $1,2$ & $1,3$ & $8,33$\% \\
+cubes5 & $2,3$ & $3,2$ & $39,13$\% \\
+products72 & $6,1$ & $13,7$ & $124,59$\% \\
+threepaths160 & $22,2$ & $338,5$ & $1424,77$\% \\
+threepaths320 & $71$ & $1343,3$ & $1791,97$\% \\
+threepaths640 & $253,1$ & $5381,8$ & $2026,35$\% \\
+threepaths1280 & $947,6$ & $21894,7$ & $2210,54$\% \\
+threepaths2560 & $3669$ & $91896$ & $2404,66$\% \\
+threepaths5120 & $14366$ & $385167$ & $2581,10$\% \\
+threepaths10240 & $56878$ & $1577055$ & $2672,70$\% \\
+torus24 & $1,5$ & $1,7$ & $13,33$\% \\
+trees36 & $1,2$ & $3,1$ & $158,33$\% \\
+trees90 & $20,6$ & $54,6$ & $165,05$\% \\
+wheeljoin14 & $0,2$ & $0,4$ & $100,00$\% \\
+wheelstar12 & $18,1$ & $22,1$ & $22,10$\% \\
 
 \bottomrule
 \end{tabular}
